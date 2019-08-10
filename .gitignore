@@ -1,0 +1,4 @@
+*.swp
+*_test
+tags
+.DS_Store
