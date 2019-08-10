@@ -18,3 +18,14 @@ services:
       - '/usr/src/node_modules'
     ports:
       - '3000:3000'
+
+  db:
+    container_name: db
+    image: neo4j
+    environment:
+      - NEO4J_AUTH=${NEO4J_USER-neo4j}/${NEO4J_PASS-neo4j}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./db/neo4j/dbms:/data/dbms
