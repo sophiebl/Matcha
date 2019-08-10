@@ -1,0 +1,20 @@
+version: "3"
+services:
+
+  back:
+    container_name: back
+    build: ./back/
+    volumes:
+      - './back:/usr/src/'
+      - './back/package.json:/usr/src/package.json'
+    ports:
+      - '3001:3001'
+
+  front:
+    container_name: front
+    build: ./front/
+    volumes:
+      - './front:/usr/src/'
+      - '/usr/src/node_modules'
+    ports:
+      - '3000:3000'
