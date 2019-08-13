@@ -9,6 +9,7 @@
 	"start": "nodemon --legacy-watch index.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "neo4j-driver": "^1.7.5"
   }
 }

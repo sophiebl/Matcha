@@ -1,12 +1,13 @@
 version: "3"
 services:
 
-  back:
-    container_name: back
-    build: ./back/
+  api:
+    container_name: api
+    build: ./api/
     volumes:
-      - './back:/usr/src/'
-      - './back/package.json:/usr/src/package.json'
+      - './api:/usr/src/'
+      - './api/package.json:/usr/src/package.json'
+      - '/usr/src/node_modules'
     ports:
       - '3001:3001'
 
@@ -15,6 +16,7 @@ services:
     build: ./front/
     volumes:
       - './front:/usr/src/'
+      - './front/package.json:/usr/src/package.json'
       - '/usr/src/node_modules'
     ports:
       - '3000:3000'
@@ -25,7 +27,9 @@ services:
     environment:
       - NEO4J_AUTH=${NEO4J_USER-neo4j}/${NEO4J_PASS-neo4j}
     ports:
+      - "7473:7473"
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - ./db/neo4j/dbms:/data/dbms
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
