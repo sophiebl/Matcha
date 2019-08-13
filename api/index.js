@@ -1,16 +1,34 @@
-const neo4j = require('neo4j-driver').v1
+const express         = require('express');
+const cors            = require('cors');
+const bodyParser      = require('body-parser');
+const express_graphql = require('express-graphql');
+const schemas         = require('./graphql/schemas');
+const route           = require('./routes.js');
+const resolversUser   = require('./graphql/resolvers/user');
 
-const driver = neo4j.driver('bolt://db', neo4j.auth.basic('neo4j', 'matcha'))
+const app = express();
 
-const session = driver.session()
+app.use(cors({credentials: true, origin: 'http://front:3000'}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-session
-    .run(`
-        MATCH (p:Person)
-        RETURN p AS moi
-    `)
-    .then((results) => {
-        results.records.forEach((record) => console.log(record.get('moi')))
-        session.close()
-        driver.close()
-    })
+const root = {
+	hello: () => {
+		return "Hello world!";
+	},
+	...resolversUser,
+}
+
+app.use('/api', express_graphql( req =>( {
+    schema: schemas.registerSchema,
+    rootValue: root,
+    graphiql: true,
+    formatError: (err) => {
+        return ({ message: err.message, statusCode: 403})
+    }
+})));
+
+const http = require('http').Server(app);
+http.listen(4000, () => console.log("Server started"))
+
+route.setRoutes(app);

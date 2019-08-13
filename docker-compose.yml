@@ -9,7 +9,7 @@ services:
       - './api/package.json:/usr/src/package.json'
       - '/usr/src/node_modules'
     ports:
-      - '3001:3001'
+      - '4000:4000'
 
   front:
     container_name: front
