@@ -2,7 +2,7 @@ version: "3"
 
 services:
   api:
-    image: matcha-api
+    image: triinoxys/matcha-api
     build: ./api/
     volumes:
       - './api:/usr/src/'
@@ -12,7 +12,7 @@ services:
       - '4000:4000'
 
   front:
-    image: matcha-front
+    image: triinoxys/matcha-front
     build: ./front/
     volumes:
       - './front:/usr/src/'
@@ -33,5 +33,4 @@ services:
       - "7687:7687"
     volumes:
       - ./db/data:/data
-      - ./db/logs:/logs
 #   command: /bin/bash -c "[ -f /data/graph.db.dump ] && /var/lib/neo4j/bin/neo4j-admin load --from=/data/graph.db.dump --force; /sbin/tini -g -- /docker-entrypoint.sh neo4j"
