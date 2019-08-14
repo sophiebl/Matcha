@@ -3,3 +3,7 @@
 tags
 .DS_Store
 node_modules
+
+db/data/databases
+db/data/dbms
+db/logs

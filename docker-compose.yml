@@ -1,8 +1,8 @@
 version: "3"
-services:
 
+services:
   api:
-    container_name: api
+    image: matcha_api
     build: ./api/
     volumes:
       - './api:/usr/src/'
@@ -12,7 +12,7 @@ services:
       - '4000:4000'
 
   front:
-    container_name: front
+    image: matcha_front
     build: ./front/
     volumes:
       - './front:/usr/src/'
@@ -22,14 +22,16 @@ services:
       - '3000:3000'
 
   db:
-    container_name: db
     image: neo4j
+    env_file:
+      - .env
     environment:
-      - NEO4J_AUTH=${NEO4J_USER-neo4j}/${NEO4J_PASS-neo4j}
+      - NEO4J_AUTH=${NEO4J_USER-neo4j}/${NEO4J_PASS-letmein}
     ports:
       - "7473:7473"
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - ./neo4j/data:/data
-      - ./neo4j/logs:/logs
+      - ./db/data:/data
+      - ./db/logs:/logs
+#   command: /bin/bash -c "[ -f /data/graph.db.dump ] && /var/lib/neo4j/bin/neo4j-admin load --from=/data/graph.db.dump --force; /sbin/tini -g -- /docker-entrypoint.sh neo4j"
