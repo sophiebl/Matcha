@@ -3,6 +3,9 @@ PWD=$(shell pwd)
 
 # --- STACK --- #
 
+build:
+	@docker-compose build
+
 init:
 	docker swarm init
 

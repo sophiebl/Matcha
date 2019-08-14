@@ -2,7 +2,7 @@ version: "3"
 
 services:
   api:
-    image: matcha_api
+    image: matcha-api
     build: ./api/
     volumes:
       - './api:/usr/src/'
@@ -12,7 +12,7 @@ services:
       - '4000:4000'
 
   front:
-    image: matcha_front
+    image: matcha-front
     build: ./front/
     volumes:
       - './front:/usr/src/'
