@@ -1,0 +1,99 @@
+/*
+General settings
+*********/
+
+@font-face {
+  font-family: "Meyrin";
+  src: url("../font/formats/Meyrin.woff");
+  src: url("../font/formats/Meyrin.woff") format("woff"), url("../font/formats/Meyrin.ttf") format("ttf"), url("../font/formats/Meyrin.svg") format("svg"), url("../font/formats/Meyrin.eot") format("eot"),  url("../font/formats/Meyrin.sfd") format("sfd"),;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.App {
+  text-align: center;
+  height: 100vh;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Meyrin";
+  font-size: 90px;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+}
+
+.bg-desc {
+  background-image: linear-gradient(rgba(3, 218, 198, 1), rgba(3, 218, 198, 0));
+}
+
+/*
+Button
+*********/
+
+.btn {
+  display: block;
+  width: 30%;
+  margin: 10px auto;
+  padding: 15px 10px;
+  border: 2px solid #2196F3;
+  border-radius: 2px;
+  color: #0389f2;
+}
+
+/*
+Start
+*********/
+
+.start{
+  height: 70vh;
+  padding: 18vh 0 0;
+}
+
+.start > div {
+  margin: 10vh auto;
+}
+
+/*.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+*/
