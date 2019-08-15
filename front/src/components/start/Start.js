@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../Button';
 
-function Start() {
+  const Start = () => {
     return (
       <div className="start bg-desc">
         <h1>Matcha</h1>

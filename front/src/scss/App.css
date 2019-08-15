@@ -63,6 +63,45 @@ Start
   margin: 10vh auto;
 }
 
+/*
+Login
+*********/
+
+.login {
+  height: 70vh;
+  padding: 18vh 0 0;
+}
+
+/*
+Button
+*********/
+
+button {
+  display: block;
+  width: 30%;
+  margin: 10px auto;
+  padding: 15px 10px;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+  color: #0389f2;  
+  background-color: transparent;
+}
+
+/*
+Input
+*********/
+
+input {
+  display: block;
+  width: 30%;
+  margin: 10px auto;
+  padding: 5px 10px;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+  color: #fff; 
+  background-color: transparent;
+}
+
 /*.App {
   text-align: center;
 }
