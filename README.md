@@ -20,7 +20,7 @@ open http://localhost:3000
 - `make ls`: List stack services
 - `make ps`: Show stack services details
 
-- `make dump-db`: Dump the database into a single file (`db/data/graph.db/dump`)
+- `make dump-db`: Dump the database into a single file (`db/data/graph.db.dump`)
 - `make load-db`: Load the database from the dump file
 
 ## Full commands list
