@@ -8,6 +8,7 @@ ifeq ($(shell uname),Linux)
 endif
 
 # Colors
+C_INFO		= \033[0;36m
 C_PENDING	= \033[0;33m
 C_SUCCESS	= \033[0;32m
 C_RESET		= \033[0m
@@ -60,9 +61,15 @@ ls:
 	@docker stack services ${STACK}
 
 ps:
-	@docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
-	@echo "------------"
+	@docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'
+	@echo '------------'
 	@docker service ls -q | xargs docker service ps --format 'table {{.ID}}\t{{.Image}}\t{{.Name}}\t{{.DesiredState}}\t{{.CurrentState}}\t{{.Error}}'
+
+logs:
+	@docker stack services ${STACK} --format '{{.Name}}' | xargs  -I % sh -c ' echo "\n$(C_INFO)---------- [ % ] ----------$(C_RESET)\n"; docker service logs --raw %;'
+
+stats:
+	@docker stats --no-stream --format 'table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
 
 fix:
 	@$(ECHO) "$(C_PENDING)\nTrying to fix (force removing network)...$(C_RESET)"
