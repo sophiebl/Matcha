@@ -6,6 +6,8 @@ ECHO 		= echo
 ifeq ($(shell uname),Linux)
 	ECHO	+= -e
 endif
+MAKEFLAGS += --no-print-directory
+HOSTNAME = $(shell hostname)
 
 # Colors
 C_INFO		= \033[0;36m
@@ -70,6 +72,16 @@ logs:
 
 stats:
 	@docker stats --no-stream --format 'table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
+
+open:
+	@open http://localhost:3000/
+	@open http://localhost:7474/
+	@open http://localhost:4000/api
+
+open-public:
+	@open http://${HOSTNAME}:3000/
+	@open http://${HOSTNAME}:7474/
+	@open http://${HOSTNAME}:4000/api
 
 fix:
 	@$(ECHO) "$(C_PENDING)\nTrying to fix (force removing network)...$(C_RESET)"
