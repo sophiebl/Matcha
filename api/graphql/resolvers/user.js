@@ -5,18 +5,32 @@ const driver = neo4j.driver('bolt://db', neo4j.auth.basic('neo4j', 'matcha'))
 const session = driver.session();
 
 module.exports = {
-	user: async (params) => {
-		return await session.run('MATCH (u:User {name: $name}) RETURN u;', params)
-			.then(result => result.records[0].get(0).properties);
-	},
-	users: async () => {
-		return await session.run('MATCH (u:User) RETURN u;')
-			.then(result => {
-				let data = [];
-				result.records.forEach((record) => {
-					data.push(record.get(0).properties);
-				});
-				return data;
-			});
-	}
+	user,
+	users
+}
+
+async function user ({name})
+{
+	return await session.run(`MATCH (u:User {name: $name}) RETURN u;`, {name})
+	.then(result => result.records[0].get('u').properties);
+}
+
+async function users ({first, last})
+{
+	query = `
+		MATCH (u:User)
+		RETURN u
+		ORDER BY u.id `
+		+ (last === undefined ? ('ASC' + (first === undefined ? '' : ` LIMIT $first`)) : (`DESC LIMIT $last`))
+		+ `;
+	`;
+
+	return await session.run(query, {first, last})
+	.then(result => {
+		let data = [];
+		result.records.forEach((record) => {
+			data.push(record.get('u').properties);
+		});
+		return data;
+	});
 }

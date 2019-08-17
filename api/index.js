@@ -13,9 +13,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 const root = {
-	hello: () => {
-		return "Hello world!";
-	},
 	...resolversUser,
 }
 
