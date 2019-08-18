@@ -1,48 +1,21 @@
 import React  from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import './scss/App.scss';
 import Start  from './components/start/Start';
 import Login  from './components/login/Login';
-import Button from './components/Button';
-import './scss/App.css';
-
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
-
-const client = new ApolloClient({
-	uri: 'http://localhost:4000/api',
-});
-
-const Users = () => {
-  const { loading, error, data } = useQuery(gql`
-    {
-      Users {
-        id
-        firstname
-	  }
-    }
-  `);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-
-  return data.Users.map(({ id, firstname }) => (
-    <div key={id}>
-      <p>
-        {id}: {firstname}
-      </p>
-    </div>
-  ));
-}
+import Signup from './components/signup/Signup';
+import TestQL from './components/TestQL';
 
 const App = () => {
   return (
-    <ApolloProvider client={client}>
+    <Router>
       <div className="App">
-		{/*<Start />*/}
-		{/*<Login />*/}
-        <Users />
+        <Route exact path="/" component={Start} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/testql" component={TestQL} />
       </div>
-    </ApolloProvider>
+    </Router>
   );
 }
 
