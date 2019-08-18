@@ -9,7 +9,7 @@ module.exports = {
 	users
 }
 
-async function user ({name})
+async function user ({firstname, lastname})
 {
 	return await session.run(`MATCH (u:User {name: $name}) RETURN u;`, {name})
 	.then(result => result.records[0].get('u').properties);
