@@ -15,63 +15,10 @@ C_PENDING	= \033[0;33m
 C_SUCCESS	= \033[0;32m
 C_RESET		= \033[0m
 
-all: init-db load-db up
+all: init-db load-db stack-up
 
-# --- STACK --- #
 
-build:
-	@$(ECHO) "$(C_PENDING)\nBuilding images...$(C_RESET)"
-	@docker-compose build
-	@$(ECHO) "$(C_SUCCESS)Images have been built successfully.$(C_RESET)"
-
-init:
-	@$(ECHO) "$(C_PENDING)\nCreating a new swarm...$(C_RESET)"
-	@docker swarm init --advertise-addr 127.0.0.1
-	@$(ECHO) "$(C_SUCCESS)Created swarm.$(C_RESET)"
-
-leave:
-	@$(ECHO) "$(C_PENDING)\nLeaving swarm...$(C_RESET)"
-	@docker swarm leave --force
-	@$(ECHO) "$(C_SUCCESS)Left swarm.$(C_RESET)"
-
-start:
-	@$(ECHO) "$(C_PENDING)\nDeploying stack...$(C_RESET)"
-	@docker stack deploy -c docker-compose.yml ${STACK}
-	@$(ECHO) "$(C_SUCCESS)Deployed stack.$(C_RESET)"
-
-stop:
-	@$(ECHO) "$(C_PENDING)\nStopping stack...$(C_RESET)"
-	-@docker stack rm ${STACK}
-	@$(ECHO) "$(C_SUCCESS)Stoped stack.$(C_RESET)"
-
-up:
-	-@$(MAKE) init
-	-@$(MAKE) start
-	@$(ECHO) ""
-	@docker service ls
-
-down:
-	-@$(MAKE) stop
-	-@$(MAKE) leave
-
-reload:
-	@$(ECHO) "$(C_PENDING)\nReloading stack...$(C_RESET)"
-	@docker stack deploy -c docker-compose.yml ${STACK}
-	@$(ECHO) "$(C_SUCCESS)Reloaded stack.$(C_RESET)"
-
-ls:
-	@docker stack services ${STACK}
-
-ps:
-	@docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'
-	@echo '------------'
-	@docker service ls -q | xargs docker service ps --format 'table {{.ID}}\t{{.Image}}\t{{.Name}}\t{{.DesiredState}}\t{{.CurrentState}}\t{{.Error}}'
-
-logs:
-	@docker stack services ${STACK} --format '{{.Name}}' | xargs  -I % sh -c ' echo "\n$(C_INFO)---------- [ % ] ----------$(C_RESET)\n"; docker service logs --raw %;'
-
-stats:
-	@docker stats --no-stream --format 'table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
+# ---- MISC ----#
 
 open:
 	@open http://localhost:3000/
@@ -83,11 +30,103 @@ open-public:
 	@open http://${HOSTNAME}:7474/
 	@open http://${HOSTNAME}:4000/api
 
-fix:
+
+# -- COMPOSE -- #
+
+pull:
+	@$(ECHO) "$(C_PENDING)\nPulling images...$(C_RESET)"
+	@docker-compose pull
+	@$(ECHO) "$(C_SUCCESS)Pulled images successfully.$(C_RESET)"
+
+build:
+	@$(ECHO) "$(C_PENDING)\nBuilding images...$(C_RESET)"
+	@docker-compose build
+	@$(ECHO) "$(C_SUCCESS)Built images successfully.$(C_RESET)"
+
+up:
+	-@$(MAKE) pull
+	@$(ECHO) "$(C_PENDING)\nStarting compose project...$(C_RESET)"
+	@docker-compose up -d
+	@$(ECHO) "$(C_SUCCESS)Started compose project.$(C_RESET)"
+	@$(ECHO) "$(C_INFO)Run \`make logs\` to see (and follow) logs.$(C_RESET)"
+	-@$(MAKE) ps
+
+down:
+	@$(ECHO) "$(C_PENDING)\nStoping compose project...$(C_RESET)"
+	@docker-compose down
+	@$(ECHO) "$(C_SUCCESS)Stopped compose project.$(C_RESET)"
+
+restart:
+	@$(ECHO) "$(C_PENDING)\nRestarting compose project...$(C_RESET)"
+	@docker-compose restart
+	@$(ECHO) "$(C_SUCCESS)Restarted compose project.$(C_RESET)"
+
+ps:
+	@docker-compose ps
+	@echo '------------'
+	@docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+logs:
+	@docker-compose logs -f
+
+
+# --- STACK --- #
+
+stack-init:
+	@$(ECHO) "$(C_PENDING)\nCreating a new swarm...$(C_RESET)"
+	@docker swarm init --advertise-addr 127.0.0.1
+	@$(ECHO) "$(C_SUCCESS)Created swarm.$(C_RESET)"
+
+stack-leave:
+	@$(ECHO) "$(C_PENDING)\nLeaving swarm...$(C_RESET)"
+	@docker swarm leave --force
+	@$(ECHO) "$(C_SUCCESS)Left swarm.$(C_RESET)"
+
+stack-start:
+	@$(ECHO) "$(C_PENDING)\nDeploying stack...$(C_RESET)"
+	@docker stack deploy -c docker-compose.yml ${STACK}
+	@$(ECHO) "$(C_SUCCESS)Deployed stack.$(C_RESET)"
+
+stack-stop:
+	@$(ECHO) "$(C_PENDING)\nStopping stack...$(C_RESET)"
+	-@docker stack rm ${STACK}
+	@$(ECHO) "$(C_SUCCESS)Stoped stack.$(C_RESET)"
+
+stack-up:
+	-@$(MAKE) init
+	-@$(MAKE) start
+	@$(ECHO) ""
+	@docker service ls
+
+stack-down:
+	-@$(MAKE) stop
+	-@$(MAKE) leave
+
+stack-reload:
+	@$(ECHO) "$(C_PENDING)\nReloading stack...$(C_RESET)"
+	@docker stack deploy -c docker-compose.yml ${STACK}
+	@$(ECHO) "$(C_SUCCESS)Reloaded stack.$(C_RESET)"
+
+stack-ls:
+	@docker stack services ${STACK}
+
+stack-ps:
+	@docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'
+	@echo '------------'
+	@docker service ls -q | xargs docker service ps --format 'table {{.ID}}\t{{.Image}}\t{{.Name}}\t{{.DesiredState}}\t{{.CurrentState}}\t{{.Error}}'
+
+stack-logs:
+	@docker stack services ${STACK} --format '{{.Name}}' | xargs  -I % sh -c ' echo "\n$(C_INFO)---------- [ % ] ----------$(C_RESET)\n"; docker service logs --raw %;'
+
+stack-stats:
+	@docker stats --no-stream --format 'table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}'
+
+stack-fix:
 	@$(ECHO) "$(C_PENDING)\nTrying to fix (force removing network)...$(C_RESET)"
 	docker network disconnect -f $(docker network inspect matcha_default -f "{{.Id}}") matcha_default-endpoint
 	docker network prune -f
 	@$(ECHO) "$(C_SUCCESS)Fixed it!$(C_RESET)"
+
 
 # --- DB --- #
 
