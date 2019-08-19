@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React/*, { useState }*/ from 'react';
 /*
 const Input = ({ type, placeholder }) => (
     <input type={type} placeholder={placeholder} />
