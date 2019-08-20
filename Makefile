@@ -141,13 +141,17 @@ endif
 dump-db:
 	@$(ECHO) "$(C_PENDING)\nDumping database to db/data/graph.db.dump$(C_RESET)"
 	-@docker service scale matcha_db=0
+	-@docker-compose stop db
 	@docker run -it --rm -v ${CURDIR}/db/data:/data neo4j /bin/bash -c "rm /data/graph.db.dump; neo4j-admin dump --to /data"
+	-@docker-compose start db
 	-@docker service scale matcha_db=1
 	@$(ECHO) "$(C_SUCCESS)Dumped database$(C_RESET)"
 
 load-db:
 	@$(ECHO) "$(C_PENDING)\nLoading database from db/data/graph.db.dump$(C_RESET)"
 	-@docker service scale matcha_db=0
+	-@docker-compose stop db
 	@docker run -it --rm -v ${CURDIR}/db/data:/data neo4j /bin/bash -c "neo4j-admin load --from /data/graph.db.dump --force"
+	-@docker-compose start db
 	-@docker service scale matcha_db=1
 	@$(ECHO) "$(C_SUCCESS)Imported database.$(C_RESET)"
