@@ -13,7 +13,11 @@ const Users = () => {
     {
       Users {
         id
-        firstname
+		firstname
+		likesCount
+		tags {
+		  name
+		}
 	  }
     }
   `);
@@ -21,15 +25,16 @@ const Users = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  return data.Users.map(({ id, firstname }) => (
+  return data.Users.map(({ id, firstname, tags, likesCount }) => (
     <div key={id}>
       <p>
-        {id}: {firstname}
+		  {id}: {firstname}
+		  <br/>	- Tags: {tags.map(tag => tag.name).join(', ')}
+		  <br/>	- Likes: {likesCount}
       </p>
     </div>
   ));
 }
-
 
 const TestQL = () => {
   return (
@@ -38,7 +43,7 @@ const TestQL = () => {
         <Users />
       </div>
     </ApolloProvider>
-  );   
+  );
 }
 
 export default TestQL;

@@ -1,11 +1,11 @@
 import express from 'express';
 import cors    from 'cors';
-import neo4j   from 'neo4j-driver';
 import exprgql from 'express-graphql';
 import schema  from './graphql/schema.js';
 import routes  from './routes.js';
+import { v1 as neo4j } from 'neo4j-driver';
 
-const driver = neo4j.v1.driver('bolt://db:7687', neo4j.v1.auth.basic('neo4j', 'matcha'));
+const driver = neo4j.driver('bolt://db:7687', neo4j.auth.basic('neo4j', 'matcha'));
 const app    = express();
 
 routes.setRoutes(app);

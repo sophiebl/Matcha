@@ -1,0 +1,29 @@
+type User {
+	id: Int!
+	firstname: String!
+	lastname: String!
+	email: String!
+	birthdate: String!
+	gender: String
+	bio: String
+	tags: [Tag] @relation(name: "ENJOYS", direction: "OUT")
+	elo: Int!
+	prefAge: Int
+	prefOrientation: String
+	prefRadius: Int
+	confirmToken: String!
+	resetToken: String!
+	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
+	likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
+	likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
+}
+
+type Tag {
+	id: Int!
+	name: String!
+}
+
+type Query {
+  Users: [User]
+  Tags: [Tag]
+}
