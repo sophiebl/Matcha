@@ -1,5 +1,5 @@
 /*
-General settings
+GENERAL SETTINGS
 *********/
 
 @font-face {
@@ -11,6 +11,14 @@ General settings
 }
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+/* Color */
+$blue-green: #03DAC6;
+
+
+.bg-bg{
+  background-color: $blue-green; 
+} 
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -36,8 +44,19 @@ a {
   background-image: linear-gradient(rgba(3, 218, 198, 1), rgba(3, 218, 198, 0));
 }
 
+.valign {
+  width: 100%;
+  > div {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 49%;
+    margin: 0 auto;
+  }
+}
+
+
 /*
-Button
+Link
 *********/
 
 .btn {
@@ -73,7 +92,7 @@ Login
 }
 
 /*
-Button
+Button Submit
 *********/
 
 button {
@@ -86,6 +105,30 @@ button {
   color: #0389f2;  
   background-color: transparent;
 }
+
+/*
+Button Rond
+*********/
+
+.btn-rond {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: red;
+}
+
+/*
+Button Like
+*********/
+
+
+
+
+
+/*
+Button DisLike
+*********/
 
 /*
 Input

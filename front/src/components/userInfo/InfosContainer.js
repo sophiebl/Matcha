@@ -1,5 +1,9 @@
 import React from 'react';
-import Browse from '../browse/Browse';
+import UserImg from './UserImg';
+import MainInfos from './MainInfos';
+import Bio from './Bio';
+import Tag from './Tag';
+import LikeDislike from './LikeDislike';
 
 const InfosContainer = () => {
     return (
@@ -8,10 +12,7 @@ const InfosContainer = () => {
             <MainInfos />
             <Bio />
             <Tag />
-            <div>
-                <Button />
-                <Button />
-            </div>
+            <LikeDislike />
         </div>
     );
 }
