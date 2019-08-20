@@ -1,14 +1,13 @@
-import React from 'react';
+import React  from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
 import './scss/App.scss';
-import Start from './components/start/Start';
-import Login from './components/login/Login';
+import Start  from './components/start/Start';
+import Login  from './components/login/Login';
 import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
+import TestQL from './components/TestQL';
 
-
-function App() {
+const App = () => {
   return (
     <Router>
       <div className="App">
@@ -16,6 +15,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/browse" component={Browse} />
+        <Route path="/testql" component={TestQL} />
       </div>
     </Router>
   );
