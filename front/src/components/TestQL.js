@@ -44,6 +44,7 @@ const TestQL = () => {
       <div className="App">
 		  <Users />
 		  <FontAwesomeIcon icon="coffee" />
+		  <FontAwesomeIcon icon={['far', 'star']} />
       </div>
     </ApolloProvider>
   );
