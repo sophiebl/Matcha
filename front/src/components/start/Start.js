@@ -8,6 +8,7 @@ const Start = () => {
       <div>
         <Link to="/login" className="btn">Login</Link>
         <Link to="/signup" className="btn">Sign up</Link>
+        <Link to="/browse" className="btn">Browse</Link>
       </div>
     </div>
   );

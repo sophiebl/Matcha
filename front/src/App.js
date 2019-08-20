@@ -4,6 +4,7 @@ import './scss/App.scss';
 import Start  from './components/start/Start';
 import Login  from './components/login/Login';
 import Signup from './components/signup/Signup';
+import Browse from './components/browse/Browse';
 import TestQL from './components/TestQL';
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
         <Route exact path="/" component={Start} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/browse" component={Browse} />
         <Route path="/testql" component={TestQL} />
       </div>
     </Router>
