@@ -1,5 +1,7 @@
 import React/*, { useState }*/ from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
@@ -40,7 +42,8 @@ const TestQL = () => {
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <Users />
+		  <Users />
+		  <FontAwesomeIcon icon="coffee" />
       </div>
     </ApolloProvider>
   );
