@@ -44,7 +44,7 @@ build:
 	@$(ECHO) "$(C_SUCCESS)Built images successfully.$(C_RESET)"
 
 up:
-	-@$(MAKE) pull
+#	-@$(MAKE) pull
 	@$(ECHO) "$(C_PENDING)\nStarting compose project...$(C_RESET)"
 	@docker-compose up -d
 	@$(ECHO) "$(C_SUCCESS)Started compose project.$(C_RESET)"
