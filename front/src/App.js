@@ -7,11 +7,11 @@ import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
 import TestQL from './components/TestQL';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { faStar } from '@fortawesome/free-regular-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheckSquare, faCoffee, faTimes, faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faHeart } from '@fortawesome/free-regular-svg-icons';
 
-library.add(fab, faCheckSquare, faCoffee, tamere)
+library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingBasket, faHeart);
 
 const App = () => {
   return (
