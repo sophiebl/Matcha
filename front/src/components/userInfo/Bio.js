@@ -2,10 +2,9 @@ import React from 'react';
 
 const Bio = () => {
     return (
-        <div className="bio">
-    
-            
-        </div>
+        <p className="bio txt-left">
+            Looking at my phone searching for a reason to stop looking at my phone. 
+        </p>
     );
 }
 

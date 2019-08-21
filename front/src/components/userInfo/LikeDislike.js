@@ -1,14 +1,18 @@
 import React from 'react';
-import Button from '../Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const LikeDislike = () => {
     return (
         <div className="valign">
             <div>
-                {/*<Button />*/}
+                <a href="" className="bg-g btn-rond dislike">
+                    <FontAwesomeIcon className="color-w" size="2x" icon="times" />
+                </a>      
             </div>
             <div>
-                <Button className="bg-bg btn-rond"/>
+                <a href="" className="bg-bg btn-rond like">
+                    <FontAwesomeIcon className="color-w" size="2x"  icon={['far', 'star']} />
+                </a>      
             </div>
         </div>
     );
