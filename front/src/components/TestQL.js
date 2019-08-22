@@ -1,6 +1,6 @@
 import React/*, { useState }*/ from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
@@ -15,22 +15,24 @@ const Users = () => {
     {
       Users {
         id
-		firstname
-		likesCount
-		tags {
-		  name
-		}
-	  }
+        firstname
+        lastname
+		    likesCount
+		    tags {
+          name
+          id
+		    }
+	    }
     }
   `);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  return data.Users.map(({ id, firstname, tags, likesCount }) => (
+  return data.Users.map(({ id, firstname, lastname, tags, likesCount }) => (
     <div key={id}>
       <p>
-		  {id}: {firstname}
+		  {id}: {firstname} {lastname}
 		  <br/>	- Tags: {tags.map(tag => tag.name).join(', ')}
 		  <br/>	- Likes: {likesCount}
       </p>

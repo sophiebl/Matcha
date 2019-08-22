@@ -11,7 +11,13 @@ const InfosContainer = () => {
             <UserImg />
             <MainInfos />
             <Bio />
-            <Tag />
+            <div className="tag-container">
+                <Tag />
+                <Tag />
+                <Tag />
+                <Tag />
+                <Tag />
+            </div>
             <LikeDislike />
         </div>
     );
