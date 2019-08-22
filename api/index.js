@@ -14,8 +14,11 @@ app.use('/api', exprgql( req =>( {
     schema: schema,
 	graphiql: true,
 	context: { driver },
-    formatError: (err) => {
-        return ({ message: err.message, statusCode: 403})
-    }
+	formatError: error => ({
+		message: error.message,
+		//		locations: error.locations,
+		//stack: error.stack ? error.stack.split('\n') : [],
+		//path: error.path,
+	})
 })));
 app.listen(4000, () => console.log("API started on port 4000"));
