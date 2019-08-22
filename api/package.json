@@ -7,7 +7,7 @@
   "author": "aguiot-- <aguiot--@student.42.fr>",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --legacy-watch -- -r esm index.js"
+    "start": "nodemon --legacy-watch -e js,mjs,json,gql,coffee,litcoffee -- -r esm index.js"
   },
   "dependencies": {
     "cors": "^2.8.4",
