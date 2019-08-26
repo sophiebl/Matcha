@@ -6,6 +6,10 @@ import Login from './components/login/Login';
 import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
 import TestQL from './components/TestQL';
+import Messages from './components/messages/Messages';
+
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
@@ -20,6 +24,8 @@ const client = new ApolloClient({
     uri: 'http://localhost:4000/api',
 });
 
+const client = new ApolloClient({uri: 'http://localhost:4000/api'});
+
 const App = () => {
   return (
     <ApolloProvider client={client}>
@@ -30,6 +36,7 @@ const App = () => {
           <Route path="/signup" component={Signup} />
           <Route path="/browse" component={Browse} />
           <Route path="/testql" component={TestQL} />
+          <Route path="/messages" component={Messages} />
         </div>
       </Router>
     </ApolloProvider>

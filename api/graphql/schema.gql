@@ -16,6 +16,9 @@ type User {
 	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
 	likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
 	likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
+    receivedMessages: [Message] @relation(name: "RECEIVED", direction: "OUT")
+    sentMessages: [Message] @relation(name: "SENT", direction: "OUT")
+    conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
 }
 
 type Tag {
@@ -23,7 +26,27 @@ type Tag {
 	name: String!
 }
 
+type Conversation {
+    id: Int!
+    lastMessage: Message @cypher(statement: "MATCH (this)-[:HAS_MSG]-(msgs:Message) RETURN msgs")
+    messages: [Message] @relation(name: "HAS_MSG", direction: "OUT")
+}
+
+type Message {
+	id: Int!
+    author: User @cypher(statement: "MATCH (author:User {id: this.author_id}) RETURN author")
+	content: String!
+}
+
+type Blocked @relation(name: "BLOCKED") {
+    from: User!
+    to: User!
+    id: Int!
+    at: String!
+}
+
 type Query {
   Users: [User]
   Tags: [Tag]
+  Messages: [Message]
 }
