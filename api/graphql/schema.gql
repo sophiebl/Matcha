@@ -6,7 +6,7 @@ type User {
 	birthdate: String!
 	gender: String
 	bio: String
-	tags: [Tag] @relation(name: "ENJOYS", direction: "OUT")
+	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
 	elo: Int!
 	prefAge: Int
 	prefOrientation: String
@@ -16,8 +16,6 @@ type User {
 	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
 	likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
 	likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
-    receivedMessages: [Message] @relation(name: "RECEIVED", direction: "OUT")
-    sentMessages: [Message] @relation(name: "SENT", direction: "OUT")
     conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
 }
 

@@ -18,7 +18,7 @@ import ApolloClient from 'apollo-boost';
 library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt);
 
 const client = new ApolloClient({
-    uri: 'http://localhost:4000/api',
+    uri: 'http://localhost:4000/graphql',
 });
 
 const App = () => {
