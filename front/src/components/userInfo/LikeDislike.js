@@ -6,12 +6,12 @@ const LikeDislike = () => {
         <div className="valign">
             <div>
                 <a href="" className="bg-g btn-rond dislike">
-                    <FontAwesomeIcon className="color-w" size="2x" icon="times" />
+                    <FontAwesomeIcon className="color-w" size="3x" icon="times" />
                 </a>      
             </div>
             <div>
                 <a href="" className="bg-bg btn-rond like">
-                    <FontAwesomeIcon className="color-w" size="2x"  icon={['far', 'star']} />
+                    <FontAwesomeIcon className="color-w" size="3x"  icon={['far', 'star']} />
                 </a>      
             </div>
         </div>

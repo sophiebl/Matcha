@@ -5,15 +5,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const MainInfos = (props) => {
     return (
         <div className="pos-rel">
-        <div className="nav-user">
-            <FontAwesomeIcon className="icon white" icon={['fa', 'map-marker-alt']} />
-            <div className="rond"></div>
-        </div>
+            <div className="nav-user w-100">
+                <div>
+                    <FontAwesomeIcon className="icon white" icon={['fa', 'map-marker-alt']} />
+                    <span className="icon-top">{props.prefRadius} Km</span>
+                </div>
+                <div>
+                    <FontAwesomeIcon className="icon white" icon={['far', 'heart']} />
+                    <span className="icon-top">{props.likesCount}</span>
+                </div>
+                <div>
+                    <div className="rond"></div>
+                </div>
+            </div>
             <UserImg/>
             <div className="main-infos">
-                <div>
+                <div className="mb-5">
                     <h2>{props.firstname}</h2> 
-                   {/*} <h3>{props.lastname}</h3>*/}
+                    <span className="f-base">Creative writter</span>
                 </div>
                 <div>
                     <div></div>

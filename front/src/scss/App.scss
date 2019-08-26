@@ -12,6 +12,29 @@ GENERAL SETTINGS
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap');
 
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+}
+
+$f-base : 1.3em;
+$f-m : 1.2em;
+$f-l : 1.6em;
+$f-xxl : 7em;
+
+.f-base {font-size: $f-base;}
+.f-xs {font-size: 0.8em;}
+.f-s {font-size: 0.9em;}
+.f-m {font-size: 1.2em;}
+.f-l {font-size: $f-l;}
+.f-xl {font-size: 1.5em;}
+.f-xxl {font-size: $f-xxl;}
+
+$semi-b : 600;
+
+.semi-b {font-weight: $semi-b;}
+
 /* Color */
 $white: #fff;
 $blue-green: #03DAC6;
@@ -30,6 +53,7 @@ $offline: #F81616;
 /* Dimension 
 .w-60{width: 60px;}
 .h-60{height: 60px;}*/
+.w-100 {width: 100%;}
 
 /* Position */
 .txt-center{text-align: center;}
@@ -38,11 +62,7 @@ $offline: #F81616;
 .pos-rel {position: relative;}
 
 .mh-30{margin: 0 30px;}
-
-
-body {
-  font-family: 'Open Sans', sans-serif;
-}
+.mb-5{margin-bottom: 5px;}
 
 body * {
   box-sizing: border-box;
@@ -56,7 +76,7 @@ body * {
 h1 {
   margin: 0;
   font-family: "Meyrin";
-  font-size: 90px;
+  font-size: 7em;
   color: #fff;
 }
 
@@ -107,7 +127,7 @@ Navigation
 
 .icon{
   color: $dark-grey;
-  font-size: 1.2em;
+  font-size: $f-l;
 }
 
 .link:hover > .icon{
@@ -194,6 +214,18 @@ User content
   height: 100vh;
 }
 
+.browse {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  .infos-container {
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 100%;
+  }
+}
+
 /*
 User img
 *********/
@@ -212,12 +244,19 @@ User info
 
 .nav-user {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 4px;
   > * {
     display: inline-block;
-    width: 30%;
+    width: 33%;
   }
+}
+
+.icon-top {
+  margin-left: 5px;
+  color: #fff;
+  font-size: $f-base;
+  font-weight: $semi-b;
 }
 
 .rond {
@@ -225,6 +264,8 @@ User info
   height: 13px;
   background-color: $online;
   border-radius: 13px;
+  float: right;
+  margin-right: 5px;
 }
 
 .main-infos {
@@ -240,7 +281,9 @@ User info
 .main-infos h2{
   margin: 10px;
   font-family: "Meyrin";
-  font-size: 90px;
+  font-size: 7em;
+  margin-bottom: 0;
+  margin-block-end: 0;
 }
 
 /*
@@ -251,6 +294,7 @@ User bio
   width: 90%;
   margin: 10px 20px;
   color: $txt-color;
+  font-size: $f-base;
 }
 
 /*
@@ -262,18 +306,21 @@ User tag
   flex-direction: row;
   flex-wrap: wrap;
   overflow-y: scroll;
+  height: 89px;
+  margin-bottom: 20px;
 }
 
 .tag {
   position: relative;
   min-width: 80px;
   min-height: 29px;
-  padding: 10px 16px 2px 45px;
+  padding: 10px 16px 4px 45px;
   margin: 5px 2px;
   background-color: #03dac61f;
   color: $blue-green;
   border-radius: 25px;
   text-align: right;
+  font-size: $f-m;
 }
 
 .tagImg {
