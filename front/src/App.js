@@ -8,9 +8,6 @@ import Browse from './components/browse/Browse';
 import TestQL from './components/TestQL';
 import Messages from './components/messages/Messages';
 
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
-
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faHeart, faCommentAlt, faUser } from '@fortawesome/free-regular-svg-icons';
@@ -23,8 +20,6 @@ library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, f
 const client = new ApolloClient({
     uri: 'http://localhost:4000/api',
 });
-
-const client = new ApolloClient({uri: 'http://localhost:4000/api'});
 
 const App = () => {
   return (
