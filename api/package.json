@@ -10,13 +10,11 @@
     "start": "nodemon --legacy-watch -e js,mjs,json,gql,coffee,litcoffee -- -r esm index.js"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "cors": "^2.8.4",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "express-graphql": "^0.6.12",
-    "graphql": "^14.0.2",
-    "graphql-tools": "^4.0.3",
     "neo4j-driver": "^1.7.5",
-    "neo4j-graphql-js": "^2.7.1"
+    "neo4j-graphql-js": "^2.7.1",
+    "apollo-server-express": "^2.9.0"
   }
 }
