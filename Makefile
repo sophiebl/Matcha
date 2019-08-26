@@ -23,12 +23,12 @@ all: init-db load-db stack-up
 open:
 	@open http://localhost:3000/
 	@open http://localhost:7474/
-	@open http://localhost:4000/api
+	@open http://localhost:4000/graphql
 
 open-public:
 	@open http://${HOSTNAME}:3000/
 	@open http://${HOSTNAME}:7474/
-	@open http://${HOSTNAME}:4000/api
+	@open http://${HOSTNAME}:4000/graphql
 
 
 # -- COMPOSE -- #
