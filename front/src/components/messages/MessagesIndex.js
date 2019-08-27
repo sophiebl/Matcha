@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const GET_CONVS = gql`
 	{
@@ -85,6 +85,8 @@ const MessagesList = () => {
 const MessagesIndex = () => {
   return (
 	<div>
+	  <Link to="/" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="3x" icon="times" /></Link>
+	  <br />
 	  <p style={{fontSize: '15px'}}><strong>Discussions</strong></p>
 	  <MessagesList />
 	</div>

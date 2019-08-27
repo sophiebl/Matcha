@@ -10,13 +10,13 @@ import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faHeart, faCommentAlt, faUser } from '@fortawesome/free-regular-svg-icons';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
 
-library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt);
+library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft);
 
 const client = new ApolloClient({
     uri: 'http://localhost:4000/graphql',
