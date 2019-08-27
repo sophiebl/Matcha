@@ -28,6 +28,7 @@ type Conversation {
     id: Int!
     lastMessage: Message @cypher(statement: "MATCH (this)-[:HAS_MSG]-(msgs:Message) RETURN msgs")
     messages: [Message] @relation(name: "HAS_MSG", direction: "OUT")
+    members: [User] @relation(name: "HAS_CONV", direction: "IN")
 }
 
 type Message {
@@ -41,10 +42,4 @@ type Blocked @relation(name: "BLOCKED") {
     to: User!
     id: Int!
     at: String!
-}
-
-type Query {
-  Users: [User]
-  Tags: [Tag]
-  Messages: [Message]
 }
