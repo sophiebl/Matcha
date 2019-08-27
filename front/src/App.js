@@ -6,6 +6,7 @@ import Login from './components/login/Login';
 import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
 import TestQL from './components/TestQL';
+import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -31,7 +32,8 @@ const App = () => {
           <Route path="/signup" component={Signup} />
           <Route path="/browse" component={Browse} />
           <Route path="/testql" component={TestQL} />
-          <Route path="/messages" component={Messages} />
+		  <Route exact path="/messages" component={MessagesIndex} />
+		  <Route path="/messages/:id" component={Messages} />
         </div>
       </Router>
     </ApolloProvider>
