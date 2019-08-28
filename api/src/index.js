@@ -9,7 +9,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const driver = neo4j.driver('bolt://db:7687', neo4j.auth.basic('neo4j', 'matcha'));
+const driver = neo4j.driver('bolt://db:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
 const app    = express();
 
 routes.setRoutes(app);

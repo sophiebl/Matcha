@@ -44,3 +44,13 @@ type Blocked @relation(name: "BLOCKED") {
     id: Int!
     at: String!
 }
+
+type Book {
+  author: String
+  title: String
+}
+
+type Mutation {
+  signup (firstname: String!, email: String!, password: String!): String
+  login(email: String!, password: String!): String
+}
