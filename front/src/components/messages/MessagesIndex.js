@@ -4,9 +4,11 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+const myid = 5; //TODO: Use real current user id 
 const GET_CONVS = gql`
-	{
-	  User (firstname: "Manon") {
+	query User($id: Int) {
+	  User(id: $id) {
+		id
 		conversations {
 		  id
 		  lastMessage {
@@ -60,7 +62,12 @@ const msgStyle = {
 };
 
 const MessagesList = () => {
-  const { loading, error, data } = useQuery(GET_CONVS);
+  const { loading, error, data } = useQuery(GET_CONVS, {
+	variables: {
+	  'id': myid,
+	},
+	fetchPolicy: 'cache-and-network',
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
