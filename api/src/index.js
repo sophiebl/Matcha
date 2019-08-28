@@ -4,11 +4,16 @@ import schema  from './graphql/schema.js';
 import routes  from './routes.js';
 import { v1 as neo4j }  from 'neo4j-driver';
 import { ApolloServer } from 'apollo-server-express';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const driver = neo4j.driver('bolt://db:7687', neo4j.auth.basic('neo4j', 'matcha'));
 const app    = express();
 
 routes.setRoutes(app);
+app.use(bodyParser.json());
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 const apolloServer = new ApolloServer({
