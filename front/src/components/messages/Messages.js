@@ -5,9 +5,27 @@ import { gql } from "apollo-boost";
 import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Chat = ({ conv }) => {
-  const myid = 5; //TODO: Use real current user id
+const myid = 5; //TODO: Use real current user id
+const GET_CONV = gql`
+	query Conversation($id: Int) {
+	  Conversation(id: $id) {
+		members {
+		  id
+		  firstname
+		}
+		messages(orderBy: id_asc) {
+		  id
+		  author {
+			id
+			firstname
+		  }
+		  content
+		}
+	  }
+	}
+  `;
 
+const Chat = ({ conv }) => {
   const messages = conv.messages.map(({author, content}) => (
 	new ChatMessage({
 	  id: (author.id !== myid) >>> 0,
@@ -38,26 +56,12 @@ const Chat = ({ conv }) => {
 }
 
 const Messages = ({ match }) => {
-  const myid = 5; //TODO: Use real current user id
-
-  const { loading, error, data } = useQuery(gql`
-  {
-	Conversation(id: ${match.params.id}) {
-	  members {
-		id
-		firstname
-	  }
-	  messages(orderBy: id_asc) {
-		id
-		author {
-		  id
-		  firstname
-		}
-		content
-	  }
-	}
-  }
-  `, {fetchPolicy: 'cache-and-network',});
+  const { loading, error, data } = useQuery(GET_CONV, {
+	variables: {
+	  'id': parseInt(match.params.id),
+	},
+	fetchPolicy: 'cache-and-network',
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
