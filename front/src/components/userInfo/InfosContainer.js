@@ -9,21 +9,21 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 
 const InfosContainer =  () => {
-    const { loading, error, data } = useQuery(gql`
-        {
-            Users {
-                id
-                firstname
-                lastname
-                likesCount
-                prefRadius
-                tags{
-                    name
-                    id
-                }
-            }
-        }
-    `);
+	const { loading, error, data } = useQuery(gql`
+		{
+			Users {
+				id
+				firstname
+				lastname
+				likesCount
+				prefRadius
+				tags{
+					name
+					id
+				}
+			}
+		}
+	`);
     const [users, setUsers] = useState([]);
     
     useEffect(() => {
@@ -33,7 +33,7 @@ const InfosContainer =  () => {
         }
         console.log(users);
         console.log(data.Users);
-    }, [users, loading, setUsers]);
+    }, [users, setUsers, loading, data.Users]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error </p>;
@@ -69,7 +69,6 @@ const InfosContainer =  () => {
             </div>
         </div>
     ));
-    console.log(users);
 }
 
 export default InfosContainer;
