@@ -7,7 +7,8 @@
   "author": "aguiot-- <aguiot--@student.42.fr>",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --legacy-watch -e js,mjs,json,gql,coffee,litcoffee -- -r esm src/index.js"
+    "start": "nodemon --legacy-watch -e js,mjs,json,gql,coffee,litcoffee -- -r esm src/index.js",
+    "seed": "node -r esm scripts/seed.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.9.0",
@@ -16,6 +17,7 @@
     "dotenv": "^8.1.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "faker": "^4.1.0",
     "neo4j-driver": "^1.7.5",
     "neo4j-graphql-js": "^2.7.1",
     "uniqid": "^5.0.3"
