@@ -16,6 +16,11 @@ faker.locale = 'fr';
 faker.seed(42);
 
 /* -----[ Queries ]----- */
+const RESET = `
+MATCH (a)
+DETACH DELETE (a)
+`;
+
 const CREATE_USER = `
 CREATE (:User {
   uid: $uuid,
@@ -35,10 +40,37 @@ CREATE (:User {
 })`;
 
 const CREATE_TAG = `
-CREATE (:TAG {
+CREATE (:Tag {
   uid: $uuid,
   name: $name
 })`;
+
+const HAS_TAGS = `
+MATCH (t:Tag)
+WITH [t] as tags
+UNWIND tags as tag
+MATCH (users:User)
+WHERE rand() < 0.3
+CREATE (users)-[:HAS_TAG]->(tag)
+`;
+
+const LIKED = `
+MATCH (l:User)
+WITH [l] as likeds
+UNWIND likeds as liked
+MATCH (likers:User)
+WHERE rand() < 0.3 AND likers <> liked
+CREATE (likers)-[:LIKED]->(liked)
+`;
+
+const BLOCKED = `
+MATCH (b:User)
+WITH [b] as blockeds
+UNWIND blockeds as blocked
+MATCH (blockers:User)
+WHERE rand() < 0.03 AND blockers <> blocked
+CREATE (blockers)-[:BLOCKED]->(blocked)
+`;
 
 /* -----[ Seeding functions ]----- */
 async function users(amount = 1) {
@@ -52,7 +84,7 @@ async function users(amount = 1) {
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
 	const prefRadius = faker.random.number({min: 2, max: 250});
 
-	await session.run(faker.fake(CREATE_USER), {uuid, hash, gender, elo, prefAge, prefOrientation, prefRadius})
+	await session.run(faker.fake(CREATE_USER), {uuid, hash, gender, elo, prefAge, prefOrientation, prefRadius});
   }
 }
 
@@ -62,18 +94,38 @@ async function tags() {
 	const uuid = uniqid('tag-');
 	const name = names[i];
 
-	await session.run(faker.fake(CREATE_TAG), {uuid, name})
+	await session.run(faker.fake(CREATE_TAG), {uuid, name});
   }
 }
 
+async function hasTags() {
+  await session.run(faker.fake(HAS_TAGS));
+}
+
+async function liked() {
+  await session.run(faker.fake(LIKED));
+}
+
+async function blocked() {
+  await session.run(faker.fake(BLOCKED));
+}
+
 /* -----[ Main function ]----- */
+async function reset() {
+	await session.run(faker.fake(RESET));
+}
+
 async function seed() {
   await users(10);
   await tags();
+  await hasTags();
+  await liked();
+  await blocked();
 
   console.log('Database is reaady!');
   session.close();
   process.exit(0);
 }
 
+reset();
 seed();
