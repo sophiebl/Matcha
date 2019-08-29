@@ -44,7 +44,8 @@ CREATE (:TAG {
 async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
 	const uuid = uniqid('user-');
-	const hash = await SHA256(faker.internet.password, 'salt').toString();
+	//const hash = await SHA256(faker.internet.password, 'salt').toString();
+	const hash = await SHA256('password', 'salt').toString();
 	const gender = faker.random.arrayElement(['homme', 'femme']);
 	const elo = faker.random.number({min: 0, max: 100});
 	const prefAge = faker.random.number({min: 18, max: 100});
