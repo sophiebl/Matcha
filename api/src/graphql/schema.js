@@ -14,18 +14,17 @@ const session = driver.session();
 const resolvers = {
   Mutation: {
 	async signup (_, { firstname, email, password }) {
-	  const id = uniqid('user-');
-
+	  const uid = uniqid('user-');
 	  //const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
 	  const hash = await SHA256(password, 'salt').toString();
 
-	  return await session.run(`CREATE (u:User {id: $id, firstname: $firstname, email: $email, password: $hash}) RETURN u`,
-		{id, firstname, email, hash})
+	  return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, email: $email, password: $hash}) RETURN u`,
+		{uid, firstname, email, hash})
 		.then(result => {
 		  const user = result.records[0].get('u').properties;
 		  //console.log(user);
 		  return jwt.sign(
-			{ id: user.id, email: user.email },
+			{ uid: user.uid },
 			process.env.JWT_SECRET,
 			{ expiresIn: '1y' }
 		  )
@@ -46,7 +45,7 @@ const resolvers = {
 	  }
 
 	  return jwt.sign(
-		{ id: user.id, email: user.email },
+		{ id: user.id },
 		process.env.JWT_SECRET,
 		{ expiresIn: '1d' }
 	  )
