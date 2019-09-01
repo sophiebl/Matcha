@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import MainInfos from './MainInfos';
 import Bio from './Bio';
 import Tag from './Tag';
@@ -11,21 +11,21 @@ import { gql } from "apollo-boost";
 const InfosContainer =  () => {
 	const { loading, error, data } = useQuery(gql`
 		{
-			Users {
-				id
+			User {
+				uid
 				firstname
 				lastname
 				likesCount
 				prefRadius
 				tags{
 					name
-					id
+					uid
 				}
 			}
 		}
 	`);
     const [users, setUsers] = useState([]);
-    
+    /*
     useEffect(() => {
         console.log(loading);
         if (loading === false) {
@@ -33,11 +33,11 @@ const InfosContainer =  () => {
         }
         console.log(users);
         console.log(data.Users);
-    }, [users, setUsers, loading, data.Users]);
+    }, [users, setUsers, loading, data.Users]);*/
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error </p>;
-
+/*
     const HandleDelete = idUser => {
         const updatedUsers = [...data.Users];
         //console.log(updatedUsers);
@@ -49,22 +49,16 @@ const InfosContainer =  () => {
         setUsers(updatedUsers);
     }
    // console.log(data.Users);
-
-    return data.Users.map(({ id, firstname, lastname, tags, likesCount, prefRadius }) => (
+*/
+    return data.User.map(({ id, firstname, lastname, tags, likesCount, prefRadius }) => (
         <div className="infos-container" key={id}>
             <div>
                 <MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius}/>
                 <Bio />
                 <div className="tag-container">
                     {tags.map(tag => <Tag tagName={tag.name}/>)}
-                    <Tag tagName="hello"/>
-                    <Tag tagName="hello"/>
-                    <Tag tagName="hello"/>
-                    <Tag tagName="hello koko"/>
-                    <Tag tagName="hello"/>
-                    <Tag tagName="Say hello"/>
                 </div>
-                <LikeDislike idUser={id} onDelete={HandleDelete} />
+                <LikeDislike idUser={id} /*onDelete={HandleDelete}*/ />
                 <Nav/>
             </div>
         </div>

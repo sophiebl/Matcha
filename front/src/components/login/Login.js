@@ -1,11 +1,15 @@
 import React/*, { useState }*/ from 'react';
-import Input from '../Input';
 
 const Login = () => {
+    const onSubmit = inputs => {
+        console.log(inputs);
+    }
+
+
     return (
-        <form className="login bg-desc">
-            <Input type="text" placeholder="username"/>
-            <Input type="password" placeholder="password"/>
+        <form method="POST" className="login bg-desc" /*onSubmit={handleSubmit(onSubmit)}*/>
+            <input type="test" placeholder="username" />
+            <input type="password" placeholder="password"/>
             <button>Login</button>
         </form>
     )
