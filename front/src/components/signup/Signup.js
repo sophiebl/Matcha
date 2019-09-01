@@ -16,6 +16,7 @@ const Signup = () => {
 	{
 	  onCompleted: (data) => {
 		console.log(data.signup);
+		localStorage.setItem('token', data.signup);
 	  }
 	});
   const onSubmit = inputs => {
