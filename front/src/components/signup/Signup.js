@@ -5,8 +5,8 @@ import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 const SIGNUP = gql`
-  mutation signup($firstname: String!, $email: String!, $password: String!) {
-	signup(firstname: $firstname, email: $email, password: $password)
+  mutation signup($firstname: String!, $email: String!, $username: String!, $password: String!) {
+	signup(firstname: $firstname, email: $email, username: $username, password: $password)
   }
 `;
 
@@ -24,6 +24,7 @@ const Signup = () => {
 	  variables: {
 		firstname: inputs.firstname,
 		email: inputs.email,
+		username: inputs.username,
 		password: inputs.password,
 	  }
 	});

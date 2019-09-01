@@ -46,6 +46,6 @@ type Blocked @relation(name: "BLOCKED") {
 }
 
 type Mutation {
-  signup (firstname: String!, email: String!, password: String!): String
-  login(email: String!, password: String!): String
+  signup (firstname: String!, email: String!, username: String!, password: String!): String
+  login(username: String!, password: String!): String
 }

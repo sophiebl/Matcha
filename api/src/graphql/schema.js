@@ -1,5 +1,5 @@
 import { makeAugmentedSchema } from 'neo4j-graphql-js';
-import fs from 'fs';
+import fs, { exists } from 'fs';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
@@ -13,42 +13,50 @@ const session = driver.session();
 
 const resolvers = {
   Mutation: {
-	async signup (_, { firstname, email, password }) {
+	async signup (_, { firstname, email, username, password }) {
 	  const uid = uniqid('user-');
 	  //const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
 	  const hash = await SHA256(password, 'salt').toString();
 
-	  return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, email: $email, password: $hash}) RETURN u`,
-		{uid, firstname, email, hash})
+	  return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, username: $username, email: $email, password: $hash}) RETURN u`,
+		{uid, firstname, email, username, hash})
 		.then(result => {
-		  const user = result.records[0].get('u').properties;
-		  //console.log(user);
-		  return jwt.sign(
-			{ uid: user.uid },
-			process.env.JWT_SECRET,
-			{ expiresIn: '1y' }
-		  )
+		  	const user = result.records[0].get('u').properties;
+		  	//console.log(user);
+		  	return jwt.sign(
+				{ uid: user.uid },
+				process.env.JWT_SECRET,
+				{ expiresIn: '1y' }
+			)
 		});
 	},
 
-	async login (_, { email, password }) {
-	  //const user = await User.findOne({ where: { email } })
-
+	async login (_, { username, password }) {
+	  console.log('lol');
+	  //const user = await User.findOne({ where: { username } })
+	  const user = await session.run(`MATCH (u:User {username: $username}) RETURN u`, {username});
+	  console.log(user);
 	  if (!user) {
-		throw new Error('No user with that email')
+		throw new Error('No user with that username')
 	  }
-
-	  const valid = await bcrypt.compare(password, user.password)
-
+	  const hash = await SHA256(password, 'salt').toString();
+	  console.log(hash);
+	  const valid = await bcrypt.compare(hash, user.password)
 	  if (!valid) {
 		throw new Error('Incorrect password')
 	  }
-
-	  return jwt.sign(
-		{ id: user.id },
-		process.env.JWT_SECRET,
-		{ expiresIn: '1d' }
-	  )
+	  //MATCH (u:User {username: 'test', password: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'}) RETURN u
+	  return await session.run(`MATCH (u:User {username: $username, password: $hash}) RETURN u`,
+		{username, password})
+		.then(result => {
+		  	const user = result.records[0].get('u').properties;
+		  	//console.log(user);
+			return jwt.sign(
+				{ id: user.id },
+				process.env.JWT_SECRET,
+				{ expiresIn: '1d' }
+		  	)
+		});
 	}
   }
 };
