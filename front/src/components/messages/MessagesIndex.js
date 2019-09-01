@@ -4,17 +4,17 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const myid = 5; //TODO: Use real current user id 
+const myuid = 'user-lnrhdyok00z5pku'; //TODO: Use real current user id 
 const GET_CONVS = gql`
-	query User($id: Int) {
-	  User(id: $id) {
-		id
+	query User($uid: String) {
+	  User(uid: $uid) {
+		uid
 		conversations {
-		  id
+		  uid
 		  lastMessage {
-			id
+			uid
 			author {
-			  id
+			  uid
 			  firstname
 			}
 			content
@@ -64,7 +64,7 @@ const msgStyle = {
 const MessagesList = () => {
   const { loading, error, data } = useQuery(GET_CONVS, {
 	variables: {
-	  'id': myid,
+	  'uid': myuid,
 	},
 	fetchPolicy: 'cache-and-network',
   });
@@ -73,9 +73,9 @@ const MessagesList = () => {
   if (error) return <p>Error :(</p>;
 
   const convs = data.User[0].conversations;
-  return convs.map(({ id, lastMessage }) => (
-	<div key={id}>
-	  <Link to={"/messages/" + id}>
+  return convs.map(({ uid, lastMessage }) => (
+	<div key={uid}>
+	  <Link to={"/messages/" + uid}>
 		<div style={divStyle}>
 		  <img alt="user icon" style={imgStyle} src="https://bulma.io/images/placeholders/128x128.png" />
 		  <div style={txtStyle}>

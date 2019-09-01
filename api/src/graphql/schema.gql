@@ -34,7 +34,7 @@ type Conversation {
 
 type Message {
 	uid: String!
-    author: User @cypher(statement: "MATCH (author:User {id: this.author_id}) RETURN author")
+    author: User @relation(name: "AUTHORED", direction: "IN")
 	content: String!
 }
 
