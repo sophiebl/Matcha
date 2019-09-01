@@ -22,7 +22,6 @@ const resolvers = {
 		{uid, firstname, email, username, hash})
 		.then(result => {
 		  	const user = result.records[0].get('u').properties;
-		  	//console.log(user);
 		  	return jwt.sign(
 				{ uid: user.uid },
 				process.env.JWT_SECRET,
@@ -32,31 +31,27 @@ const resolvers = {
 	},
 
 	async login (_, { username, password }) {
-	  console.log('lol');
-	  //const user = await User.findOne({ where: { username } })
-	  const user = await session.run(`MATCH (u:User {username: $username}) RETURN u`, {username});
-	  console.log(user);
-	  if (!user) {
-		throw new Error('No user with that username')
-	  }
-	  const hash = await SHA256(password, 'salt').toString();
-	  console.log(hash);
-	  const valid = await bcrypt.compare(hash, user.password)
-	  if (!valid) {
-		throw new Error('Incorrect password')
-	  }
-	  //MATCH (u:User {username: 'test', password: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'}) RETURN u
-	  return await session.run(`MATCH (u:User {username: $username, password: $hash}) RETURN u`,
-		{username, password})
-		.then(result => {
-		  	const user = result.records[0].get('u').properties;
-		  	//console.log(user);
-			return jwt.sign(
-				{ id: user.id },
-				process.env.JWT_SECRET,
-				{ expiresIn: '1d' }
-		  	)
-		});
+		//const user = await User.findOne({ where: { username } })
+		//const user = await session.run(`MATCH (u:User {username: $username}) RETURN u`, {username});
+		//console.log(user);
+		const hash = await SHA256(password, 'salt').toString();
+		console.log('Back');
+		return await session.run(`MATCH (u:User {username: $username}) RETURN u`,
+			{username})
+			.then(result => {
+				const user = result.records[0].get('u').properties;
+				if (!user) {
+					throw new Error('No user with that username')
+				}
+				console.log(user.password);
+				if (hash !== user.password)
+					throw new Error('Incorrect password')
+			  	return jwt.sign(
+					{ id: user.id },
+					process.env.JWT_SECRET,
+					{ expiresIn: '1d' }
+				)
+		});	
 	}
   }
 };

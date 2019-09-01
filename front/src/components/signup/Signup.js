@@ -12,10 +12,13 @@ const SIGNUP = gql`
 
 const Signup = () => {
   const { register, handleSubmit, errors } = useForm();
+  console.log(register);
+  console.log(handleSubmit);
   const [signup] = useMutation(SIGNUP,
 	{
 	  onCompleted: (data) => {
 		console.log(data.signup);
+		localStorage.setItem('token', data.signup);
 	  }
 	});
   const onSubmit = inputs => {
@@ -35,7 +38,7 @@ const Signup = () => {
 	  <input type="text" name="lastname" placeholder="Nom" ref={register}/>
 	  {errors.lastname && 'Last name is required.'}
 	  <input type="text" name="firstname" placeholder="Prénom" ref={register} required/>
-	  <input type="text" name="username" placeholder="Username" ref={register}/>
+	  <input type="text" name="username" placeholder="Username" ref={register} required/>
 	  <input type="text" name="email" placeholder="Email" ref={register} required/>
 	  <input type="password" name="password" placeholder="Mot de passe" ref={register} required/>
 	  <input type="password" name="password-confirmation" placeholder="Vérification du mot de passe" ref={register}/>
