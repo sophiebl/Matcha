@@ -13,7 +13,10 @@ const session = driver.session();
 
 const resolvers = {
   Mutation: {
-	async signup (_, { firstname, email, password }) {
+	async signup (_, { firstname, email, password }, context) {
+	  console.log('---');
+	  console.log(context.token);
+	  console.log('---');
 	  const uid = uniqid('user-');
 	  //const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
 	  const hash = await SHA256(password, 'salt').toString();
@@ -22,7 +25,6 @@ const resolvers = {
 		{uid, firstname, email, hash})
 		.then(result => {
 		  const user = result.records[0].get('u').properties;
-		  //console.log(user);
 		  return jwt.sign(
 			{ uid: user.uid },
 			process.env.JWT_SECRET,
