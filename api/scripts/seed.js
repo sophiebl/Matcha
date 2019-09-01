@@ -72,6 +72,14 @@ WHERE rand() < 0.03 AND blockers <> blocked
 CREATE (blockers)-[:BLOCKED]->(blocked)
 `;
 
+const MESSAGES = `
+MATCH (u1:User {firstname: 'Camille'}), (u2:User {firstname: 'Noa'})
+CREATE (u1)-[:HAS_CONV]->(conv:Conversation {uid: 'conv-1'})<-[:HAS_CONV]-(u2)
+CREATE (msg1:Message {uid: 'msg-1', content: "Hey, moi c'est Noa !"})<-[:HAS_MSG]-(conv)-[:HAS_MSG]->(msg2:Message {uid: 'msg-2', content: "Hey Noa, moi c'est Camille !"})
+CREATE (msg1)<-[:AUTHORED]-(u2), (msg2)<-[:AUTHORED]-(u1)
+RETURN u1, u2, conv, msg1, msg2
+`;
+
 /* -----[ Seeding functions ]----- */
 async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
@@ -110,6 +118,10 @@ async function blocked() {
   await session.run(faker.fake(BLOCKED));
 }
 
+async function messages() {
+  await session.run(faker.fake(MESSAGES));
+}
+
 /* -----[ Main function ]----- */
 async function reset() {
 	await session.run(faker.fake(RESET));
@@ -121,6 +133,7 @@ async function seed() {
   await hasTags();
   await liked();
   await blocked();
+  await messages();
 
   console.log('Database is reaady!');
   session.close();
