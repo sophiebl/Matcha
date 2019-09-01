@@ -5,18 +5,18 @@ import { gql } from "apollo-boost";
 import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const myid = 5; //TODO: Use real current user id
+const myuid = 'user-lnrhdyok00z5pku'; //TODO: Use real current user id
 const GET_CONV = gql`
-	query Conversation($id: Int) {
-	  Conversation(id: $id) {
+	query Conversation($uid: String) {
+	  Conversation(uid: $uid) {
 		members {
-		  id
+		  uid
 		  firstname
 		}
-		messages(orderBy: id_asc) {
-		  id
+		messages(orderBy: uid_asc) {
+		  uid
 		  author {
-			id
+			uid
 			firstname
 		  }
 		  content
@@ -28,7 +28,7 @@ const GET_CONV = gql`
 const Chat = ({ conv }) => {
   const messages = conv.messages.map(({author, content}) => (
 	new ChatMessage({
-	  id: (author.id !== myid) >>> 0,
+	  id: (author.uid !== myuid) >>> 0,
 	  message: content,
 	})
   ));
@@ -58,7 +58,7 @@ const Chat = ({ conv }) => {
 const Messages = ({ match }) => {
   const { loading, error, data } = useQuery(GET_CONV, {
 	variables: {
-	  'id': parseInt(match.params.id),
+	  'uid': match.params.uid,
 	},
 	fetchPolicy: 'cache-and-network',
   });
@@ -66,7 +66,7 @@ const Messages = ({ match }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const members = data.Conversation[0].members.filter(m => (m.id !== myid)).map(m => m.firstname).join(', ');
+  const members = data.Conversation[0].members.filter(m => (m.uid !== myuid)).map(m => m.firstname).join(', ');
 
   return (
 	<div>

@@ -33,7 +33,7 @@ const App = () => {
           <Route path="/browse" component={Browse} />
           <Route path="/testql" component={TestQL} />
 		  <Route exact path="/messages" component={MessagesIndex} />
-		  <Route path="/messages/:id" component={Messages} />
+		  <Route path="/messages/:uid" component={Messages} />
         </div>
       </Router>
     </ApolloProvider>
