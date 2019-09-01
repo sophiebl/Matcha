@@ -5,7 +5,7 @@ const Input = ({ type, placeholder }) => (
 );
 */
 const Input = (props) => (
-    <input type={props.type} name={props.name} placeholder={props.placeholder} ref={props.reff}/>
+    <input type={props.type} name={props.name} placeholder={props.placeholder} ref={props.ref}/>
 );
 /*
 

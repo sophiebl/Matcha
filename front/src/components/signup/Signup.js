@@ -1,5 +1,4 @@
 import React from 'react';
-import Input from '../Input';
 import useForm from 'react-hook-form';
 
 import { gql } from "apollo-boost";
@@ -13,19 +12,32 @@ const SIGNUP = gql`
 
 const Signup = () => {
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = data => {
-	console.log(data);
+  const [signup] = useMutation(SIGNUP,
+	{
+	  onCompleted: (data) => {
+		console.log(data.signup);
+	  }
+	});
+  const onSubmit = inputs => {
+	console.log(inputs);
+	signup({
+	  variables: {
+		firstname: inputs.firstname,
+		email: inputs.email,
+		password: inputs.password,
+	  }
+	});
   };
 
   return (
-	<form className="signup bg-desc" onSubmit={handleSubmit(onSubmit)}>
-	  <Input type="text" name="lastname" placeholder="Nom" reff={register}/>
+	<form method="POST" className="signup bg-desc" onSubmit={handleSubmit(onSubmit)}>
+	  <input type="text" name="lastname" placeholder="Nom" ref={register}/>
 	  {errors.lastname && 'Last name is required.'}
-	  <Input type="text" name="firstname" placeholder="Prénom" reff={register}/>
-	  <Input type="text" name="username" placeholder="Username" reff={register}/>
-	  <Input type="text" name="email" placeholder="Email" reff={register}/>
-	  <Input type="password" name="password" placeholder="Mot de passe" reff={register}/>
-	  <Input type="password" name="password-confirmation" placeholder="Vérification du mot de passe" reff={register}/>
+	  <input type="text" name="firstname" placeholder="Prénom" ref={register} required/>
+	  <input type="text" name="username" placeholder="Username" ref={register}/>
+	  <input type="text" name="email" placeholder="Email" ref={register} required/>
+	  <input type="password" name="password" placeholder="Mot de passe" ref={register} required/>
+	  <input type="password" name="password-confirmation" placeholder="Vérification du mot de passe" ref={register}/>
 	  <button>Sign up</button>
 	</form>
   );
