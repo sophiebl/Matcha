@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const myuid = 'user-lnrhdyok00z5pku'; //TODO: Use real current user id 
 const GET_CONVS = gql`
-	query User($uid: String) {
+	query User($uid: ID) {
 	  User(uid: $uid) {
 		uid
 		conversations {
