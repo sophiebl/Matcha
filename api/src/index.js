@@ -25,7 +25,8 @@ const apolloServer = new ApolloServer({
   schema,
   cors: corsOptions,
   context: ({ req }) => ({
-	token: req.headers.authorization || ''
+    driver,
+    token: req.headers.authorization || '',
   }),
   playground: true
 });
