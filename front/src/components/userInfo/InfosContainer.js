@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React/*, { useState }*/ from 'react';
 import MainInfos from './MainInfos';
 import Bio from './Bio';
 import Tag from './Tag';
@@ -24,7 +24,7 @@ const InfosContainer =  () => {
 			}
 		}
 	`);
-    const [users, setUsers] = useState([]);
+    //const [users, setUsers] = useState([]);
     /*
     useEffect(() => {
         console.log(loading);

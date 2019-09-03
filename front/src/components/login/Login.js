@@ -1,4 +1,4 @@
-import React/*, { useState }*/ from 'react';
+import React from 'react';
 import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
@@ -11,9 +11,9 @@ const LOGIN = gql`
 
 const Login = () => {
     const { register, handleSubmit, errors } = useForm();
-    console.log(register);
-    console.log(handleSubmit);
-    console.log(errors);
+    //console.log(register);
+    //console.log(handleSubmit);
+    //console.log(errors);
     const [login] = useMutation(LOGIN,
         {
             onCompleted: (data) => {
@@ -22,7 +22,7 @@ const Login = () => {
             }
         });
     const onSubmit = inputs => {
-        console.log(inputs);
+        //console.log(inputs);
         login({
             variables: {
                 username: inputs.username,
