@@ -4,16 +4,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const Nav = () => {
     return (
         <div className="nav">
-			<a href="/" classsName="link">
+			<a href="/" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['fa', 'shopping-cart']} />
             </a>
-			<a href="/likes" classsName="link">
+			<a href="/likes" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'heart']} />
             </a>
-			<a href="/messages" classsName="link">
+			<a href="/messages" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'comment-alt']} />
             </a>
-			<a href="/profile" classsName="link">
+			<a href="/profile" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'user']} />
             </a>
         </div>

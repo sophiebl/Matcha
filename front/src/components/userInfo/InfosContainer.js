@@ -5,8 +5,6 @@ import Tag from './Tag';
 import LikeDislike from './LikeDislike';
 import Nav from '../Nav';
 
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
 
 const InfosContainer = (props) => {
 	
@@ -35,17 +33,17 @@ const InfosContainer = (props) => {
    // console.log(data.Users);
 */
 
-    const { id, firstname, lastname, tags, likesCount, prefRadius } = props.user;
+    const { uid, firstname, lastname, tags, likesCount, prefRadius } = props.user;
 
     return (
-        <div className="infos-container" key={id}>
+        <div className="infos-container" key={uid}>
             <div>
                 <MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius}/>
                 <Bio />
                 <div className="tag-container">
-                    {tags.map(tag => <Tag tagName={tag.name}/>)}
+                    {tags.map(tag => <Tag key={tag.uid} tagName={tag.name}/>)}
                 </div>
-                <LikeDislike idUser={id} /*onDelete={HandleDelete}*/ />
+                <LikeDislike uidUser={uid} /*onDelete={HandleDelete}*/ />
                 <Nav/>
             </div>
         </div>
