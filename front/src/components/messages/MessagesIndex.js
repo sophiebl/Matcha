@@ -3,8 +3,18 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import jwt_decode from 'jwt-decode';
 
-const myuid = 'user-1ljcu1y2yk016qlc1'; //TODO: Use real current user id 
+const getId = () => {
+	try {
+		return jwt_decode(localStorage.getItem('token')).uid
+	}
+	catch(error) {
+		return null;
+	}
+}
+const myuid = (getId());
+
 const GET_CONVS = gql`
 	query User($uid: ID) {
 	  User(uid: $uid) {

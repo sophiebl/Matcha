@@ -7,10 +7,10 @@ const Nav = () => {
 			<a href="/" classsName="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['fa', 'shopping-cart']} />
             </a>
-			<a href="/" classsName="link">
+			<a href="/likes" classsName="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'heart']} />
             </a>
-			<a href="/" classsName="link">
+			<a href="/messages" classsName="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'comment-alt']} />
             </a>
 			<a href="/" classsName="link">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import './scss/App.scss';
 import Start from './components/start/Start';
 import Login from './components/login/Login';
@@ -8,6 +8,7 @@ import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
 import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
+import PrivateRoute from './components/PrivateRoute';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
@@ -58,17 +59,19 @@ const client = new ApolloClient({
 const App = () => {
   return (
 	<ApolloProvider client={client}>
-	  <Router>
 		<div className="App">
-		  <Route exact path="/" component={Start} />
-		  <Route path="/login" component={Login} />
-			<Route path="/logout" component={Logout} />
-		  <Route path="/signup" component={Signup} />
-		  <Route path="/browse" component={Browse} />
-		  <Route exact path="/messages" component={MessagesIndex} />
-		  <Route path="/messages/:uid" component={Messages} />
+			<Router>
+				<Switch>
+					<Route exact path="/login" component={Login} />
+					<Route exact path="/logout" component={Logout} />
+					<Route exact path="/signup" component={Signup} />
+					<PrivateRoute exact path="/browse" component={Browse} />
+					<PrivateRoute path="/messages/:uid" component={Messages} />
+					<PrivateRoute exact path="/messages" component={MessagesIndex} />
+					<Route exact path="/" component={Start} />
+				</Switch>
+			</Router>
 		</div>
-	  </Router>
 	</ApolloProvider>
   );
 }
