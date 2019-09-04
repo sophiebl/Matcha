@@ -1,18 +1,26 @@
-import express from 'express';
 import schema  from './graphql/schema.js';
 import { v1 as neo4j }  from 'neo4j-driver';
 import { ApolloServer } from 'apollo-server';
 import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken';
 
 dotenv.config()
 
 const driver = neo4j.driver('bolt://db:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
-const app    = express();
 
 var corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true
 };
+
+const tamere = () => {
+  if (!req.headers.authorization || req.headers.authorization == '')
+    return null;
+  jwt.verify(req.headers.authorization, process.env.JWT_SECRET, function(err, decoded) {
+    return decoded;
+  });
+  return null;
+}
 
 const apolloServer = new ApolloServer({
   schema,
@@ -20,7 +28,17 @@ const apolloServer = new ApolloServer({
   context: ({ req }) => ({
     driver,
     req,
-    token: req.headers.authorization || '',
+    headers: req.headers,
+    token: (req.headers.authorization && req.headers.authorization.slice(7)) || '',
+    cypherParams: {
+      currentUserUid: jwt.verify((req.headers.authorization && req.headers.authorization.slice(7)), process.env.JWT_SECRET, function(err, decoded) {
+        console.log(err);
+        console.log(decoded);
+        if (!decoded)
+          return null;
+        return decoded.uid;
+      }),
+    }
   }),
   playground: {
     settings: {

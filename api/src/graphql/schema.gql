@@ -1,4 +1,4 @@
-type User {
+type User @isAuthenticated {
 	uid: ID!
 	firstname: String!
 	lastname: String!
@@ -20,29 +20,33 @@ type User {
     conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
 }
 
-type Tag {
+type Tag @isAuthenticated {
 	uid: ID!
 	name: String!
 }
 
-type Conversation {
+type Conversation @isAuthenticated {
     uid: ID!
     lastMessage: Message @cypher(statement: "MATCH (this)-[:HAS_MSG]-(msgs:Message) RETURN msgs")
     messages: [Message] @relation(name: "HAS_MSG", direction: "OUT")
     members: [User] @relation(name: "HAS_CONV", direction: "IN")
 }
 
-type Message {
+type Message @isAuthenticated {
 	uid: ID!
     author: User @relation(name: "AUTHORED", direction: "IN")
 	content: String!
 }
 
-type Blocked @relation(name: "BLOCKED") {
+type Blocked @isAuthenticated @relation(name: "BLOCKED") {
     uid: ID!
     from: User!
     to: User!
     at: String!
+}
+
+type Query {
+	me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
 }
 
 type Mutation {

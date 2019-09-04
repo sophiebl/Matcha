@@ -3,8 +3,8 @@ import fs, { exists } from 'fs';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
-import crypto from 'crypto-js/core'
-import PBKDF2 from 'crypto-js/pbkdf2'
+//import crypto from 'crypto-js/core'
+//import PBKDF2 from 'crypto-js/pbkdf2'
 import SHA256 from 'crypto-js/sha256'
 
 import { v1 as neo4j }  from 'neo4j-driver';
@@ -12,6 +12,10 @@ const driver = neo4j.driver('bolt://db', neo4j.auth.basic('neo4j', 'matcha'))
 const session = driver.session();
 
 const resolvers = {
+	Query: {
+		
+  },
+  
   Mutation: {
 	async signup (_, { firstname, email, username, password }) {
 	  const uid = uniqid('user-');
@@ -31,9 +35,6 @@ const resolvers = {
 	},
 
 	async login (_, { username, password }) {
-		//const user = await User.findOne({ where: { username } })
-		//const user = await session.run(`MATCH (u:User {username: $username}) RETURN u`, {username});
-		//console.log(user);
 		const hash = await SHA256(password, 'salt').toString();
 		console.log('Back');
 		return await session.run(`MATCH (u:User {username: $username}) RETURN u`,
@@ -43,11 +44,10 @@ const resolvers = {
 				if (!user) {
 					throw new Error('No user with that username')
 				}
-				console.log(user.password);
 				if (hash !== user.password)
 					throw new Error('Incorrect password')
 			  	return jwt.sign(
-					{ id: user.id },
+					{ uid: user.uid },
 					process.env.JWT_SECRET,
 					{ expiresIn: '1d' }
 				)
@@ -57,5 +57,13 @@ const resolvers = {
 };
 
 const typeDefs = fs.readFileSync('/usr/src/src/graphql/schema.gql', 'utf8');
-const schema = makeAugmentedSchema({ typeDefs, resolvers });
+const schema = makeAugmentedSchema({
+  typeDefs,
+  resolvers,
+  config: {
+    auth: {
+      isAuthenticated: true,
+    }
+  }
+});
 export default schema
