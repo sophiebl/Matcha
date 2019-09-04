@@ -6,6 +6,7 @@ import Login from './components/login/Login';
 import Logout from './components/login/Logout';
 import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
+import Profile from './components/profile/Profile';
 import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
 import PrivateRoute from './components/PrivateRoute';
@@ -66,6 +67,7 @@ const App = () => {
 					<Route exact path="/logout" component={Logout} />
 					<Route exact path="/signup" component={Signup} />
 					<PrivateRoute exact path="/browse" component={Browse} />
+					<PrivateRoute exact path="/profile" component={Profile} />
 					<PrivateRoute path="/messages/:uid" component={Messages} />
 					<PrivateRoute exact path="/messages" component={MessagesIndex} />
 					<Route exact path="/" component={Start} />
