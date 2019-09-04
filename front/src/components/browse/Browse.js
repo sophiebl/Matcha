@@ -28,7 +28,7 @@ const Browse = () => {
 
     return (
         <div className="browse">
-           { data.User.map((user) => <InfosContainer user={user}/> ) }
+           { data.User.map((user) => <InfosContainer key={user.uid} user={user}/> ) }
         </div>
     );
 }
