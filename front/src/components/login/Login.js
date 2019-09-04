@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
@@ -9,7 +10,7 @@ const LOGIN = gql`
     }
 `;
 
-const Login = () => {
+const Login = withRouter(({history, ...props}) => {
     const { register, handleSubmit, errors } = useForm();
     //console.log(register);
     //console.log(handleSubmit);
@@ -19,6 +20,10 @@ const Login = () => {
             onCompleted: (data) => {
                 console.log(data.login);
                 localStorage.setItem('token', data.login);
+                history.push("/browse");
+            },
+            onError: (data) => {
+                console.log(data);
             }
         });
     const onSubmit = inputs => {
@@ -41,6 +46,6 @@ const Login = () => {
             <button>Login</button>
         </form>
     )
-}
+});
 
 export default Login;
