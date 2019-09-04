@@ -6,7 +6,6 @@ import Login from './components/login/Login';
 import Logout from './components/login/Logout';
 import Signup from './components/signup/Signup';
 import Browse from './components/browse/Browse';
-import TestQL from './components/TestQL';
 import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
 
@@ -66,7 +65,6 @@ const App = () => {
 			<Route path="/logout" component={Logout} />
 		  <Route path="/signup" component={Signup} />
 		  <Route path="/browse" component={Browse} />
-		  <Route path="/testql" component={TestQL} />
 		  <Route exact path="/messages" component={MessagesIndex} />
 		  <Route path="/messages/:uid" component={Messages} />
 		</div>
