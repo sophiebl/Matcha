@@ -13,7 +13,7 @@ const Nav = () => {
 			<a href="/messages" classsName="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'comment-alt']} />
             </a>
-			<a href="/" classsName="link">
+			<a href="/profile" classsName="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'user']} />
             </a>
         </div>
