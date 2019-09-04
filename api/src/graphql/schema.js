@@ -36,7 +36,6 @@ const resolvers = {
 
 	async login (_, { username, password }) {
 		const hash = await SHA256(password, 'salt').toString();
-		console.log('Back');
 		return await session.run(`MATCH (u:User {username: $username}) RETURN u`,
 			{username})
 			.then(result => {

@@ -12,22 +12,19 @@ const LOGIN = gql`
 
 const Login = withRouter(({history, ...props}) => {
     const { register, handleSubmit, errors } = useForm();
-    //console.log(register);
-    //console.log(handleSubmit);
-    //console.log(errors);
     const [login] = useMutation(LOGIN,
         {
             onCompleted: (data) => {
                 console.log(data.login);
                 localStorage.setItem('token', data.login);
                 history.push("/browse");
+                console.log(history);
             },
             onError: (data) => {
                 console.log(data);
             }
         });
     const onSubmit = inputs => {
-        //console.log(inputs);
         login({
             variables: {
                 username: inputs.username,

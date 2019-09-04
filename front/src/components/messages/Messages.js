@@ -4,8 +4,18 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import jwt_decode from 'jwt-decode';
 
-const myuid = 'user-lnrhdyok00z5pku'; //TODO: Use real current user id
+const getId = () => {
+	try {
+		return jwt_decode(localStorage.getItem('token')).uid
+	}
+	catch(error) {
+		return null;
+	}
+}
+const myuid = (getId());
+
 const GET_CONV = gql`
 	query Conversation($uid: ID) {
 	  Conversation(uid: $uid) {

@@ -13,15 +13,6 @@ var corsOptions = {
     credentials: true
 };
 
-const tamere = () => {
-  if (!req.headers.authorization || req.headers.authorization == '')
-    return null;
-  jwt.verify(req.headers.authorization, process.env.JWT_SECRET, function(err, decoded) {
-    return decoded;
-  });
-  return null;
-}
-
 const apolloServer = new ApolloServer({
   schema,
   cors: corsOptions,
@@ -32,8 +23,6 @@ const apolloServer = new ApolloServer({
     token: (req.headers.authorization && req.headers.authorization.slice(7)) || '',
     cypherParams: {
       currentUserUid: jwt.verify((req.headers.authorization && req.headers.authorization.slice(7)), process.env.JWT_SECRET, function(err, decoded) {
-        console.log(err);
-        console.log(decoded);
         if (!decoded)
           return null;
         return decoded.uid;
@@ -48,5 +37,5 @@ const apolloServer = new ApolloServer({
 });
 
 apolloServer.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+  console.log(`Server ready at ${url}`);
 });
