@@ -8,22 +8,8 @@ import Nav from '../Nav';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 
-const InfosContainer =  () => {
-	const { loading, error, data } = useQuery(gql`
-		{
-			User {
-				uid
-				firstname
-				lastname
-				likesCount
-				prefRadius
-				tags{
-					name
-					uid
-				}
-			}
-		}
-	`);
+const InfosContainer = (props) => {
+	
     //const [users, setUsers] = useState([]);
     /*
     useEffect(() => {
@@ -35,8 +21,6 @@ const InfosContainer =  () => {
         console.log(data.Users);
     }, [users, setUsers, loading, data.Users]);*/
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error </p>;
 /*
     const HandleDelete = idUser => {
         const updatedUsers = [...data.Users];
@@ -50,7 +34,10 @@ const InfosContainer =  () => {
     }
    // console.log(data.Users);
 */
-    return data.User.map(({ id, firstname, lastname, tags, likesCount, prefRadius }) => (
+
+    const { id, firstname, lastname, tags, likesCount, prefRadius } = props.user;
+
+    return (
         <div className="infos-container" key={id}>
             <div>
                 <MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius}/>
@@ -62,7 +49,7 @@ const InfosContainer =  () => {
                 <Nav/>
             </div>
         </div>
-    ));
+    );
 }
 
 export default InfosContainer;
