@@ -4,17 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import jwt_decode from 'jwt-decode';
-
-const getId = () => {
-	try {
-		return jwt_decode(localStorage.getItem('token')).uid
-	}
-	catch(error) {
-		return null;
-	}
-}
-const myuid = (getId());
+import { getCurrentUid } from '../../Helpers';
 
 const GET_CONV = gql`
 	query Conversation($uid: ID) {
@@ -38,7 +28,7 @@ const GET_CONV = gql`
 const Chat = ({ conv }) => {
   const messages = conv.messages.map(({author, content}) => (
 	new ChatMessage({
-	  id: (author.uid !== myuid) >>> 0,
+	  id: (author.uid !== getCurrentUid()) >>> 0,
 	  message: content,
 	})
   ));
@@ -76,7 +66,7 @@ const Messages = ({ match }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const members = data.Conversation[0].members.filter(m => (m.uid !== myuid)).map(m => m.firstname).join(', ');
+  const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.firstname).join(', ');
 
   return (
 	<div>
