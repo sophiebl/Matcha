@@ -1,10 +1,7 @@
 import express from 'express';
-import cors    from 'cors';
 import schema  from './graphql/schema.js';
-import routes  from './routes.js';
 import { v1 as neo4j }  from 'neo4j-driver';
-import { ApolloServer } from 'apollo-server-express';
-import bodyParser from 'body-parser';
+import { ApolloServer } from 'apollo-server';
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -17,19 +14,21 @@ var corsOptions = {
     credentials: true
 };
 
-routes.setRoutes(app);
-app.use(bodyParser.json());
-app.use(cors(corsOptions));
-
 const apolloServer = new ApolloServer({
   schema,
   cors: corsOptions,
   context: ({ req }) => ({
     driver,
+    req,
     token: req.headers.authorization || '',
   }),
-  playground: true
+  playground: {
+    settings: {
+      'request.credentials': 'include',
+    },
+  },
 });
-apolloServer.applyMiddleware({ app, path: '/', cors: false });
 
-app.listen(4000, () => console.log("GraphQL API started on localhost:4000/graphql"));
+apolloServer.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
