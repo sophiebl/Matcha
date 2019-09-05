@@ -18,7 +18,6 @@ const Login = withRouter(({history, ...props}) => {
                 console.log(data.login);
                 localStorage.setItem('token', data.login);
                 history.push("/browse");
-                console.log(history);
             },
             onError: (data) => {
                 console.log(data);
