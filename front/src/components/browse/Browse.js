@@ -1,8 +1,7 @@
-import React from 'react';
-import InfosContainer from '../userInfo/InfosContainer';
-
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
+import React, { useEffect, useReducer } from 'react';
+import InfosContainer from '../userInfo/InfosContainer';
 
 const GET_USERS = gql`
 {
@@ -21,16 +20,41 @@ const GET_USERS = gql`
 `;
 
 const Browse = () => {
-    const { loading, error, data } = useQuery(GET_USERS);
+  const { loading, error, data } = useQuery(GET_USERS);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error </p>;
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'dislike':
+        return { user: data.User.shift() };
+      case 'reset':
+        return { user: action.payload };
+      default:
+        throw new Error();
+    }
+  }
+  const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 
-    return (
-        <div className="browse">
-           { data.User.map((user) => <InfosContainer key={user.uid} user={user}/> ) }
-        </div>
-    );
+  useEffect(() => {
+    const onCompleted = (data) => dispatch({ type: 'reset', payload: data.User.shift() });
+    const onError = (error) => console.log(error);
+    if (onCompleted || onError)
+      if (onCompleted && !loading && !error)
+        onCompleted(data);
+      else if (onError && !loading && error)
+        onError(error);
+  }, [loading, data, error]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error </p>;
+
+  return state.user == null ?
+    (
+      <p>Plus personne, reviens plus tard !</p>
+    ) : (
+      <div className="browse">
+          <InfosContainer key={state.user.uid} user={state.user} dispatch={dispatch} />
+      </div>
+    )
 }
 
 export default Browse;
