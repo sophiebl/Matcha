@@ -12,17 +12,13 @@ const SIGNUP = gql`
 
 const Signup = () => {
   const { register, handleSubmit, errors } = useForm();
-  console.log(register);
-  console.log(handleSubmit);
   const [signup] = useMutation(SIGNUP,
 	{
 	  onCompleted: (data) => {
-		console.log(data.signup);
 		localStorage.setItem('token', data.signup);
 	  }
 	});
   const onSubmit = inputs => {
-	console.log(inputs);
 	signup({
 	  variables: {
 		firstname: inputs.firstname,
