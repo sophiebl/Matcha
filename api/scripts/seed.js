@@ -24,9 +24,10 @@ DETACH DELETE (a)
 const CREATE_USER = `
 CREATE (:User {
   uid: $uuid,
-  firstname: '{{name.firstName}}',
+  firstname: $firstname,
   lastname: '{{name.lastName}}',
   email: '{{internet.email}}',
+  username: $firstname,
   password: $hash,
   birthdate: '{{date.past}}',
   gender: $gender,
@@ -84,6 +85,8 @@ RETURN u1, u2, conv, msg1, msg2
 async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
 	const uuid = uniqid('user-');
+	const firstname = faker.name.firstName();
+	const username = firstname;
 	//const hash = await SHA256(faker.internet.password, 'salt').toString();
 	const hash = await SHA256('password', 'salt').toString();
 	const gender = faker.random.arrayElement(['homme', 'femme']);
@@ -92,7 +95,7 @@ async function users(amount = 1) {
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
 	const prefRadius = faker.random.number({min: 2, max: 250});
 
-	await session.run(faker.fake(CREATE_USER), {uuid, hash, gender, elo, prefAge, prefOrientation, prefRadius});
+	await session.run(faker.fake(CREATE_USER), {uuid, firstname, username, hash, gender, elo, prefAge, prefOrientation, prefRadius});
   }
 }
 
