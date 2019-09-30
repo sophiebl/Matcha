@@ -9,7 +9,7 @@ import Browse from './components/browse/Browse';
 import Profile from './components/profile/Profile';
 import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
-import Settings from './components/profile/Settings';
+import Preferences from './components/profile/Preferences';
 import PrivateRoute from './components/PrivateRoute';
 //import Nav from "./components/Nav";
 
@@ -72,7 +72,7 @@ const App = () => {
 						<PrivateRoute exact path="/profile" component={Profile} />
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
-						<PrivateRoute exact path="/settings" component={Settings} />
+						<PrivateRoute exact path="/preferences" component={Preferences} />
 						<Route exact path="/" component={Start} />
 					</Switch>
 				</Router>
