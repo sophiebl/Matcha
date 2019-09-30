@@ -28,7 +28,7 @@ const GET_CONV = gql`
 const Chat = ({ conv }) => {
   const messages = conv.messages.map(({author, content}) => (
 	new ChatMessage({
-	  id: (author.uid !== getCurrentUid()) >>> 0,
+	  id: (author.uid === getCurrentUid()) >>> 0,
 	  message: content,
 	})
   ));
