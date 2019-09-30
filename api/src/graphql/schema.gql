@@ -27,7 +27,7 @@ type Tag @isAuthenticated {
 
 type Conversation @isAuthenticated {
     uid: ID!
-    lastMessage: Message @cypher(statement: "MATCH (this)-[:HAS_MSG]-(msgs:Message) RETURN msgs ORDER BY m.uid DESC LIMIT 1")
+    lastMessage: Message @cypher(statement: "MATCH (this)-[:HAS_MSG]-(msgs:Message) RETURN msgs ORDER BY msgs.uid DESC LIMIT 1")
     messages: [Message] @relation(name: "HAS_MSG", direction: "OUT")
     members: [User] @relation(name: "HAS_CONV", direction: "IN")
 }
