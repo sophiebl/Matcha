@@ -13,7 +13,7 @@ const session = driver.session();
 
 /* -----[ Faker config ]----- */
 faker.locale = 'fr';
-faker.seed(42);
+//faker.seed(42);
 
 /* -----[ Queries ]----- */
 const RESET = `
