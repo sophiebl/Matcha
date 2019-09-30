@@ -11,6 +11,7 @@ import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
 import Settings from './components/profile/Settings';
 import PrivateRoute from './components/PrivateRoute';
+//import Nav from "./components/Nav";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
@@ -59,25 +60,26 @@ const client = new ApolloClient({
 });
 
 const App = () => {
-  return (
-	<ApolloProvider client={client}>
-		<div className="App">
-			<Router>
-				<Switch>
-					<Route exact path="/login" component={Login} />
-					<Route exact path="/logout" component={Logout} />
-					<Route exact path="/signup" component={Signup} />
-					<PrivateRoute exact path="/browse" component={Browse} />
-					<PrivateRoute exact path="/profile" component={Profile} />
-					<PrivateRoute path="/messages/:uid" component={Messages} />
-					<PrivateRoute exact path="/messages" component={MessagesIndex} />
-					<PrivateRoute exact path="/settings" component={Settings} />
-					<Route exact path="/" component={Start} />
-				</Switch>
-			</Router>
-		</div>
-	</ApolloProvider>
-  );
+  return <>
+		<ApolloProvider client={client}>
+			<div className="App">
+				<Router>
+					<Switch>
+						<Route exact path="/login" component={Login} />
+						<Route exact path="/logout" component={Logout} />
+						<Route exact path="/signup" component={Signup} />
+						<PrivateRoute exact path="/browse" component={Browse} />
+						<PrivateRoute exact path="/profile" component={Profile} />
+						<PrivateRoute path="/messages/:uid" component={Messages} />
+						<PrivateRoute exact path="/messages" component={MessagesIndex} />
+						<PrivateRoute exact path="/settings" component={Settings} />
+						<Route exact path="/" component={Start} />
+					</Switch>
+				</Router>
+			</div>
+		</ApolloProvider>
+		{/*<Nav/>*/}
+	</>
 }
 
 export default App;

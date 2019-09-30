@@ -3,7 +3,6 @@ import MainInfos from './MainInfos';
 import Bio from './Bio';
 import Tag from './Tag';
 import LikeDislike from './LikeDislike';
-import Nav from '../Nav';
 
 
 const InfosContainer = (props) => {
@@ -18,7 +17,6 @@ const InfosContainer = (props) => {
           {tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />)}
         </div>
         <LikeDislike uidUser={uid} dispatch={props.dispatch} />
-        <Nav />
       </div>
     </div>
   );
