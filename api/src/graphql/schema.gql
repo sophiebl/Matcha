@@ -10,9 +10,10 @@ type User @isAuthenticated {
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
 	elo: Int!
-	prefAge: Int
+	prefAgeMin: Int
+	prefAgeMax: Int
 	prefOrientation: String
-	prefRadius: Int
+	prefDistance: Int
 	confirmToken: String!
 	resetToken: String!
 	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
