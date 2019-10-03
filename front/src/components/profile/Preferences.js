@@ -83,13 +83,13 @@ const Preferences = () => {
 
     const wrapperStyle = { width: '80%', margin: 30 };
 
-    const Checkbox = ({ label, isSelected, onCheckboxChange }) => (
+    const Radio = ({ name, label, isSelected, onCheckboxChange }) => (
         <div className="form-check">
             <label>
                 <input
-                    type="checkbox"
-                    name={label}
-                    checked={isSelected}
+                    type="radio"
+                    name={name}
+                    defaultChecked={isSelected}
                     onChange={onCheckboxChange}
                     className="form-check-input"
                 />
@@ -105,16 +105,16 @@ const Preferences = () => {
         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
             <div>
                 <h4>Vous etes</h4>
-                <Checkbox label="Homme">Homme</Checkbox>
-                <Checkbox label="Femme">Femme</Checkbox>
-                <Checkbox label="Non binaire">Non binaire</Checkbox>
+                <Radio name="gender" label="Homme">Homme</Radio>
+                <Radio name="gender" label="Femme">Femme</Radio>
+                <Radio name="gender" label="Non binaire">Non binaire</Radio>
             </div>
             <div style={{width: '15px'}}> </div>
             <div>
                 <h4>Vous cherchez</h4>
-                <Checkbox label="Homme">Homme</Checkbox>
-                <Checkbox label="Femme">Femme</Checkbox>
-                <Checkbox label="Non binaire">Non binaire</Checkbox>
+                <Radio name="orientation" label="Homme">Homme</Radio>
+                <Radio name="orientation" label="Femme">Femme</Radio>
+                <Radio name="orientation" label="Non binaire">Non binaire</Radio>
             </div>
         </div>
 
