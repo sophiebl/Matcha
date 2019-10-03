@@ -11,7 +11,7 @@ const GET_USERS = gql`
         firstname
         lastname
         likesCount
-        prefRadius
+        prefDistance
         tags {
             uid
             name

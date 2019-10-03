@@ -12,7 +12,7 @@ const ME = gql`
             firstname
             lastname
             likesCount
-            prefRadius
+            prefDistance
             tags {
                 uid
                 name
