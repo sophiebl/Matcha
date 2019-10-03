@@ -24,6 +24,7 @@ DETACH DELETE (a)
 const CREATE_USER = `
 CREATE (:User {
   uid: $uuid,
+  username: $firstname
   firstname: $firstname,
   lastname: '{{name.lastName}}',
   email: '{{internet.email}}',
