@@ -34,9 +34,10 @@ CREATE (:User {
   gender: $gender,
   bio: '{{lorem.sentence}}',
   elo: $elo,
-  prefAge: $prefAge,
+  prefAgeMin: $prefAgeMin,
+  prefAgeMax: $prefAgeMax,
   prefOrientation: $prefOrientation,
-  prefRadius: $prefRadius,
+  prefDistance: $prefRadius,
   confirmToken: 'null',
   resetToken: 'null'
 })`;
@@ -92,11 +93,12 @@ async function users(amount = 1) {
 	const hash = await SHA256('password', 'salt').toString();
 	const gender = faker.random.arrayElement(['homme', 'femme']);
 	const elo = faker.random.number({min: 0, max: 100});
-	const prefAge = faker.random.number({min: 18, max: 100});
+	const prefAgeMin = faker.random.number({min: 18, max: 100});
+	const prefAgeMax = prefAgeMin + 10;
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
-	const prefRadius = faker.random.number({min: 2, max: 250});
+	const prefDistance = faker.random.number({min: 5, max: 200});
 
-	await session.run(faker.fake(CREATE_USER), {uuid, firstname, username, hash, gender, elo, prefAge, prefOrientation, prefRadius});
+	await session.run(faker.fake(CREATE_USER), {uuid, firstname, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance});
   }
 }
 
