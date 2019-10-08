@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Slider, { Range } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
@@ -124,6 +127,7 @@ const Preferences = () => {
 
 	return (
 		<div className="settings">
+			<Link to="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="3x" icon="times" /></Link>
 			<h2>Preferences</h2>
 
 			<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
