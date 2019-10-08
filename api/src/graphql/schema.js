@@ -36,7 +36,7 @@ const resolvers = {
 
 	async login (_, { username, password }) {
 		const hash = await SHA256(password, 'salt').toString();
-		return await session.run(`MATCH (u:User {username: $username}) RETURN u`,
+		return await session.run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`,
 			{username})
 			.then(result => {
 				const user = result.records[0].get('u').properties;
