@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Tag = (props) => {
+const Tag = ({ tagName }) => {
     return (
         <span className="tag">
            <span className="tagImg"></span> 
-           {props.tagName}
+           {tagName}
         </span>
     );
 }
