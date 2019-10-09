@@ -50,9 +50,9 @@ const resolvers = {
 					process.env.JWT_SECRET,
 					{ expiresIn: '1d' }
 				)
-		});	
-	}
-  }
+			});	
+		}
+  	}
 };
 
 const typeDefs = fs.readFileSync('/usr/src/src/graphql/schema.gql', 'utf8');
