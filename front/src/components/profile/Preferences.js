@@ -14,6 +14,7 @@ const ME = gql`
 		{
 			me {
 				uid
+				bio
 				gender
 				prefAgeMin
 				prefAgeMax
@@ -24,9 +25,10 @@ const ME = gql`
 `;
 
 const EDIT_PREFERENCES = gql`
-	mutation UpdateUser($uid: ID!, $gender: String!, $prefAgeMin: Int!, $prefAgeMax: Int!, $prefOrientation: String!, $prefDistance: Int!) {
-		UpdateUser(uid: $uid, gender: $gender, prefAgeMin: $prefAgeMin, prefAgeMax: $prefAgeMax, prefOrientation: $prefOrientation, prefDistance: $prefDistance) {
+	mutation UpdateUser($uid: ID!, $bio: String!, $gender: String!, $prefAgeMin: Int!, $prefAgeMax: Int!, $prefOrientation: String!, $prefDistance: Int!) {
+		UpdateUser(uid: $uid, bio: $bio, gender: $gender, prefAgeMin: $prefAgeMin, prefAgeMax: $prefAgeMax, prefOrientation: $prefOrientation, prefDistance: $prefDistance) {
 			uid
+			bio
 			gender
 			prefAgeMin
 			prefAgeMax
@@ -109,6 +111,13 @@ const Preferences = () => {
 		});
 	}
 
+	const onTextareaChange = (event) => {
+		setState({
+			...state,
+			bio: event.target.value,
+		});	
+	}
+
 	const { loading, error, data } = useQuery(ME);
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
@@ -117,6 +126,7 @@ const Preferences = () => {
 		setState({
 			...state,
 			first: false,
+			bio: data.me.bio,
 			gender: data.me.gender,
 			prefOrientation: data.me.prefOrientation,
 			prefAgeMin: data.me.prefAgeMin,
@@ -155,9 +165,14 @@ const Preferences = () => {
 				<Range min={18} max={80} defaultValue={[state['prefAgeMin'], state['prefAgeMax']]} pushable={1} handle={ageHandle} onChange={onRangerChange}/>
 			</div>
 
+			<label>Bio</label>
+			<br/>
+			<textarea placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
+
 			<button onClick={() => editPreferences({
 				variables: {
 					uid: data.me.uid,
+					bio: state['bio'],
 					gender: state['gender'],
 					prefAgeMin: state['prefAgeMin'],
 					prefAgeMax: state['prefAgeMax'],

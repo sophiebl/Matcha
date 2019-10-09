@@ -9,6 +9,8 @@ const ME = gql`
     {
         me {
             uid
+					  bio
+					  gender
             firstname
             lastname
             likesCount

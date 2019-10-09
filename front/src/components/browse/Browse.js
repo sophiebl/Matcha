@@ -8,6 +8,8 @@ const GET_USERS = gql`
 {
     User {
         uid
+				bio
+			  gender
         firstname
         lastname
         likesCount
