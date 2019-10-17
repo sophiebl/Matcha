@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import Chips, { Chip } from 'react-chips';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Slider, { Range } from 'rc-slider';
@@ -72,7 +74,15 @@ const Preferences = () => {
 		);
 	};
 
-	const [state, setState] = useState({ first: true, gender: null, prefOrientation: null, prefAgeMin: 18, prefAgeMax: 25, prefDistance: 25});
+	const [state, setState] = useState({
+		first: true,
+		gender: null,
+		prefOrientation: null,
+		prefAgeMin: 18,
+		prefAgeMax: 25,
+		prefDistance: 25,
+		chips: [],
+	});
 
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
 		onCompleted: (data) => {
@@ -132,6 +142,7 @@ const Preferences = () => {
 			prefAgeMin: data.me.prefAgeMin,
 			prefAgeMax: data.me.prefAgeMax,
 			prefDistance: data.me.prefDistance,
+			chips: [],
 		});
 	}
 
@@ -169,6 +180,12 @@ const Preferences = () => {
 			<br/>
 			<textarea placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
 
+			<Chips
+				value={state['chips']}
+				onChange={(chips) => setState({ ...state, chips: chips })}
+				suggestions={["Sport", "Musique", "Dessin", "Art", "Nature", "Cinema", "Technologie", "Cosplay", "Science-fiction"]}
+			/>
+
 			<button onClick={() => editPreferences({
 				variables: {
 					uid: data.me.uid,
@@ -180,6 +197,7 @@ const Preferences = () => {
 					prefDistance: state['prefDistance'],
 				}
 			})}>Enregistrer</button>
+
 			</div>
 	);
 }
