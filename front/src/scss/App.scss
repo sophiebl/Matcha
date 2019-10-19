@@ -203,7 +203,7 @@ input {
   padding: 5px 10px;
   border: 2px solid #2196F3;
   border-radius: 3px;
-  color: #fff; 
+  //color: #fff; 
   background-color: transparent;
 }
 
@@ -315,6 +315,7 @@ User tag
   position: relative;
   min-width: 80px;
   min-height: 29px;
+	max-height: 35px;
   padding: 10px 16px 4px 45px;
   margin: 5px 2px;
   background-color: #03dac61f;
