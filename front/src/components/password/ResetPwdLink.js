@@ -10,20 +10,19 @@ const PWD_RESET = gql`
   }
 `;
 
-const ResetPwdLink = () => {
-//const ResetPwdLink = withRouter(({history, ...props}) => {
+//const ResetPwdLink = () => {
+const ResetPwdLink = withRouter(({history, ...props}) => {
   const { resetPwdLink, handleSubmit, errors } = useForm();
   const [pwdReset] = useMutation(PWD_RESET,
-      {
-        onCompleted: (data) => {
-		      localStorage.setItem('token', data.signup);
-          console.log(data);
-        },
-        onError: (data) => {
-          console.log(data);
-          console.log('Votre email n\'a PASSSSS ete envoye');
-        }
-      });
+  {
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: (data) => {
+      console.log(data);
+      console.log('Votre email n\'a PASSSSS ete envoye');
+    }
+  });
   const onSubmit = inputs => {
     pwdReset({
         variables: {
@@ -39,7 +38,6 @@ const ResetPwdLink = () => {
       <button>Reset password</button>
     </form>
   )
-//});
-}
+});
 
 export default ResetPwdLink;

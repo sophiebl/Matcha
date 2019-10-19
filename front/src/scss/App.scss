@@ -20,7 +20,7 @@ body {
 
 $f-base : 1.3em;
 $f-m : 1.2em;
-$f-l : 1.6em;
+$f-l : 1.5em;
 $f-xxl : 7em;
 
 .f-base {font-size: $f-base;}
@@ -28,7 +28,7 @@ $f-xxl : 7em;
 .f-s {font-size: 0.9em;}
 .f-m {font-size: 1.2em;}
 .f-l {font-size: $f-l;}
-.f-xl {font-size: 1.5em;}
+.f-xl {font-size: 1.6em;}
 .f-xxl {font-size: $f-xxl;}
 
 $semi-b : 600;
@@ -94,6 +94,30 @@ a {
     display: inline-block;
     vertical-align: baseline;
     width: 25%;
+  }
+}
+
+/* Banner */
+.banner{
+  width: 90%;
+  height: auto;
+  margin: 0 auto;
+  padding: 5px;
+  background-color: $blue-green;
+  color: $white;
+  border-radius: 5px;
+  font-weight: $semi-b;
+  font-size: 1.1em;
+  animation-duration: 3s;
+  animation-name: appear;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0; 
+  }
+  to {
+    opacity: 1; 
   }
 }
 

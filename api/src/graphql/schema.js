@@ -87,7 +87,7 @@ const resolvers = {
 		});*/
 		console.log('before querie');
 
-		return await session.run(`MATCH (u:User {email: $email, confirmToken: 'true'}) RETURN u`,
+		return await session.run(`MATCH (u:User {email: $email}) RETURN u`,
 		{email})
 		.then(result => {
 			const user = result.records[0].get('u').properties;
