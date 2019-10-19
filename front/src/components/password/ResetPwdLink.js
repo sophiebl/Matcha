@@ -1,8 +1,8 @@
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
-import { withRouter } from "react-router-dom";
 
 const PWD_RESET = gql`
   mutation pwdReset($email: String!) {
@@ -10,24 +10,21 @@ const PWD_RESET = gql`
   }
 `;
 
-//const ResetPwdLink = () => {
 const ResetPwdLink = withRouter(({history, ...props}) => {
   const { register, handleSubmit, errors } = useForm();
   const [pwdReset] = useMutation(PWD_RESET,
   {
-    onCompleted: (data) => {
-      console.log(data);
-    },
-    onError: (data) => {
-      console.log(data);
-      console.log('Votre email n\'a PASSSSS ete envoye');
-    }
+		onCompleted: data => {
+			console.log(data);
+			//history.push("/");
+		},
+    onError: data => console.log("Votre email n'a PAS ete envoye. Data: " + data),
   });
   const onSubmit = inputs => {
     pwdReset({
-        variables: {
-            email: inputs.email,
-        }
+      variables: {
+        email: inputs.email,
+      }
     });
   };
 
