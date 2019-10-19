@@ -1,6 +1,5 @@
-import React,  { useEffect } from 'react';
+import React from 'react';
 import useForm from 'react-hook-form';
-import { withRouter } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 

@@ -2,6 +2,7 @@ import { makeAugmentedSchema } from 'neo4j-graphql-js';
 import fs, { exists } from 'fs';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
+import sendmail from 'sendmail';
 
 //import crypto from 'crypto-js/core'
 //import PBKDF2 from 'crypto-js/pbkdf2'
@@ -17,14 +18,14 @@ const resolvers = {
   },
 
   Mutation: {
-	async signup (_, { firstname, email, username, password }) {
+	async signup (_, { firstname, lastname, username, email, password }) {
 		const uid = uniqid('user-');
 		//const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
 		const hash = await SHA256(password, 'salt').toString();
 		const emailToken = Math.random() * 10;
 		const url = `http://localhost:3000/verification/${emailToken}/${uid}`;
 
-		const sendmail = require('sendmail')();
+		//const sendmail = require('sendmail')();
 		
 		sendmail({
 			from: 'sophieboulaaouli@gmail.com',
@@ -36,8 +37,8 @@ const resolvers = {
 			console.dir(reply);
 		});
 
-		return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, username: $username, email: $email, password: $hash, confirmToken: $emailToken}) RETURN u`,
-		{uid, firstname, email, username, hash, emailToken})
+		return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $emailToken}) RETURN u`,
+		{uid, firstname, lastname, username, email, hash, emailToken})
 		.then(result => {
 			const user = result.records[0].get('u').properties;
 			return jwt.sign(
