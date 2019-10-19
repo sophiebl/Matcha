@@ -8,18 +8,17 @@ const PWD_RESET = gql`
     emailverif(uid: $uid, confirmToken: $confirmToken)
   }
 `;
+
 const passwordReset = withRouter(({history, ...props}) => {
-// const EmailVerification = () => {
   console.log(props);
   const [pwdReset] = useMutation(PWD_RESET,
       {
-        onCompleted: (data) => {
+        onCompleted: data => {
           console.log(data);
           history.push("/login");
         },
-        onError: (data) => {
+        onError: data => {
           console.log(data);
-          history.push("/login");
         }
       }
     )
