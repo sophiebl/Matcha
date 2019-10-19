@@ -12,7 +12,7 @@ const PWD_RESET = gql`
 
 //const ResetPwdLink = () => {
 const ResetPwdLink = withRouter(({history, ...props}) => {
-  const { resetPwdLink, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const [pwdReset] = useMutation(PWD_RESET,
   {
     onCompleted: (data) => {
@@ -33,7 +33,7 @@ const ResetPwdLink = withRouter(({history, ...props}) => {
 
   return (
     <form method="POST" className="resetPwdLink bg-desc" onSubmit={handleSubmit(onSubmit)}>
-	    <input type="text" name="email" placeholder="Email" ref={resetPwdLink} required/>
+	    <input type="text" name="email" placeholder="Email" ref={register({ required: true })} required/>
       {errors.email && 'Email is required.'}
       <button>Reset password</button>
     </form>

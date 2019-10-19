@@ -38,7 +38,6 @@ const resolvers = {
 		const emailToken = Math.random() * 10;
 		const url = `http://localhost:3000/verification/${emailToken}/${uid}`;
 
-		
 		var mailOptions = {
 			from: process.env.MAIL_USER,
 			to: email,
@@ -80,28 +79,27 @@ const resolvers = {
 				)
 			});
 		}
-	}, 
+	},
 	async pwdReset(_, { email }) {
-	/*	console.log('email');
-		console.log(email);
 		const uid = uniqid('user-');
 		//const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
-//		const hash = await SHA256(password, 'salt').toString();
+		//const hash = await SHA256(password, 'salt').toString();
 		const pwdToken = Math.random() * 10;
 		const url = `http://localhost:3000/verification/${pwdToken}`;
 
-		const sendmail = require('sendmail')();
-		
-		sendmail({
-		  from: 'sophieboulaaouli@gmail.com',
-		  to: email,
-		  subject: 'Forgot password',
-		  html: `Click here to reset your password : <a href="${url}">${url}</a>`,
-		}, function(err, reply) {
-		  console.log(err && err.stack);
-		  console.dir(reply);
-		});*/
-		console.log('before querie');
+		var mailOptions = {
+			from: process.env.MAIL_USER,
+			to: email,
+			subject: 'Matcha | Reset your password',
+			text: `Click here to reset your password : ${url}`,
+			html: `Click here to reset your password : <a href="${url}">${url}</a>`,
+		};
+
+		transporter.sendMail(mailOptions, (error, info) => {
+			if (error) console.log(error);
+			else console.log('Email sent: ' + info.response);
+		});
+
 
 		return await session.run(`MATCH (u:User {email: $email}) RETURN u`,
 		{email})
