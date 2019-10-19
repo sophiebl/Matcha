@@ -20,7 +20,7 @@ const Signup = withRouter(({history, ...props}) => {
 	{
 	  onCompleted: data => {
 		 localStorage.setItem('token', data.signup);
-		 history.push("/profile");
+		 history.push("/");
 	  }
 	});
   const onSubmit = inputs => {
