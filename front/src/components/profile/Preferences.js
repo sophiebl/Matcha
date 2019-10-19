@@ -142,7 +142,7 @@ const Preferences = () => {
 
 	if (state['first'] === true) {
 		let tags = [];
-		for (const v of data.me.tags.values())
+		for (const v of data.me.tags.values())  //eslint-disable-line no-unused-vars
 			tags.push(v.name.charAt(0).toUpperCase() + v.name.slice(1));
 		setState({
 			...state,
