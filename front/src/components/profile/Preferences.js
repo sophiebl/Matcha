@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import Chips, { Chip } from 'react-chips';
+import Chips from 'react-chips';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -18,6 +18,10 @@ const ME = gql`
 				uid
 				bio
 				gender
+				tags {
+					uid
+					name
+				}
 				prefAgeMin
 				prefAgeMax
 				prefDistance
@@ -76,7 +80,10 @@ const Preferences = () => {
 
 	const [state, setState] = useState({
 		first: true,
+		bio: null,
 		gender: null,
+		tagsNames: [],
+		tags: [],
 		prefOrientation: null,
 		prefAgeMin: 18,
 		prefAgeMax: 25,
@@ -87,6 +94,7 @@ const Preferences = () => {
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
 		onCompleted: (data) => {
 			console.log("complete " + data);
+			console.log(data.tags);
 		},
 		onError: (data) => {
 			console.log("error " + data);
@@ -133,16 +141,20 @@ const Preferences = () => {
 	if (error) return <p>Error </p>;
 
 	if (state['first'] === true) {
+		let tags = [];
+		for (const v of data.me.tags.values())
+			tags.push(v.name.charAt(0).toUpperCase() + v.name.slice(1));
 		setState({
 			...state,
 			first: false,
 			bio: data.me.bio,
 			gender: data.me.gender,
+			tagsNames: tags,
+			//tags: data.me.tags,
 			prefOrientation: data.me.prefOrientation,
 			prefAgeMin: data.me.prefAgeMin,
 			prefAgeMax: data.me.prefAgeMax,
 			prefDistance: data.me.prefDistance,
-			chips: [],
 		});
 	}
 
@@ -181,8 +193,8 @@ const Preferences = () => {
 			<textarea placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
 
 			<Chips
-				value={state['chips']}
-				onChange={(chips) => setState({ ...state, chips: chips })}
+				value={state['tagsNames']}
+				onChange={(chips) => setState({ ...state, tagsNames: chips })}
 				suggestions={["Sport", "Musique", "Dessin", "Art", "Nature", "Cinema", "Technologie", "Cosplay", "Science-fiction"]}
 			/>
 
@@ -191,6 +203,7 @@ const Preferences = () => {
 					uid: data.me.uid,
 					bio: state['bio'],
 					gender: state['gender'],
+					tags: state['tags'],
 					prefAgeMin: state['prefAgeMin'],
 					prefAgeMax: state['prefAgeMax'],
 					prefOrientation: state['prefOrientation'],
