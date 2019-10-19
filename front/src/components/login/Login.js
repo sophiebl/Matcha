@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
+import { Link } from "react-router-dom";
 
 const LOGIN = gql`
     mutation login($username: String!, $password: String!) {
@@ -32,15 +33,17 @@ const Login = withRouter(({history, ...props}) => {
         });
     };
 
-
     return (
-        <form method="POST" className="login bg-desc" onSubmit={handleSubmit(onSubmit)}>
-            <input type="text" name="username" placeholder="username" ref={register} required/>
-	        {errors.username && 'Username is required.'}
-            <input type="password" name="password" placeholder="password" ref={register} required/>
-	        {errors.password && 'Password is required.'}
-            <button>Login</button>
-        </form>
+        <div>
+            <form method="POST" className="login bg-desc" onSubmit={handleSubmit(onSubmit)}>
+                <input type="text" name="username" placeholder="username" ref={register} required/>
+                {errors.username && 'Username is required.'}
+                <input type="password" name="password" placeholder="password" ref={register} required/>
+                {errors.password && 'Password is required.'}
+                <button>Login</button>
+            </form>
+            <Link to="/password/resetPwdLink" className="btn">resetPwdLink</Link>
+        </div>
     )
 });
 

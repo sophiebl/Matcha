@@ -10,6 +10,8 @@ import Profile from './components/profile/Profile';
 import MessagesIndex from './components/messages/MessagesIndex';
 import Messages from './components/messages/Messages';
 import Preferences from './components/profile/Preferences';
+import EmailVerification from './components/verification/EmailVerification';
+import ResetPwdLink from './components/password/ResetPwdLink';
 import PrivateRoute from './components/PrivateRoute';
 //import Nav from "./components/Nav";
 
@@ -73,6 +75,8 @@ const App = () => {
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
 						<PrivateRoute exact path="/preferences" component={Preferences} />
+						<Route path="/verification/:emailToken/:uid" component={EmailVerification} />
+						<Route path="/password/ResetPwdLink" component={ResetPwdLink} />
 						<Route exact path="/" component={Start} />
 					</Switch>
 				</Router>

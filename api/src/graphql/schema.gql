@@ -54,4 +54,6 @@ type Query {
 type Mutation {
   signup (firstname: String!, email: String!, username: String!, password: String!): String
   login(username: String!, password: String!): String
+  emailverif(uid: String!, confirmToken: String!): String
+  pwdReset(email: String!): String
 }
