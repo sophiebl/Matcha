@@ -4,12 +4,13 @@
   width: 90%;
   height: auto;
   margin: 0 auto;
-  padding: 5px;
+  padding: 15px 10px;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.25);
   background-color: $blue-green;
   color: $white;
   border-radius: 5px;
   font-weight: $semi-b;
-  font-size: 1.1em;
+  font-size: $f-m;
   animation-duration: 3s;
   animation-name: appear;
 }
