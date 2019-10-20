@@ -3,6 +3,7 @@ import { gql } from "apollo-boost";
 import React, { useEffect, useReducer } from 'react';
 import UserProfile from '../UserProfile/UserProfile';
 import Nav from "../Nav/Nav";
+import './Browse.scss'
 
 const GET_USERS = gql`
 {

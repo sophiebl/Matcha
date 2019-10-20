@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import './App.scss';
 import Main from '../Main/Main';
 import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
@@ -15,6 +14,7 @@ import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 //import Nav from "./components/Nav";
+import './App.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft } from '@fortawesome/free-solid-svg-icons';

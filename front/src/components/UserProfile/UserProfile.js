@@ -3,7 +3,7 @@ import MainInfos from './MainInfos';
 import Bio from './Bio';
 import Tag from './Tag';
 import LikeDislike from './LikeDislike';
-
+import './UserProfile.scss'
 
 const UserProfile = props => {
 	const { uid, firstname, lastname, bio, tags, likesCount, prefRadius } = props.user;

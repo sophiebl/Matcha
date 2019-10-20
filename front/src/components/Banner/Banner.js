@@ -1,4 +1,5 @@
 import React from 'react';
+import './Banner.scss'
 //import React, { useState } from 'react';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 

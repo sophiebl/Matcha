@@ -4,6 +4,7 @@ import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 import { Link } from "react-router-dom";
+import './Login.scss'
 
 const LOGIN = gql`
 		mutation login($username: String!, $password: String!) {
