@@ -16,7 +16,6 @@ const ResetPassword = withRouter(({history, ...props}) => {
 	const [resetPassword] = useMutation(RESET_PASSWORD,
 		{
 			onCompleted: data => {
-				console.log(data);
 				history.push("/login");
 			},
 			onError: data => {

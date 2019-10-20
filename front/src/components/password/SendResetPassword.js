@@ -15,10 +15,10 @@ const SendResetPassword = withRouter(({history, ...props}) => {
   const [pwdReset] = useMutation(SEND_PWD_RESET,
   {
 		onCompleted: data => {
-			console.log(data);
-			//history.push("/");
+			alert('Merci de cliquer sur le lien dans le mail que vous avez recu.');
+			history.push("/login");
 		},
-    onError: data => console.log("Votre email n'a PAS ete envoye. data: " + data),
+    onError: data => console.log(data),
   });
   const onSubmit = inputs => {
     pwdReset({

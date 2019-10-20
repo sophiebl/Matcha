@@ -13,7 +13,6 @@ const EmailVerification = withRouter(({history, ...props}) => {
 	const [emailVerif] = useMutation(EMAIL_VERIF,
 		{
 			onCompleted: data => {
-				console.log(data);
 				history.push("/login");
 			},
 			onError: data => {

@@ -92,12 +92,11 @@ const Preferences = () => {
 	});
 
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
-		onCompleted: (data) => {
-			console.log("complete " + data);
-			console.log(data.tags);
+		onCompleted: data => {
+			alert('Profil sauvegarde !');
 		},
-		onError: (data) => {
-			console.log("error " + data);
+		onError: data => {
+			console.log(data);
 		}
 	});
 
