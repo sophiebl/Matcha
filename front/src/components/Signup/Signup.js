@@ -6,7 +6,7 @@ import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
-import Banner from '../Banner';
+import Banner from '../Banner/Banner';
 
 const SIGNUP = gql`
   mutation signup($firstname: String!,$lastname: String!, $email: String!, $username: String!, $password: String!) {

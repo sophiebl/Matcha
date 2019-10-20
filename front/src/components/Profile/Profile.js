@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InfosContainer from '../userInfo/InfosContainer';
+import UserProfile from '../UserProfile/UserProfile';
 
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
@@ -31,7 +31,7 @@ const Browse = () => {
 
   return (
     <div className="browse">
-      <InfosContainer user={data.me}/>
+      <UserProfile user={data.me}/>
     </div>
   );
 };

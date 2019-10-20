@@ -1,19 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import './scss/App.scss';
-import Start from './components/start/Start';
-import Login from './components/login/Login';
-import Logout from './components/login/Logout';
-import Signup from './components/signup/Signup';
-import Browse from './components/browse/Browse';
-import Profile from './components/profile/Profile';
-import MessagesIndex from './components/messages/MessagesIndex';
-import Messages from './components/messages/Messages';
-import Preferences from './components/profile/Preferences';
-import EmailVerification from './components/verification/EmailVerification';
-import SendResetPassword from './components/password/SendResetPassword';
-import ResetPassword from './components/password/ResetPassword';
-import PrivateRoute from './components/PrivateRoute';
+import './App.scss';
+import Main from '../Main/Main';
+import Login from '../Login/Login';
+import Logout from '../Logout/Logout';
+import Signup from '../Signup/Signup';
+import Browse from '../Browse/Browse';
+import Profile from '../Profile/Profile';
+import MessagesIndex from '../MessagesIndex/MessagesIndex';
+import Messages from '../Messages/Messages';
+import Preferences from '../Preferences/Preferences';
+import EmailVerification from '../EmailVerification/EmailVerification';
+import SendResetPassword from '../SendResetPassword/SendResetPassword';
+import ResetPassword from '../ResetPassword/ResetPassword';
+import PrivateRoute from '../PrivateRoute/PrivateRoute';
 //import Nav from "./components/Nav";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -31,39 +31,39 @@ import { setContext } from 'apollo-link-context';
 library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft);
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
-  return {
-	headers: {
-	  ...headers,
-		authorization: token ? `Bearer ${token}` : "",
-	},
-	credentials: 'include'
-  }
+	const token = localStorage.getItem('token');
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : "",
+		},
+		credentials: 'include'
+	}
 });
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
-  link: ApolloLink.from([
-	authLink,
-	onError(({ graphQLErrors, networkError }) => {
-	  if (graphQLErrors)
-		graphQLErrors.forEach(({ message, locations, path }) =>
-		  console.log(
-			`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-		  ),
-		);
-	  if (networkError) console.log(`[Network error]: ${networkError}`);
-	}),
-	new HttpLink({
-	  uri: 'http://localhost:4000/graphql',
-	  credentials: 'include'
-	}),
-  ]),
-  cache: new InMemoryCache(),
+	uri: 'http://localhost:4000/graphql',
+	link: ApolloLink.from([
+		authLink,
+		onError(({ graphQLErrors, networkError }) => {
+			if (graphQLErrors)
+				graphQLErrors.forEach(({ message, locations, path }) =>
+					console.log(
+						`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+					),
+				);
+			if (networkError) console.log(`[Network error]: ${networkError}`);
+		}),
+		new HttpLink({
+			uri: 'http://localhost:4000/graphql',
+			credentials: 'include'
+		}),
+	]),
+	cache: new InMemoryCache(),
 });
 
 const App = () => {
-  return <>
+	return <>
 		<ApolloProvider client={client}>
 			<div className="App">
 				<Router>
@@ -79,7 +79,7 @@ const App = () => {
 						<Route path="/confirm/:confirmToken" component={EmailVerification} />
 						<Route exact path="/reset" component={SendResetPassword} />
 						<Route path="/reset/:resetToken" component={ResetPassword} />
-						<Route exact path="/" component={Start} />
+						<Route exact path="/" component={Main} />
 					</Switch>
 				</Router>
 			</div>

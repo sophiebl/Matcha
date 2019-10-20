@@ -4,8 +4,8 @@ GENERAL SETTINGS
 
 @font-face {
   font-family: "Meyrin";
-  src: url("../font/formats/Meyrin.woff");
-  src: url("../font/formats/Meyrin.woff") format("woff"), url("../font/formats/Meyrin.ttf") format("ttf"), url("../font/formats/Meyrin.svg") format("svg"), url("../font/formats/Meyrin.eot") format("eot"),  url("../font/formats/Meyrin.sfd") format("sfd"),;
+  src: url("../../font/formats/Meyrin.woff");
+  src: url("../../font/formats/Meyrin.woff") format("woff"), url("../../font/formats/Meyrin.ttf") format("ttf"), url("../../font/formats/Meyrin.svg") format("svg"), url("../../font/formats/Meyrin.eot") format("eot"),  url("../../font/formats/Meyrin.sfd") format("sfd"),;
   font-weight: normal;
   font-style: normal;
 }
@@ -258,7 +258,7 @@ User img
 .user-img {
   width: 100%;
   height: 58vh;
-  background-image: url(../img/userPicture.jpg);
+  background-image: url(../../img/userPicture.jpg);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -357,6 +357,6 @@ User tag
   width: 32px;
   height: 32px;
   border-radius: 32px;
-  background-image: url(../img/tag-travel.png);
+  background-image: url(../../img/tag-travel.png);
   background-size: contain;
 }
