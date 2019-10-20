@@ -3,8 +3,7 @@ import dotenv from 'dotenv'
 import faker from 'faker';
 import uniqid from 'uniqid';
 
-import crypto from 'crypto-js/core'
-import SHA256 from 'crypto-js/sha256'
+import crypto from 'crypto'
 
 dotenv.config()
 const driver  = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
@@ -24,7 +23,7 @@ DETACH DELETE (a)
 const CREATE_USER = `
 CREATE (:User {
   uid: $uuid,
-  username: $firstname
+  username: $firstname,
   firstname: $firstname,
   lastname: '{{name.lastName}}',
   email: '{{internet.email}}',
@@ -37,7 +36,7 @@ CREATE (:User {
   prefAgeMin: $prefAgeMin,
   prefAgeMax: $prefAgeMax,
   prefOrientation: $prefOrientation,
-  prefDistance: $prefRadius,
+  prefDistance: $prefDistance,
   confirmToken: 'null',
   resetToken: 'null'
 })`;
@@ -89,8 +88,7 @@ async function users(amount = 1) {
 	const uuid = uniqid('user-');
 	const firstname = faker.name.firstName();
 	const username = firstname;
-	//const hash = await SHA256(faker.internet.password, 'salt').toString();
-	const hash = await SHA256('password', 'salt').toString();
+	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
 	const gender = faker.random.arrayElement(['homme', 'femme']);
 	const elo = faker.random.number({min: 0, max: 100});
 	const prefAgeMin = faker.random.number({min: 18, max: 100});
