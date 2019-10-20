@@ -1,0 +1,21 @@
+@import '../../global';
+
+/*
+Browse
+*********/
+
+.browse {
+  height: 100vh;
+}
+
+.browse {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  .infos-container {
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 100%;
+  }
+}

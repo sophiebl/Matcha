@@ -1,0 +1,23 @@
+@import '../../global';
+
+/*
+Navigation
+*********/
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  width: 100%;
+}
+
+.icon{
+  color: $dark-grey;
+  font-size: $f-l;
+}
+
+.link:hover > .icon{
+  color: $blue-green;
+}

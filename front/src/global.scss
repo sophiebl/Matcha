@@ -1,0 +1,98 @@
+/*
+  GENERAL SETTINGS
+*********/
+
+@font-face {
+  font-family: "Meyrin";
+  src: url("font/formats/Meyrin.woff");
+  src: url("font/formats/Meyrin.woff") format("woff"), url("font/formats/Meyrin.ttf") format("ttf"), url("font/formats/Meyrin.svg") format("svg"), url("font/formats/Meyrin.eot") format("eot"),  url("font/formats/Meyrin.sfd") format("sfd"),;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap');
+
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+}
+
+$f-base : 1.3em;
+$f-m : 1.2em;
+$f-l : 1.5em;
+$f-xxl : 7em;
+
+.f-base {font-size: $f-base;}
+.f-xs {font-size: 0.8em;}
+.f-s {font-size: 0.9em;}
+.f-m {font-size: 1.2em;}
+.f-l {font-size: $f-l;}
+.f-xl {font-size: 1.6em;}
+.f-xxl {font-size: $f-xxl;}
+
+$semi-b : 600;
+
+.semi-b {font-weight: $semi-b;}
+
+/* Color */
+$white: #fff;
+$blue-green: #03DAC6;
+$grey: #F1F1F1;
+$dark-grey: #C4C4C4;
+$txt-color: #7b7b7b;
+$online: #1AF816;
+$offline: #F81616;
+
+.color-w{color: $white;}
+.color-dg{color: $dark-grey;}
+
+.bg-bg{background-color: $blue-green;}
+.bg-g{background-color: $grey;}
+
+/* Dimension 
+.w-60{width: 60px;}
+.h-60{height: 60px;}*/
+.w-100 {width: 100%;}
+
+/* Position */
+.txt-center{text-align: center;}
+.txt-left{text-align: left;}
+
+.pos-rel {position: relative;}
+
+.mh-30{margin: 0 30px;}
+.mb-5{margin-bottom: 5px;}
+
+body * {
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  height: 100vh;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Meyrin";
+  font-size: 7em;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+}
+
+.bg-desc {
+  background-image: linear-gradient(rgba(3, 218, 198, 1), rgba(3, 218, 198, 0));
+}
+
+.valign {
+  width: 100%;
+  > div {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 25%;
+  }
+}

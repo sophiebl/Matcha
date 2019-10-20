@@ -1,0 +1,24 @@
+@import '../../global';
+
+.banner {
+  width: 90%;
+  height: auto;
+  margin: 0 auto;
+  padding: 5px;
+  background-color: $blue-green;
+  color: $white;
+  border-radius: 5px;
+  font-weight: $semi-b;
+  font-size: 1.1em;
+  animation-duration: 3s;
+  animation-name: appear;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0; 
+  }
+  to {
+    opacity: 1; 
+  }
+}
