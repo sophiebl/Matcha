@@ -53,7 +53,7 @@ const Login = withRouter(({history, ...props}) => {
 				{errors.password && 'Password is required.'}
 				<button>Login</button>
 			</form>
-			<Link to="/password/resetPwdLink" className="btn">resetPwdLink</Link>
+			<Link to="/reset" className="btn">resetPwdLink</Link>
 		</div>
 	)
 });

@@ -7,8 +7,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-//import crypto from 'crypto-js/core'
-//import PBKDF2 from 'crypto-js/pbkdf2'
+import crypto from 'crypto';
 import SHA256 from 'crypto-js/sha256'
 
 import { v1 as neo4j }  from 'neo4j-driver';
@@ -33,10 +32,9 @@ const resolvers = {
 	Mutation: {
 		async signup (_, { firstname, lastname, username, email, password }) {
 			const uid = uniqid('user-');
-			//const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
 			const hash = await SHA256(password, 'salt').toString();
-			const emailToken = Math.random() * 10;
-			const url = `http://localhost:3000/verification/${emailToken}/${uid}`;
+			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
+			const url = `http://localhost:3000/confirm/${confirmToken}`;
 
 			var mailOptions = {
 				from: process.env.MAIL_USER,
@@ -51,9 +49,11 @@ const resolvers = {
 				else console.log('Email sent: ' + info.response);
 			});
 
-			return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $emailToken}) RETURN u`,
-				{uid, firstname, lastname, username, email, hash, emailToken})
+			return await session.run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $confirmToken}) RETURN u`,
+				{uid, firstname, lastname, username, email, hash, confirmToken})
 				.then(result => {
+					if (result.records.length < 1)
+						throw new Error('CouldNotCreateUser')
 					const user = result.records[0].get('u').properties;
 					return jwt.sign(
 						{ uid: user.uid },
@@ -62,16 +62,15 @@ const resolvers = {
 					)
 				});
 		},
-		async emailverif(_, { uid, confirmToken }) {
-			if (confirmToken != "true")
+
+		async emailVerif(_, { confirmToken }) {
+			if (confirmToken !== 'true')
 			{
-				confirmToken = "true";
-				return await session.run(`MATCH (u:User {uid: $uid}) SET u.confirmToken = 'true' RETURN u`,
-					{uid})
+				return await session.run(`MATCH (u:User {confirmToken: $confirmToken}) SET u.confirmToken = 'true' RETURN u`, { confirmToken })
 					.then(result => {
+						if (result.records.length < 1)
+							throw new Error('UnknownUser')
 						const user = result.records[0].get('u').properties;
-						console.log("user");
-						console.log(user);
 						return jwt.sign(
 							{ uid: user.uid },
 							process.env.JWT_SECRET,
@@ -80,12 +79,10 @@ const resolvers = {
 					});
 			}
 		},
-		async pwdReset(_, { email }) {
-			const uid = uniqid('user-');
-			//const hash = await PBKDF2(password, 'salt', { iterations: 10, hasher: crypto.algo.SHA256, keySize: 256 }).toString();
-			//const hash = await SHA256(password, 'salt').toString();
-			const pwdToken = Math.random() * 10;
-			const url = `http://localhost:3000/verification/${pwdToken}`;
+
+		async sendPwdReset(_, { email }) {
+			const resetToken = uniqid() + crypto.randomBytes(16).toString('hex');
+			const url = `http://localhost:3000/reset/${resetToken}`;
 
 			var mailOptions = {
 				from: process.env.MAIL_USER,
@@ -100,26 +97,37 @@ const resolvers = {
 				else console.log('Email sent: ' + info.response);
 			});
 
-
-			return await session.run(`MATCH (u:User {email: $email}) RETURN u`,
-				{email})
+			return await session.run(`MATCH (u:User {email: $email}) SET u.resetToken = $resetToken RETURN u`, { email, resetToken })
 				.then(result => {
+					if (result.records.length < 1)
+						throw new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
-					console.log(user);
-					if (!user) {
-						throw new Error('No user with that email')
-					}
 					return jwt.sign(
 						{ uid: user.uid },
 						process.env.JWT_SECRET,
 						{ expiresIn: '1y' }
 					)
 				});
-		}, 
-		async login (_, { username, password }) {
-			// return await session.run(`MATCH (u:User {username: $username, confirmToken: 'true'}) RETURN u`,
+		},
+
+		async resetPassword(_, { password, resetToken }) {
 			const hash = await SHA256(password, 'salt').toString();
-			return await session.run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, {username})
+			return await session.run(`MATCH (u:User {resetToken: $resetToken}) SET u.password = $hash RETURN u`, { resetToken, hash })
+				.then(result => {
+					if (result.records.length < 1)
+						throw new Error('UnknownUser')
+					const user = result.records[0].get('u').properties;
+					return jwt.sign(
+						{ uid: user.uid },
+						process.env.JWT_SECRET,
+						{ expiresIn: '1y' }
+					)
+				});
+		},
+
+		async login (_, { username, password }) {
+			const hash = await SHA256(password, 'salt').toString();
+			return await session.run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
 				.then(result => {
 					if (result.records.length < 1)
 						throw new Error('UnknownUsername')
