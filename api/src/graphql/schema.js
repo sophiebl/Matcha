@@ -3,15 +3,12 @@ import fs, { exists } from 'fs';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 import dotenv from 'dotenv'
-
 dotenv.config()
 
-import crypto from 'crypto';
-import SHA256 from 'crypto-js/sha256'
-
 import { v1 as neo4j }  from 'neo4j-driver';
-const driver = neo4j.driver('bolt://db', neo4j.auth.basic('neo4j', 'matcha'))
+const driver = neo4j.driver('bolt://db', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
 const session = driver.session();
 
 const transporter = nodemailer.createTransport({
@@ -32,7 +29,7 @@ const resolvers = {
 	Mutation: {
 		async signup (_, { firstname, lastname, username, email, password }) {
 			const uid = uniqid('user-');
-			const hash = await SHA256(password, 'salt').toString();
+			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
 			const url = `http://localhost:3000/confirm/${confirmToken}`;
 
@@ -111,7 +108,7 @@ const resolvers = {
 		},
 
 		async resetPassword(_, { password, resetToken }) {
-			const hash = await SHA256(password, 'salt').toString();
+			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			return await session.run(`MATCH (u:User {resetToken: $resetToken}) SET u.password = $hash RETURN u`, { resetToken, hash })
 				.then(result => {
 					if (result.records.length < 1)
@@ -126,7 +123,7 @@ const resolvers = {
 		},
 
 		async login (_, { username, password }) {
-			const hash = await SHA256(password, 'salt').toString();
+			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			return await session.run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
 				.then(result => {
 					if (result.records.length < 1)
