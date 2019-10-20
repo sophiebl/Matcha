@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import React, { useEffect, useReducer } from 'react';
-import InfosContainer from '../userInfo/InfosContainer';
-import Nav from "../Nav";
+import UserProfile from '../UserProfile/UserProfile';
+import Nav from "../Nav/Nav";
 
 const GET_USERS = gql`
 {
@@ -56,7 +56,7 @@ const Browse = () => {
         <p>Plus personne, reviens plus tard !</p>
       ) : (
         <div className="browse">
-          <InfosContainer key={state.user.uid} user={state.user} dispatch={dispatch} />
+          <UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} />
         </div>
       )
     }
