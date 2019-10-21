@@ -1,13 +1,10 @@
 import React from 'react';
 import './Banner.scss'
-import ReactDOM from 'react-dom';
-//import React, { useState } from 'react';
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const Banner = ({ isShowing, show, content }) => isShowing ? ReactDOM.render(
+const Banner = ({ content }) => (
     <div className="banner">
         {content}
-    </div>, document.getElementById('signup-banner')
-) : null;
+    </div>
+);
 
 export default Banner;
