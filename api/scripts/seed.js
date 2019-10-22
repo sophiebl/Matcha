@@ -101,12 +101,12 @@ async function users(amount = 1) {
 }
 
 async function tags() {
-  const names = ['sport', 'cinema', 'tech', 'design', 'mode'];
-  for (var i = 0; i < 5; i++) {
-	const uuid = uniqid('tag-');
-	const name = names[i];
+	const names = ['Sport', 'Cinema', 'Tech', 'Design', 'Mode', 'Art', 'Culture', 'Science-Fiction', 'Dessin', 'Peinture', 'Street-Art', 'Cuisine', 'Jeux-video'];
+	for (const i in names) {
+	  const uuid = uniqid('tag-');
+	  const name = names[i];
 
-	await session.run(faker.fake(CREATE_TAG), {uuid, name});
+	  await session.run(faker.fake(CREATE_TAG), {uuid, name});
   }
 }
 
@@ -132,9 +132,9 @@ async function reset() {
 }
 
 async function seed() {
-  await users(10);
+	await users(10);
   await tags();
-  await hasTags();
+	await hasTags();
   await liked();
   await blocked();
   await messages();
