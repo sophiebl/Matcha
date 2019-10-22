@@ -12,7 +12,7 @@ import 'rc-slider/assets/index.css';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 
-const ME = gql`
+const ME_AND_TAGS = gql`
 		{
 			me {
 				uid
@@ -27,6 +27,11 @@ const ME = gql`
 				prefDistance
 				prefOrientation
 			}
+
+			Tag {
+				uid
+				name
+			}
 		}
 `;
 
@@ -40,6 +45,32 @@ const EDIT_PREFERENCES = gql`
 			prefAgeMax
 			prefDistance
 			prefOrientation
+		}
+	}
+`;
+
+const ADD_TAG = gql`
+	mutation AddUserTags($from: _UserInput!, $to: _TagInput!) {
+		AddUserTags(from: $from, to: $to) {
+			from {
+				tags {
+					uid
+					name
+				}
+			}
+		}
+	}
+`;
+
+const REMOVE_TAG = gql`
+	mutation RemoveUserTags($from: _UserInput!, $to: _TagInput!) {
+		RemoveUserTags(from: $from, to: $to) {
+			from {
+				tags {
+					uid
+					name
+				}
+			}
 		}
 	}
 `;
@@ -91,13 +122,21 @@ const Preferences = () => {
 		chips: [],
 	});
 
+	const onError = data => console.log(data);
+
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
 		onCompleted: data => {
 			alert('Profil sauvegarde !');
 		},
-		onError: data => {
-			console.log(data);
-		}
+		onError,
+	});
+
+	const [addTag] = useMutation(ADD_TAG, {
+		onError,
+	});
+
+	const [removeTag] = useMutation(REMOVE_TAG, {
+		onError,
 	});
 
 	const Radio = ({ id, name, label, isSelected, onCheckboxChange }) => (
@@ -114,13 +153,14 @@ const Preferences = () => {
 		</div>
 	);
 
-	const onSliderChange = (value) => {
+	const onSliderChange = value => {
 		setState({
 			...state,
 			prefDistance: value,
 		});
 	};
-	const onRangerChange = (values) => {
+
+	const onRangerChange = values => {
 		setState({
 			...state,
 			prefAgeMin: values[0],
@@ -128,14 +168,14 @@ const Preferences = () => {
 		});
 	}
 
-	const onTextareaChange = (event) => {
+	const onTextareaChange = event => {
 		setState({
 			...state,
 			bio: event.target.value,
 		});	
 	}
 
-	const { loading, error, data } = useQuery(ME);
+	const { loading, error, data } = useQuery(ME_AND_TAGS);
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
@@ -143,17 +183,44 @@ const Preferences = () => {
 		let tags = [];
 		for (const v of data.me.tags.values())  //eslint-disable-line no-unused-vars
 			tags.push(v.name.charAt(0).toUpperCase() + v.name.slice(1));
+
 		setState({
 			...state,
 			first: false,
 			bio: data.me.bio,
 			gender: data.me.gender,
-			tagsNames: tags,
-			//tags: data.me.tags,
+			tags: data.Tag,
+			chips: tags,
 			prefOrientation: data.me.prefOrientation,
 			prefAgeMin: data.me.prefAgeMin,
 			prefAgeMax: data.me.prefAgeMax,
 			prefDistance: data.me.prefDistance,
+		});
+	}
+
+	const onChipsChange = chips => {
+		const added = chips.filter(x => !state['chips'].includes(x))[0];	
+		const removed = state['chips'].filter(x => !chips.includes(x))[0];	
+
+		const changedTag = state['tags'].filter(tag => tag['name'].toLowerCase() === (added || removed).toLowerCase())[0];
+		if (changedTag === undefined)
+			return;
+
+		const payload = {
+			variables: {
+				from: { uid: data.me.uid },
+				to: { uid: changedTag.uid },
+			}
+		}
+
+		if (added !== undefined)
+			addTag(payload);
+		if (removed !== undefined)
+			removeTag(payload);
+
+		setState({
+			...state,
+			chips: chips
 		});
 	}
 
@@ -192,9 +259,9 @@ const Preferences = () => {
 			<textarea placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
 
 			<Chips
-				value={state['tagsNames']}
-				onChange={(chips) => setState({ ...state, tagsNames: chips })}
-				suggestions={["Sport", "Musique", "Dessin", "Art", "Nature", "Cinema", "Technologie", "Cosplay", "Science-fiction"]}
+				value={state['chips']}
+				onChange={onChipsChange}
+				suggestions={state['tags'].map(tag => tag.name.charAt(0).toUpperCase() + tag.name.slice(1))}
 			/>
 
 			<button onClick={() => editPreferences({
@@ -202,7 +269,6 @@ const Preferences = () => {
 					uid: data.me.uid,
 					bio: state['bio'],
 					gender: state['gender'],
-					tags: state['tags'],
 					prefAgeMin: state['prefAgeMin'],
 					prefAgeMax: state['prefAgeMax'],
 					prefOrientation: state['prefOrientation'],
