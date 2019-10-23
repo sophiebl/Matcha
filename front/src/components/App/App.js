@@ -12,7 +12,7 @@ import Preferences from '../Preferences/Preferences';
 import EmailVerification from '../EmailVerification/EmailVerification';
 import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
-import PrivateRoute from '../PrivateRoute/PrivateRoute';
+import { PublicRoute, PrivateRoute } from '../Routes/Routes';
 //import Nav from "./components/Nav";
 import './App.scss';
 
@@ -68,15 +68,15 @@ const App = () => {
 			<div className="App">
 				<Router>
 					<Switch>
-						<Route exact path="/login" component={Login} />
+						<PublicRoute exact path="/login" component={Login} />
 						<Route exact path="/logout" component={Logout} />
-						<Route exact path="/signup" component={Signup} />
+						<PublicRoute exact path="/signup" component={Signup} />
 						<PrivateRoute exact path="/browse" component={Browse} />
 						<PrivateRoute exact path="/profile" component={Profile} />
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
 						<PrivateRoute exact path="/preferences" component={Preferences} />
-						<Route path="/confirm/:confirmToken" component={EmailVerification} />
+						<PublicRoute path="/confirm/:confirmToken" component={EmailVerification} />
 						<Route exact path="/reset" component={SendResetPassword} />
 						<Route path="/reset/:resetToken" component={ResetPassword} />
 						<Route exact path="/" component={Main} />
