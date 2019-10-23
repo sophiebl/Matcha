@@ -93,14 +93,14 @@ stack-stop:
 	@$(ECHO) "$(C_SUCCESS)Stoped stack.$(C_RESET)"
 
 stack-up:
-	-@$(MAKE) init
-	-@$(MAKE) start
+	-@$(MAKE) stack-init
+	-@$(MAKE) stack-start
 	@$(ECHO) ""
 	@docker service ls
 
 stack-down:
-	-@$(MAKE) stop
-	-@$(MAKE) leave
+	-@$(MAKE) stack-stop
+	-@$(MAKE) stack-leave
 
 stack-reload:
 	@$(ECHO) "$(C_PENDING)\nReloading stack...$(C_RESET)"
@@ -123,7 +123,7 @@ stack-stats:
 
 stack-fix:
 	@$(ECHO) "$(C_PENDING)\nTrying to fix (force removing network)...$(C_RESET)"
-	docker network disconnect -f $(docker network inspect matcha_default -f "{{.Id}}") matcha_default-endpoint
+	docker network disconnect -f $(docker network inspect matcha_default -f "{{.Id}}") $(STACK)_default-endpoint
 	docker network prune -f
 	@$(ECHO) "$(C_SUCCESS)Fixed it!$(C_RESET)"
 
@@ -138,20 +138,25 @@ endif
 	@docker run -it --rm -v ${CURDIR}/db/data:/data neo4j /bin/bash -c "neo4j start; echo 'Waiting for database to be created..'; sleep 3; echo 'Database should be OK now.'; neo4j stop"
 	@$(ECHO) "$(C_SUCCESS)Initialized empty datasbase.$(C_RESET)"
 
+seed-db:
+	-@docker-compose exec api /usr/local/bin/npm run seed
+	-@docker exec -it $(STACK)_api.1.$(docker service ps -f 'name=$(STACK)_api.1' stack_myservice -q --no-trunc | head -n1) /usr/local/bin/npm run seed
+	@$(ECHO) "$(C_SUCCESS)Seeded datasbase.$(C_RESET)"
+
 dump-db:
 	@$(ECHO) "$(C_PENDING)\nDumping database to db/data/graph.db.dump$(C_RESET)"
-	-@docker service scale matcha_db=0
+	-@docker service scale $(STACK)_db=0
 	-@docker-compose stop db
 	@docker run -it --rm -v ${CURDIR}/db/data:/data neo4j /bin/bash -c "rm /data/graph.db.dump; neo4j-admin dump --to /data"
 	-@docker-compose start db
-	-@docker service scale matcha_db=1
+	-@docker service scale $(STACK)_db=1
 	@$(ECHO) "$(C_SUCCESS)Dumped database$(C_RESET)"
 
 load-db:
 	@$(ECHO) "$(C_PENDING)\nLoading database from db/data/graph.db.dump$(C_RESET)"
-	-@docker service scale matcha_db=0
+	-@docker service scale $(STACK)_db=0
 	-@docker-compose stop db
 	@docker run -it --rm -v ${CURDIR}/db/data:/data neo4j /bin/bash -c "neo4j-admin load --from /data/graph.db.dump --force"
 	-@docker-compose start db
-	-@docker service scale matcha_db=1
+	-@docker service scale $(STACK)_db=1
 	@$(ECHO) "$(C_SUCCESS)Imported database.$(C_RESET)"
