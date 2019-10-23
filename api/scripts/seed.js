@@ -6,7 +6,7 @@ import uniqid from 'uniqid';
 import crypto from 'crypto'
 
 dotenv.config()
-const driver  = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
+const driver  = neo4j.driver('bolt://db:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
 const session = driver.session();
 
 
