@@ -1,22 +1,32 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './Nav.scss'
 
 const Nav = () => {
     return (
         <div className="nav">
-			<a href="/" className="link">
+			{/*
+			<Link to="/" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['fa', 'shopping-cart']} />
-            </a>
-			<a href="/likes" className="link">
+			</Link>
+			*/}
+
+			<Link to="/likes" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'heart']} />
-            </a>
-			<a href="/messages" className="link">
+			</Link>
+			
+			<Link to="/browse" className="link">
+                <FontAwesomeIcon className="icon color-dg mh-30" icon={['fas', 'users']} />
+			</Link>
+
+			<Link to="/messages" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'comment-alt']} />
-            </a>
-			<a href="/profile" className="link">
+			</Link>
+			
+			<Link to="/profile" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'user']} />
-            </a>
+			</Link>
         </div>
     );
 }

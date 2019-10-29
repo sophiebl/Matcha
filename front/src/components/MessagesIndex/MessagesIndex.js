@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getCurrentUid } from '../../Helpers';
+import Nav from "../Nav/Nav";
 
 const GET_CONVS = gql`
 	query User($uid: ID) {
@@ -96,6 +97,7 @@ const MessagesIndex = () => {
 	  <br />
 	  <p style={{fontSize: '15px'}}><strong>Discussions</strong></p>
 	  <MessagesList />
+	  <Nav />
 	</div>
   );
 }
