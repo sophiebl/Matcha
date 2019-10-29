@@ -57,7 +57,7 @@ const Browse = () => {
         <p>Plus personne, reviens plus tard !</p>
       ) : (
         <div className="browse">
-          <UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} />
+          <UserProfile key={state.user.uid} user={state.user} isMyProfile={false} dispatch={dispatch} />
         </div>
       )
     }
