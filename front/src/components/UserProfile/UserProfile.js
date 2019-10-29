@@ -15,14 +15,14 @@ const UserProfile = props => {
 	return (
 		<div>
 			<div className="infos-container" key={uid}>
-				<MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius} avatar={avatar}/>
+				<MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius} avatar={avatar} isMyProfile={props.isMyProfile}/>
 				<Bio bio={bio}/>
 				<div className="tag-container">
 					{tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />)}
 				</div>
 				{ props.isMyProfile ? (
-					<Link to="/preferences" className="btn bg-g btn-rond ">
-						<FontAwesomeIcon className="color-w" size="3x" icon="cog" />
+					<Link to="#" className="btn bg-bg btn-rond pref">
+						<FontAwesomeIcon className="color-w" size="2x" icon="pen" />
 					</Link>
 				) : (
 					<LikeDislike uidUser={uid} dispatch={props.dispatch} />

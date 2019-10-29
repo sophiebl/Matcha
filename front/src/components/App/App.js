@@ -17,7 +17,7 @@ import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import './App.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faHeart, faCommentAlt, faUser } from '@fortawesome/free-regular-svg-icons';
 
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -28,7 +28,7 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { setContext } from 'apollo-link-context';
 
-library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCog, faUsers);
+library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage);
 
 const authLink = setContext((_, { headers }) => {
 	const token = localStorage.getItem('token');
