@@ -31,7 +31,7 @@ const Browse = () => {
 
   return (
     <div className="browse">
-      <UserProfile user={data.me}/>
+      <UserProfile user={data.me} isMyProfile={true}/>
     </div>
   );
 };
