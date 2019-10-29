@@ -72,7 +72,7 @@ User bio
 
 .bio {
   width: 90%;
-  margin: 10px 20px;
+  margin: 30px 20px 15px;
   color: $txt-color;
   font-size: $f-base;
 }
@@ -112,6 +112,6 @@ User tag
   width: 32px;
   height: 32px;
   border-radius: 32px;
-  //background-image: url(../../../public/img/tag-travel.png);
+  background-image: url(/img/tag-travel.png);
   background-size: contain;
 }
