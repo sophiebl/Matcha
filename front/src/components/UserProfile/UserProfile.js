@@ -6,12 +6,12 @@ import LikeDislike from './LikeDislike';
 import './UserProfile.scss'
 
 const UserProfile = props => {
-	const { uid, firstname, lastname, bio, tags, likesCount, prefRadius } = props.user;
+	const { uid, firstname, lastname, bio, tags, likesCount, prefRadius, avatar } = props.user;
 
 	return (
 		<div className="infos-container" key={uid}>
 			<div>
-				<MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius} />
+				<MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius} avatar={avatar}/>
 				<Bio bio={bio}/>
 				<div className="tag-container">
 					{tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />)}
