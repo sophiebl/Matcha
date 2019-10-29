@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const MainInfos = (props) => {
     return (
-        <div className="pos-rel">
+        <div className="pos-rel img-container">
             <div className="nav-user w-100">
                 <div>
                     <FontAwesomeIcon className="icon white" icon={['fa', 'map-marker-alt']} />
@@ -18,7 +18,7 @@ const MainInfos = (props) => {
                     <div className="rond"></div>
                 </div>
             </div>
-            <UserImg/>
+            <UserImg avatar={props.avatar}/>
             <div className="main-infos">
                 <div className="mb-5">
                     <h2>{props.firstname}</h2> 

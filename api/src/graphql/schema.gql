@@ -6,6 +6,7 @@ type User @isAuthenticated {
 	email: String!
 	passsword: String!
 	birthdate: String!
+	avatar: String!
 	gender: String
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
