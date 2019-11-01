@@ -1,39 +1,14 @@
 import React from 'react';
 
-import UserProfile from '../UserProfile/UserProfile';
+import UserProfile from './UserProfile';
+import MyProfile   from './MyProfile';
 
-import { useQuery } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
-
-const ME = gql`
-    {
-        me {
-            uid
-					  bio
-					  gender
-            firstname
-            lastname
-            likesCount
-            prefDistance
-            tags {
-                uid
-                name
-            }
-        }
-    }
-`;
-
-const Browse = () => {
-  const { loading, error, data } = useQuery(ME);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error </p>;
-
-  return (
-    <div className="browse">
-      <UserProfile user={data.me} isMyProfile={true}/>
-    </div>
-  );
+const Profile = ({ user, isMyProfile, dispatch }) => {
+	return isMyProfile ? (
+		<UserProfile user={user} dispatch={dispatch} />
+	) : (
+		<MyProfile />
+	);
 };
 
-export default Browse;
+export default Profile;
