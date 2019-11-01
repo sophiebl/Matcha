@@ -31,6 +31,7 @@ CREATE (:User {
   password: $hash,
   birthdate: '{{date.past}}',
   gender: $gender,
+  avatar: $avatar,
   bio: '{{lorem.sentence}}',
   elo: $elo,
   prefAgeMin: $prefAgeMin,
@@ -82,6 +83,12 @@ CREATE (msg1)<-[:AUTHORED]-(u2), (msg2)<-[:AUTHORED]-(u1)
 RETURN u1, u2, conv, msg1, msg2
 `;
 
+const generateImg = () => {
+  let tab = ['women', 'men'];
+
+  return `https://randomuser.me/api/portraits/${tab[Math.floor(Math.random() * (0 - 2) + 2)]}/${Math.floor(Math.random() * (100 - 1) + 1)}.jpg`
+}
+
 /* -----[ Seeding functions ]----- */
 async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
@@ -94,9 +101,12 @@ async function users(amount = 1) {
 	const prefAgeMin = faker.random.number({min: 18, max: 100});
 	const prefAgeMax = prefAgeMin + 10;
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
-	const prefDistance = faker.random.number({min: 5, max: 200});
+  const prefDistance = faker.random.number({min: 5, max: 200});
+  const avatar = faker.image.avatar();
+  //const avatar = generateImg(),
+  
 
-	await session.run(faker.fake(CREATE_USER), {uuid, firstname, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance});
+	await session.run(faker.fake(CREATE_USER), {uuid, firstname, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatar});
   }
 }
 

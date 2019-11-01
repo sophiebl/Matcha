@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Chips from 'react-chips';
+//import Avatar from '@material-ui/core/Avatar';
+//import Chip from '@material-ui/core/Chip';
+//import { withStyles } from "@material-ui/core/styles";
+//import Button from "@material-ui/core/Button";
+import './Preferences.scss'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -226,17 +231,16 @@ const Preferences = () => {
 
 	return (
 		<div className="settings">
-			<Link to="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="3x" icon="times" /></Link>
+			<Link to="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></Link>
 			<h2>Preferences</h2>
 
-			<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+			<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}} className="valign-50">
 				<div>
 					<h4>Vous etes</h4>
 					<Radio id={1} name="gender" label="Homme">Homme</Radio>
 					<Radio id={2} name="gender" label="Femme">Femme</Radio>
 					<Radio id={3} name="gender" label="Non binaire">Non binaire</Radio>
 				</div>
-				<div style={{width: '15px'}}> </div>
 				<div>
 					<h4>Vous cherchez</h4>
 					<Radio id={4} name="prefOrientation" label="Homme">Homme</Radio>
@@ -246,25 +250,72 @@ const Preferences = () => {
 			</div>
 
 			<div style={wrapperStyle}>
-				<p>Distance</p>
-				<Slider min={5} max={200} defaultValue={state['prefDistance']} handle={distanceHandle} step={5} onChange={onSliderChange}/>
+				<p className="txt-left f-m">Distance</p>
+				<Slider min={5} max={200} defaultValue={state['prefDistance']} handle={distanceHandle} step={5} onChange={onSliderChange}
+					railStyle={{
+						height: 10,
+					}}
+					handleStyle={[
+						{
+						backgroundColor: "#03DAC6",
+						width: "20px",
+						height: "20px",
+						border: "1px solid #03DAC6",
+						marginLeft: -6,
+						marginTop: -5
+						}
+					]}
+					trackStyle={[
+						{
+						marginTop: 0,
+						height: 10,
+						borderRadius: 15,
+						background:
+							"linear-gradient(to right, #03DAC6 0%, #03DAC6 100%)"
+						}
+					]}
+				/>
 			</div>
 			<div style={wrapperStyle}>
-				<p>Age</p>
-				<Range min={18} max={80} defaultValue={[state['prefAgeMin'], state['prefAgeMax']]} pushable={1} handle={ageHandle} onChange={onRangerChange}/>
+				<p className="txt-left f-m">Age</p>
+				<Range min={18} max={80} defaultValue={[state['prefAgeMin'], state['prefAgeMax']]} pushable={1} handle={ageHandle} onChange={onRangerChange}
+					railStyle={{
+						height: 10,
+					}}
+					handleStyle={[
+						{
+						backgroundColor: "#03DAC6",
+						width: "20px",
+						height: "20px",
+						border: "1px solid #03DAC6",
+						marginLeft: -6,
+						marginTop: -5
+						}
+					]}
+					trackStyle={[
+						{
+						marginTop: 0,
+						height: 10,
+						borderRadius: 15,
+						background:
+							"linear-gradient(to right, #03DAC6 0%, #03DAC6 100%)"
+						}
+					]}
+				/>
 			</div>
 
-			<label>Bio</label>
-			<br/>
-			<textarea placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
+			<div>
+				<p className="txt-left f-m bio-title">Bio</p>
+				<textarea className="bio-area" placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
+			</div>		
 
 			<Chips
 				value={state['chips']}
 				onChange={onChipsChange}
 				suggestions={state['tags'].map(tag => tag.name.charAt(0).toUpperCase() + tag.name.slice(1))}
 			/>
-
-			<button onClick={() => editPreferences({
+			
+			<button className="pref" onClick={() => editPreferences({
 				variables: {
 					uid: data.me.uid,
 					bio: state['bio'],
