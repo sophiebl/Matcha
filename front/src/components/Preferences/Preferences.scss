@@ -1,0 +1,38 @@
+@import '../../global';
+
+h2{
+  margin-top: 0;
+}
+.rc-slider-handle{
+  background-color: rgb(3, 218, 198) !important;
+    width: 20px !important;
+    height: 20px !important;
+    border: 1px solid rgb(3, 218, 198) !important;
+}
+
+.rc-slider-tooltip-inner{
+  color: $blue-green !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.settings{
+  padding: 20px 25px !important;
+}
+
+.bio-title{
+  margin-left: 30px;
+}
+
+.bio-area{
+  border: 1px solid transparent;
+  border-radius: 10px;
+  -webkit-appearance: none;
+  padding: 5px;
+  background-color: rgba(3, 218, 198, 0.2);
+  margin-bottom: 20px;
+  width: 90%;
+  color: #1f1f1f;
+  font-size: 1em;
+}

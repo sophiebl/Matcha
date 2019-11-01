@@ -38,6 +38,7 @@ $semi-b : 600;
 /* Color */
 $white: #fff;
 $blue-green: #03DAC6;
+$red: #E10050;
 $grey: #F1F1F1;
 $dark-grey: #C4C4C4;
 $txt-color: #7b7b7b;
@@ -49,6 +50,7 @@ $offline: #F81616;
 
 .bg-bg{background-color: $blue-green;}
 .bg-g{background-color: $grey;}
+.bg-r{background-color: $red;}
 
 /* Dimension 
 .w-60{width: 60px;}
@@ -94,5 +96,19 @@ a {
     display: inline-block;
     vertical-align: baseline;
     width: 25%;
+  }
+}
+
+.valign-50 {
+  width: 100%;
+  > div {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 45%;
+    margin: 0 2.5%;
+    padding-bottom: 5px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
   }
 }
