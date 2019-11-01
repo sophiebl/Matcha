@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Bio = ({ bio }) => {
+const Bio = ({ content }) => {
 	return (
 		<p className="bio txt-left">
-			{bio}
+			{content}
 		</p>
 	);
 }

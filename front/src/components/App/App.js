@@ -5,7 +5,7 @@ import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
 import Signup from '../Signup/Signup';
 import Browse from '../Browse/Browse';
-import Profile from '../Profile/Profile';
+import MyProfile from '../Profile/MyProfile';
 import MessagesIndex from '../MessagesIndex/MessagesIndex';
 import Messages from '../Messages/Messages';
 import Preferences from '../Preferences/Preferences';
@@ -72,7 +72,7 @@ const App = () => {
 						<Route exact path="/logout" component={Logout} />
 						<PublicRoute exact path="/signup" component={Signup} />
 						<PrivateRoute exact path="/browse" component={Browse} />
-						<PrivateRoute exact path="/profile" component={Profile} />
+						<PrivateRoute exact path="/profile" component={MyProfile} />
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
 						<PrivateRoute exact path="/preferences" component={Preferences} />
