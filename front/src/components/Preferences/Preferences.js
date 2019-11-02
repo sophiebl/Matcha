@@ -82,7 +82,6 @@ const REMOVE_TAG = gql`
 
 
 const Preferences = () => {
-
 	const wrapperStyle = { width: '80%', margin: 30 };
 	const Handle = Slider.Handle;
 	const distanceHandle = (props) => {
@@ -118,7 +117,6 @@ const Preferences = () => {
 		first: true,
 		bio: null,
 		gender: null,
-		tagsNames: [],
 		tags: [],
 		prefOrientation: null,
 		prefAgeMin: 18,
@@ -144,19 +142,23 @@ const Preferences = () => {
 		onError,
 	});
 
-	const Radio = ({ id, name, label, isSelected, onCheckboxChange }) => (
-		<div>
-			<label>
-				<input
-					type="radio"
-					name={name}
-					checked={state[name] === label.toLowerCase().replace(' ', '-')}
-					onChange={() => setState({ ...state, [name]: label.toLowerCase().replace(' ', '-') })}
-				/>
-				{label}
-			</label>
-		</div>
-	);
+	const Radio = ({ name, label }) => {
+		let slabel = label.toLowerCase().replace(' ', '-');
+
+		return (
+			<div>
+				<label>
+					<input
+						type="radio"
+						name={name}
+						checked={state[name] === slabel}
+						onChange={() => setState({ ...state, [name]: slabel })}
+					/>
+					{label}
+				</label>
+			</div>
+		)
+	};
 
 	const onSliderChange = value => {
 		setState({
@@ -237,15 +239,15 @@ const Preferences = () => {
 			<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}} className="valign-50">
 				<div>
 					<h4>Vous etes</h4>
-					<Radio id={1} name="gender" label="Homme">Homme</Radio>
-					<Radio id={2} name="gender" label="Femme">Femme</Radio>
-					<Radio id={3} name="gender" label="Non binaire">Non binaire</Radio>
+					<Radio id={1} name="gender" label="Homme" />
+					<Radio id={2} name="gender" label="Femme" />
+					<Radio id={3} name="gender" label="Non binaire" />
 				</div>
 				<div>
 					<h4>Vous cherchez</h4>
-					<Radio id={4} name="prefOrientation" label="Homme">Homme</Radio>
-					<Radio id={5} name="prefOrientation" label="Femme">Femme</Radio>
-					<Radio id={6} name="prefOrientation" label="Non binaire">Non binaire</Radio>
+					<Radio id={4} name="prefOrientation" label="Homme" />
+					<Radio id={5} name="prefOrientation" label="Femme" />
+					<Radio id={6} name="prefOrientation" label="Peu importe" />
 				</div>
 			</div>
 
