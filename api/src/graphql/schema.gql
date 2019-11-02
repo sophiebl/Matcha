@@ -19,8 +19,10 @@ type User @isAuthenticated {
 	resetToken: String!
 	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
 	likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
-	likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
-    conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+  likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
+  visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
+  visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
+  conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
 }
 
 type Tag @isAuthenticated {
@@ -58,4 +60,5 @@ type Mutation {
   emailVerif(confirmToken: String!): String
   sendPwdReset(email: String!): String
   resetPassword(password: String!, resetToken: String!): String
+  visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
 }
