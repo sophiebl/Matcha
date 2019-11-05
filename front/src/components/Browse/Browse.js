@@ -13,6 +13,7 @@ const GET_USERS = gql`
 		gender
 		firstname
 		lastname
+		birthdate
 		likesCount
 		prefDistance
 		tags {

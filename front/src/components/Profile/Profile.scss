@@ -56,14 +56,17 @@ User info
   margin: 0 auto;
   z-index: 100;
   color: #fff;
-}
+  text-align: left;
+  margin-left: 5px;
 
-.main-infos h2{
-  margin: 10px;
-  font-family: "Meyrin";
-  font-size: 7em;
-  margin-bottom: 0;
-  margin-block-end: 0;
+  h2 {
+	  font-family: "Open Sans";
+	  font-size: 7em;
+	  margin: 0;
+	  margin-block-start: 0;
+	  margin-bottom: 0;
+	  margin-block-end: 0;
+  }
 }
 
 /*
