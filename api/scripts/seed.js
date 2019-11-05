@@ -29,7 +29,7 @@ CREATE (:User {
   email: '{{internet.email}}',
   username: $firstname,
   password: $hash,
-  birthdate: '{{date.past}}',
+  birthdate: $birthdate,
   gender: $gender,
   avatar: $avatar,
   bio: '{{lorem.sentence}}',
@@ -94,6 +94,7 @@ async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
 	const uuid = uniqid('user-');
 	const firstname = faker.name.firstName();
+	const birthdate = faker.date.between("1974-01-01", "2001-12-31");
 	const username = firstname;
 	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
 	const gender = faker.random.arrayElement(['homme', 'femme']);
@@ -101,12 +102,11 @@ async function users(amount = 1) {
 	const prefAgeMin = faker.random.number({min: 18, max: 100});
 	const prefAgeMax = prefAgeMin + 10;
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
-  const prefDistance = faker.random.number({min: 5, max: 200});
-  const avatar = faker.image.avatar();
-  //const avatar = generateImg(),
-  
+	const prefDistance = faker.random.number({min: 5, max: 200});
+	const avatar = faker.image.avatar();
+	//const avatar = generateImg(),
 
-	await session.run(faker.fake(CREATE_USER), {uuid, firstname, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatar});
+	await session.run(faker.fake(CREATE_USER), {uuid, firstname, birthdate, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatar});
   }
 }
 
