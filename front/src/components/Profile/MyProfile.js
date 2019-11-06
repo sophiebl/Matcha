@@ -16,6 +16,7 @@ const ME = gql`
 			me {
 				uid
 				bio
+				birthdate
 				gender
 				firstname
 				lastname
@@ -35,12 +36,12 @@ const MyProfile = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
-	const { uid, firstname, lastname, bio, tags, likesCount, prefRadius, avatar } = data.me;
+	const { uid, bio, tags } = data.me;
 
 	return (
 		<div>
 			<div className="infos-container" key={uid}>
-				<MainInfos firstname={firstname} lastname={lastname} likesCount={likesCount} prefRadius={prefRadius} avatar={avatar} isMyProfile={true} />
+				<MainInfos user={data.me} isMyProfile={true} />
 				<Bio content={bio} />
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
