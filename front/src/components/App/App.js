@@ -9,6 +9,7 @@ import MyProfile from '../Profile/MyProfile';
 import MessagesIndex from '../MessagesIndex/MessagesIndex';
 import Messages from '../Messages/Messages';
 import Preferences from '../Preferences/Preferences';
+import UploadImages from '../UploadImage/UploadImages';
 import EmailVerification from '../EmailVerification/EmailVerification';
 import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
@@ -76,6 +77,7 @@ const App = () => {
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
 						<PrivateRoute exact path="/preferences" component={Preferences} />
+						<PrivateRoute exact path="/uploadimages" component={UploadImages} />
 						<PublicRoute path="/confirm/:confirmToken" component={EmailVerification} />
 						<Route exact path="/reset" component={SendResetPassword} />
 						<Route path="/reset/:resetToken" component={ResetPassword} />

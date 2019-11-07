@@ -22,6 +22,7 @@ const ME = gql`
 				lastname
 				likesCount
 				prefDistance
+				avatar
 				tags {
 					uid
 					name

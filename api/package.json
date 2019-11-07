@@ -11,7 +11,9 @@
     "seed": "node -r esm scripts/seed.js"
   },
   "dependencies": {
+    "@material-ui/core": "^4.5.2",
     "apollo-server": "^2.9.3",
+    "cloudinary": "^1.16.0",
     "dotenv": "^8.1.0",
     "esm": "^3.2.25",
     "faker": "^4.1.0",

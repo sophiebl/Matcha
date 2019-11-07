@@ -6,7 +6,7 @@ import uniqid from 'uniqid';
 import crypto from 'crypto'
 
 dotenv.config()
-const driver  = neo4j.driver('bolt://db:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
+const driver  = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
 const session = driver.session();
 
 
@@ -38,7 +38,7 @@ CREATE (:User {
   prefAgeMax: $prefAgeMax,
   prefOrientation: $prefOrientation,
   prefDistance: $prefDistance,
-  confirmToken: 'null',
+  confirmToken: 'true',
   resetToken: 'null'
 })`;
 
@@ -83,10 +83,9 @@ CREATE (msg1)<-[:AUTHORED]-(u2), (msg2)<-[:AUTHORED]-(u1)
 RETURN u1, u2, conv, msg1, msg2
 `;
 
-const generateImg = () => {
-  let tab = ['women', 'men'];
-
-  return `https://randomuser.me/api/portraits/${tab[Math.floor(Math.random() * (0 - 2) + 2)]}/${Math.floor(Math.random() * (100 - 1) + 1)}.jpg`
+const generateImg = (gender) => {
+  const attr = gender === "homme" ? "man" : "woman";
+  return`https://source.unsplash.com/random/?${attr}`;
 }
 
 /* -----[ Seeding functions ]----- */
@@ -94,7 +93,7 @@ async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
 	const uuid = uniqid('user-');
 	const firstname = faker.name.firstName();
-	const birthdate = faker.date.between("1974-01-01", "2001-12-31");
+	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
 	const username = firstname;
 	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
 	const gender = faker.random.arrayElement(['homme', 'femme']);
@@ -102,9 +101,8 @@ async function users(amount = 1) {
 	const prefAgeMin = faker.random.number({min: 18, max: 100});
 	const prefAgeMax = prefAgeMin + 10;
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
-	const prefDistance = faker.random.number({min: 5, max: 200});
-	const avatar = faker.image.avatar();
-	//const avatar = generateImg(),
+  const prefDistance = faker.random.number({min: 5, max: 200});
+  const avatar = generateImg(gender);
 
 	await session.run(faker.fake(CREATE_USER), {uuid, firstname, birthdate, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatar});
   }

@@ -6,8 +6,8 @@ type User @isAuthenticated {
 	email: String!
 	passsword: String!
 	birthdate: String!
-	avatar: String!
 	gender: String
+	avatar: String!
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
 	elo: Int!
@@ -19,10 +19,16 @@ type User @isAuthenticated {
 	resetToken: String!
 	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
 	likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
-  likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
-  visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
-  visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
-  conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+	likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
+	visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
+	visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
+	conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+}
+
+type File {
+	filename: String!
+	mimetype: String!
+	encoding: String!
 }
 
 type Tag @isAuthenticated {
@@ -52,6 +58,7 @@ type Blocked @isAuthenticated @relation(name: "BLOCKED") {
 
 type Query {
 	me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
+	uploads: [File]
 }
 
 type Mutation {
@@ -61,4 +68,5 @@ type Mutation {
   sendPwdReset(email: String!): String
   resetPassword(password: String!, resetToken: String!): String
   visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
+  uploadImages(file: Upload!): File!
 }
