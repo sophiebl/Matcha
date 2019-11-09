@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import MyActions from "./MyActions";
-//import UsersActions from "./UsersActions";
+import UsersActions from "./UsersActions";
 import Nav from "../Nav/Nav";
 import './History.scss'
 
@@ -16,7 +16,7 @@ const History = () => (
 		<div>
 			<MyActions />
 			<hr/>
-			{/*<UsersActions />*/}
+			<UsersActions />
 		</div>
 
 		<Nav />
