@@ -1,52 +1,26 @@
 import React from 'react';
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-//import { getCurrentUid } from '../../Helpers';
+import { Link } from 'react-router-dom';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import MyActions from "./MyActions";
+//import UsersActions from "./UsersActions";
 import Nav from "../Nav/Nav";
+import './History.scss'
 
-const GET_HISTORY = gql`
-	{
-		me {
-			uid
+const History = () => (
+	<div className="history">
+		<Link to="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></Link>
+		<h2>Historique</h2>
 
-			likedUsers {
-				uid
-				username
-			}
-			likedByUsers {
-				uid
-				username
-			}
-
-			visitedUsers {
-				uid
-				username
-			}
-			visitedUsers {
-				uid
-				username
-			}
-
-		}
-	}
-	`;
-
-const History = () => {
-	const { loading, error, data } = useQuery(GET_HISTORY, {
-		variables: {
-			'uid': getCurrentUid(),
-		},
-		fetchPolicy: 'cache-and-network',
-	});
-
-	if (loading) return <p>Loading...</p>;
-	if (error) return <p>Error :(</p>;
-
-	const visitedUsers = data.me.visitedUsers;
-	return visitedUsers.map(({ uid, username }) => (
-		<div key={uid}>
-			- {username}
+		<div>
+			<MyActions />
+			<hr/>
+			{/*<UsersActions />*/}
 		</div>
-	));
-}
+
+		<Nav />
+	</div>
+);
 
 export default History;
