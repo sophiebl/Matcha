@@ -8,6 +8,4 @@ db/data/databases
 db/logs
 
 .idea/
-.env
 /api/.env
-/front/.env
