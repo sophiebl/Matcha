@@ -10,6 +10,7 @@ import Bio from './Bio';
 import Tag from './Tag';
 import Nav from "../Nav/Nav";
 import './Profile.scss'
+import UploadImages from '../UploadImage/UploadImages.js';
 
 const ME = gql`
 		{
@@ -37,7 +38,7 @@ const MyProfile = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
-	const { uid, bio, tags } = data.me;
+	const { uid, bio, tags} = data.me;
 
 	return (
 		<div>

@@ -8,6 +8,10 @@ type User @isAuthenticated {
 	birthdate: String!
 	gender: String
 	avatar: String!
+	img2: String!
+	img3: String!
+	img4: String!
+	img5: String!
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
 	elo: Int!
@@ -68,5 +72,5 @@ type Mutation {
   sendPwdReset(email: String!): String
   resetPassword(password: String!, resetToken: String!): String
   visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
-  uploadImages(file: Upload!): File!
+  uploadImages(file: String!): File!
 }

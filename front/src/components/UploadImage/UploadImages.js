@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
@@ -13,217 +13,70 @@ const UPLOADIMAGES = gql`
         }
     }
 `;
-/*
-const UploadImages = () => {
-    return (   
-        <UploadButton mutation={UPLOADIMAGES}>
-          {uploadImages => (
-            <input
-            type="file"
-            required
-            onChange={({ target: { validity, files: [file] } }) =>
-              validity.valid && UploadImages({ variables: { file } })
-            }
-           />
-          )}
-        </UploadButton>
-      );
-}
 
-*/
-const UploadImages = () => {
-    console.log('env : '+process.env.REACT_APP_API_IMG_URL);
-    
-    const [state, setState] = useState(
-        { first: true, uploading: false, images: ['sss'] }
-    );
+const UploadImages = (avatar) => {
+    avatar = avatar.location.state.avatar; 
 
-	//if (state['first'] === true) {
-        
-   // }
+    const [upload, setUpload] = useState(false);
+    const [images, setImages] = useState([{avatar}]);
+
     const onChange = e => {
-        const files = Array.from(e.target.files)
-        files.forEach(file => {
+        // if (e.size < 1000000) {
 
-            //setState({ uploading: true })
+            const files = Array.from(e.target.files)
+            files.forEach(file => {
 
-            const formData = new FormData()
-            formData.append('upload_preset', 'dzhukajo');
-            formData.append('file', file);
-            formData.append('cloud_name', 'dtfunbpou');
+                setUpload(true)
 
-            files.forEach((file, i) => {
-                formData.append(i, file)
-            })
+                const formData = new FormData()
+                formData.append('upload_preset', 'dzhukajo');
+                formData.append('file', file);
+                formData.append('cloud_name', 'dtfunbpou');
 
-            fetch(`${process.env.REACT_APP_API_IMG_URL}`, {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(image => {
-                    console.log(image);
-                    console.log(state);
-                    setState({
-                        uploading: false,
-                        images: ['eeeee', 'eergrg']
-                    })
-                    console.log(state);
+                files.forEach((file, i) => {
+                    formData.append(i, file)
                 })
-        });
+
+                fetch(`${process.env.REACT_APP_API_IMG_URL}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(image => {
+                        let newImgs = images;
+                        // if (newImgs.length >= 5) {
+                        //     newImgs[newImgs.length - 1] = image;
+                        // } else {
+                        //     newImgs.push(image);
+                        // }
+                        newImgs.push(image);
+                        console.log("newImages", newImgs)
+                        setImages(newImgs);
+                        setUpload(false);
+                        // )
+                    })
+            });
+    // /    }
     }
 
     const removeImage = id => {
-        setState({
-            images: state.filter(image => image.public_id !== id)
-        })
+        setImages(
+            images.filter(image => image.public_id !== id)
+        )
     }
 
-    const { uploading, images } = state
-
-    const content = () => {
-        switch(true) {
-            case uploading:
-                return <UploadSpinner/>
-            case images.length > 0:
-                return <Images images={images} removeImage={removeImage} />
-            default:
-                return <UploadButton onChange={onChange} /> 
-        }
+    if (upload)
+        return <UploadSpinner />
+    else if (!upload && images.length >= 5)
+        return <Images images={images} removeImage={removeImage} />
+    else if (!upload && images.length < 5) {
+        return  <div>
+                    <Images images={images} removeImage={removeImage} />
+                    <UploadButton onChange={onChange} />
+                </div>
     }
-
-    return (
-        <div>
-            <div className='buttons'>
-                {content()}
-            </div>
-        </div>
-    )
+    else 
+        return <UploadButton onChange={onChange} />
 }
 
 export default UploadImages;
-
-/*
-export default class UploadImages extends React.Component {
-
-    state = {
-        uploading: false,
-        images: []
-    }
-
-    onChange = e => {
-        const files = Array.from(e.target.files)
-        this.setState({ uploading: true })
-
-        const formData = new FormData()
-
-        files.forEach((file, i) => {
-            formData.append(i, file)
-        })
-
-       fetch(`${REACT_APP_API_IMG_URL}/image-upload`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(images => {
-            this.setState({
-                uploading: false,
-                images
-            })
-        })
-    }
-
-    removeImage = id => {
-        this.setState({
-            images: this.state.images.filter(image => image.public_id !== id)
-        })
-    }
-
-    render() {
-        const { uploading, images } = this.state
-
-        const content = () => {
-            switch(true) {
-                case uploading:
-                    return <UploadSpinner/>
-                case images.length > 0:
-                    return <Images images={images} removeImage={this.removeImage} />
-                default:
-                    return <UploadButton onChange={this.onChange} /> 
-            }
-        }
-
-        return (
-            <div>
-                <div className='buttons'>
-                    {content()}
-                </div>
-            </div>
-        )
-    }
-}
-*/
-//export default UploadImages;
-
-/*
-export default class UploadImages extends React.Component {
-
-    state = {
-        uploading: false,
-        images: []
-    }
-
-    onChange = e => {
-        const files = Array.from(e.target.files)
-        this.setState({ uploading: true })
-
-        const formData = new FormData()
-
-        files.forEach((file, i) => {
-            formData.append(i, file)
-        })
-
-        fetch(`${REACT_APP_API_IMG_URL}/image-upload`, {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(images => {
-                this.setState({
-                    uploading: false,
-                    images
-                })
-            })
-    }
-
-    removeImage = id => {
-        this.setState({
-            images: this.state.images.filter(image => image.public_id !== id)
-        })
-    }
-
-    render() {
-        const { uploading, images } = this.state
-
-        const content = () => {
-            switch (true) {
-                case uploading:
-                    return <UploadSpinner />
-                case images.length > 0:
-                    return <Images images={images} removeImage={this.removeImage} />
-                default:
-                    return <UploadButton onChange={this.onChange} />
-            }
-        }
-
-        return (
-            <div>
-                <div className='buttons'>
-                    {content()}
-                </div>
-            </div>
-        )
-    }
-}
-*/
