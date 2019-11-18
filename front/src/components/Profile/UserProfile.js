@@ -21,7 +21,7 @@ const VISIT_PROFILE = gql`
 `;
 
 const UserProfile = ({ user, dispatch }) => {
-	const { uid, bio, tags } = user;
+	const { uid, bio, tags, likedUsers } = user;
 
 	const [visitProfile] = useMutation(VISIT_PROFILE, {
 		onError: data => console.log(data),
@@ -43,7 +43,7 @@ const UserProfile = ({ user, dispatch }) => {
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
 				</div>
-				<LikeDislike uidUser={uid} dispatch={dispatch} />
+				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 			</div>
 			<Nav />
 		</div>
