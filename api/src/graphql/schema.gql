@@ -1,33 +1,35 @@
 type User @isAuthenticated {
-	uid: ID!
+    uid: ID!
     username: String!
-	firstname: String!
-	lastname: String!
-	email: String!
-	passsword: String!
-	birthdate: String!
-	avatar: String!
-	gender: String
-	bio: String
-	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
-	elo: Int!
-	prefAgeMin: Int
-	prefAgeMax: Int
-	prefOrientation: String
-	prefDistance: Int
-	confirmToken: String!
-	resetToken: String!
-	likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
-	likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
-  likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
-  visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
-  visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
-  conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+    firstname: String!
+    lastname: String!
+    email: String!
+    passsword: String!
+    birthdate: String!
+    avatar: String!
+    gender: String
+    bio: String
+    tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
+    elo: Int!
+    prefAgeMin: Int
+    prefAgeMax: Int
+    prefOrientation: String
+    prefDistance: Int
+    confirmToken: String!
+    resetToken: String!
+    likesCount: Int @cypher(statement: "MATCH (User)-[r:LIKED]->(this) RETURN COUNT(r)")
+    likedUsers: [User] @relation(name: "LIKED", direction: "OUT")
+    likedByUsers: [User] @relation(name: "LIKED", direction: "IN")
+    visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
+    visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
+    blockedUsers: [User] @relation(name: "BLOCKED", direction: "OUT")
+    blockedByUsers: [User] @relation(name: "BLOCKED", direction: "IN")
+    conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
 }
 
 type Tag @isAuthenticated {
-	uid: ID!
-	name: String!
+    uid: ID!
+    name: String!
 }
 
 type Conversation @isAuthenticated {
@@ -38,9 +40,9 @@ type Conversation @isAuthenticated {
 }
 
 type Message @isAuthenticated {
-	uid: ID!
+    uid: ID!
     author: User @relation(name: "AUTHORED", direction: "IN")
-	content: String!
+    content: String!
 }
 
 type Blocked @isAuthenticated @relation(name: "BLOCKED") {
@@ -51,14 +53,14 @@ type Blocked @isAuthenticated @relation(name: "BLOCKED") {
 }
 
 type Query {
-	me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
+    me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
 }
 
 type Mutation {
-  signup (firstname: String!, lastname: String!, username: String!, email: String!, password: String!): String
-  login(username: String!, password: String!): String
-  emailVerif(confirmToken: String!): String
-  sendPwdReset(email: String!): String
-  resetPassword(password: String!, resetToken: String!): String
-  visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
+    signup (firstname: String!, lastname: String!, username: String!, email: String!, password: String!): String
+    login(username: String!, password: String!): String
+    emailVerif(confirmToken: String!): String
+    sendPwdReset(email: String!): String
+    resetPassword(password: String!, resetToken: String!): String
+    visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
 }
