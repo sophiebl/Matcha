@@ -14,6 +14,7 @@ const GET_USERS = gql`
 		firstname
 		lastname
 		birthdate
+		avatar
 		likesCount
 		prefDistance
 		tags {

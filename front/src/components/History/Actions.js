@@ -1,7 +1,6 @@
 import React from 'react';
 //import { Link } from 'react-router-dom';
 
-import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
 
 import './History.scss'
@@ -22,8 +21,8 @@ const Actions = ({ query }) => {
 	if (error) return <p>Error :(</p>;
 
 	return <div>
-		{ div('Liked', data.me.likedUsers) }
-		{ div('Visited', data.me.visitedUsers) }
+		{ div(data.me.likedUsers ? 'Liked' : 'Liked by', data.me.likedUsers || data.me.likedByUsers) }
+		{ div(data.me.visitedUsers ? 'Visited' : 'Visited by', data.me.visitedUsers || data.me.visitedByUsers) }
 	</div>
 }
 

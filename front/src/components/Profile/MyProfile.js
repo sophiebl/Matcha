@@ -17,6 +17,7 @@ const ME = gql`
 				uid
 				bio
 				birthdate
+				avatar
 				gender
 				firstname
 				lastname

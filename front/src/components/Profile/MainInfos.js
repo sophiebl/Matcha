@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Avatar from './Avatar.js';
 
 const MainInfos = ({ user, isMyProfile }) => {
-	const { firstname, birthdate, likesCount, prefRadius } = user;
+	const { firstname, birthdate, avatar, likesCount, prefRadius } = user;
 	const age = Math.abs(new Date(Date.now() - (new Date(birthdate))).getFullYear() - 1970);
 
 	return (
@@ -34,7 +34,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 					</div>
 				</div>
 			)}
-			<Avatar src="/img/userPicture.jpg" />
+			<Avatar src={avatar} />
 			<div className="main-infos">
 				<div className="mb-5">
 					<h2>{firstname}</h2>
