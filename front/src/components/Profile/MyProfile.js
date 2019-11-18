@@ -21,6 +21,7 @@ const ME = gql`
 				gender
 				firstname
 				lastname
+				elo
 				likesCount
 				prefDistance
 				tags {
