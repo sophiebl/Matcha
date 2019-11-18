@@ -48,7 +48,9 @@ const div = (title, users) => <>
 	<h3>{title}</h3>	
 	{ users.map(({ uid, username }) => (
 		//<Link to="/user" style={{color: 'black', display: 'inline-block', float: 'left'}}>
-			<div key={uid}>- {username}</div>
+		<div className="action" key={uid}>
+			<div>{username}</div>
+		</div>
 		//</Link>
 	))}
 </>
@@ -66,8 +68,8 @@ const Actions = ({ mode }) => {
 	if (error) return <p>Error :(</p>;
 
 	return <div>
-		{ div(data.me.likedUsers ? 'Liked' : 'Liked by', data.me.likedUsers || data.me.likedByUsers) }
-		{ div(data.me.visitedUsers ? 'Visited' : 'Visited by', data.me.visitedUsers || data.me.visitedByUsers) }
+		{ div(data.me.likedUsers ? 'Vous avez liké' : 'Ils vous ont liké', data.me.likedUsers || data.me.likedByUsers) }
+		{ div(data.me.visitedUsers ? 'Vous avez vu ces profils' : 'Ils ont vu votre profil', data.me.visitedUsers || data.me.visitedByUsers) }
 	</div>
 }
 
