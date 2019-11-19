@@ -152,7 +152,6 @@ const resolvers = {
 			  return file;
 			});
 		  },
-*/
 
 
 		async uploadImages(parent, { file }) {
@@ -176,6 +175,7 @@ const resolvers = {
 	  
 			return { filename, mimetype, encoding };
 		  }
+		  */
 
 	}
 };
