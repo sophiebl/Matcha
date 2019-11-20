@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 import MainInfos from './MainInfos';
 import Bio from './Bio';
 import LikeDislike from './LikeDislike';
-import ReportButton from './ReportButton';
+import BlockButton from './ReportButton';
 import Tag from './Tag';
 import Nav from "../Nav/Nav";
 import './Profile.scss'
@@ -45,7 +45,7 @@ const UserProfile = ({ user, dispatch }) => {
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
-				<ReportButton />
+				<BlockButton uidUser={uid} dispatch={dispatch} />
 			</div>
 			<Nav />
 		</div>

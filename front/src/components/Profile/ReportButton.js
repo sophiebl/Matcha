@@ -1,29 +1,63 @@
 import React from 'react';
 
 import { gql } from "apollo-boost";
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
+
+import { getCurrentUid } from '../../Helpers';
 
 const BLOCK_USER = gql`
-	mutation AddUserBlockedUsers($from: User!, $to: User!) {
+	mutation AddUserBlockedUsers($from: _UserInput!, $to: _UserInput!) {
 		AddUserBlockedUsers(from: $from, to: $to) {
 			to {
 				uid
-					blockedByUsers {
-					uid
-					username
-				}
 			}
 		}
 	}
 `;
 
-const ReportButton = ({ uidUser }) => {
+const BlockButton = ({ uidUser, dispatch }) => {
+	const [block] = useMutation(BLOCK_USER,
+		{
+			onCompleted: data => {
+				console.log('blocked');
+				dispatch({ type: 'dislike' });
+			},
+			onError: data => console.log(data),
+		});
+
+	const clickBlock = () => {
+		block({
+			variables: {
+				from: { uid: getCurrentUid() },
+				to: { uid: uidUser },
+			}
+		});
+	};
+
+
+	const [report] = useMutation(BLOCK_USER,
+		{
+			onCompleted: data => {
+				console.log('reported (wip)');
+				dispatch({ type: 'dislike' });
+			},
+			onError: data => console.log(data),
+		});
+
+	const clickReport = () => {
+		report({
+			variables: {
+				from: { uid: getCurrentUid() },
+				to: { uid: uidUser },
+			}
+		});
+	};
 
 	return (
-		<button className="txt-btn color-red" onClick={() => null}>
-			Signaler l'utilisateur
-		</button>
-	);
+		<div>
+			<a className="txt-btn color-r" onClick={clickBlock}>Bloquer</a> - <a className="txt-btn color-r" onClick={clickReport}>Signaler</a>
+		</div>
+	)
 }
 
-export default ReportButton;
+export default BlockButton;
