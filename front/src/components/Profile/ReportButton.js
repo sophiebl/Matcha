@@ -15,6 +15,14 @@ const BLOCK_USER = gql`
 	}
 `;
 
+const REPORT_USER = gql`
+	mutation reportUser($uid: ID!) {
+		reportUser(uid: $uid) {
+			uid
+		}
+	}
+`;
+
 const BlockButton = ({ uidUser, dispatch }) => {
 	const [block] = useMutation(BLOCK_USER,
 		{
@@ -25,7 +33,7 @@ const BlockButton = ({ uidUser, dispatch }) => {
 			onError: data => console.log(data),
 		});
 
-	const clickBlock = () => {
+	const onClickBlock = () => {
 		block({
 			variables: {
 				from: { uid: getCurrentUid() },
@@ -35,27 +43,26 @@ const BlockButton = ({ uidUser, dispatch }) => {
 	};
 
 
-	const [report] = useMutation(BLOCK_USER,
+	const [report] = useMutation(REPORT_USER,
 		{
 			onCompleted: data => {
-				console.log('reported (wip)');
+				console.log('reported');
 				dispatch({ type: 'dislike' });
 			},
 			onError: data => console.log(data),
 		});
 
-	const clickReport = () => {
+	const onClickReport = () => {
 		report({
 			variables: {
-				from: { uid: getCurrentUid() },
-				to: { uid: uidUser },
+				uid: uidUser,
 			}
 		});
 	};
 
 	return (
 		<div>
-			<a className="txt-btn color-r" onClick={clickBlock}>Bloquer</a> - <a className="txt-btn color-r" onClick={clickReport}>Signaler</a>
+			<a href="#0" className="txt-btn color-r" onClick={onClickBlock}>Bloquer</a> - <a href="#0" className="txt-btn color-r" onClick={onClickReport}>Signaler</a>
 		</div>
 	)
 }

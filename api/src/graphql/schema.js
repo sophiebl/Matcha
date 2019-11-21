@@ -27,7 +27,7 @@ const resolvers = {
 	},
 
 	Mutation: {
-		async signup (_, { firstname, lastname, username, email, password }) {
+		async signup(_, { firstname, lastname, username, email, password }) {
 			const uid = uniqid('user-');
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
@@ -122,7 +122,7 @@ const resolvers = {
 				});
 		},
 
-		async login (_, { username, password }) {
+		async login(_, { username, password }) {
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			return await session.run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
 				.then(result => {
@@ -139,7 +139,19 @@ const resolvers = {
 						{ expiresIn: '1d' }
 					)
 				});	
-		}
+		},
+
+		async reportUser(_, { uid }) {
+			return await session.run(`MATCH (from:User {uid: "user-fvl84uzk16j2nsa"}), (to:User {uid: $uid}), (to)<-[ra:REPORTED]-(:User) CREATE (from)-[r:REPORTED]->(to) RETURN COUNT(ra)`, { uid }) //TODO: MERGE ?
+				.then(result => {
+					if (result.records.length < 1)
+						throw new Error('UnknownUser')
+					const user = result.records[0].get('COUNT(ra)').properties;
+					console.log(user);
+					return user;
+				});	
+		},
+
 	}
 };
 
