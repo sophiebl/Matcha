@@ -23,9 +23,10 @@ const GET_USERS = gql`
 			name
 		}
 		likedUsers {
-      uid
+			uid
+			username
+		}
     }
-	}
 }
 `;
 

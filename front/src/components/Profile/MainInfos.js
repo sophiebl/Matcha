@@ -15,7 +15,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 					<Link to="/preferences" className="btn bg-r btn-rond more">
 						<FontAwesomeIcon className="color-w" size="lg" icon="plus" />
 					</Link>
-					<Link to="#" className="btn bg-bg btn-rond image">
+					<Link to={{ pathname: '/uploadimages', state: {avatar}}} className="btn bg-bg btn-rond image">
 						<FontAwesomeIcon className="color-w" size="2x" icon="image" />
 					</Link>
 				</div>
