@@ -60,9 +60,10 @@ const BlockButton = ({ uidUser, dispatch }) => {
 		});
 	};
 
+
 	return (
 		<div>
-			<a href="#0" className="txt-btn color-r" onClick={onClickBlock}>Bloquer</a> - <a href="#0" className="txt-btn color-r" onClick={onClickReport}>Signaler</a>
+			<span className="txt-btn color-r" onClick={onClickBlock}>Bloquer</span> - <span className="txt-btn color-r" onClick={onClickReport}>Signaler</span>
 		</div>
 	)
 }
