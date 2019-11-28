@@ -38,11 +38,7 @@ CREATE (:User {
   prefAgeMax: $prefAgeMax,
   prefOrientation: $prefOrientation,
   prefDistance: $prefDistance,
-<<<<<<< HEAD
-  confirmToken: 'null',
-=======
   confirmToken: 'true',
->>>>>>> image
   resetToken: 'null'
 })`;
 
@@ -97,11 +93,7 @@ async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
 	const uuid = uniqid('user-');
 	const firstname = faker.name.firstName();
-<<<<<<< HEAD
-	const birthdate = faker.date.between("1974-01-01", "2001-12-31");
-=======
 	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
->>>>>>> image
 	const username = firstname;
 	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
 	const gender = faker.random.arrayElement(['homme', 'femme']);

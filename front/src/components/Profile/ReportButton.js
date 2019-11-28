@@ -62,8 +62,8 @@ const BlockButton = ({ uidUser, dispatch }) => {
 
 
 	return (
-		<div>
-			<span className="txt-btn color-r" onClick={onClickBlock}>Bloquer</span> - <span className="txt-btn color-r" onClick={onClickReport}>Signaler</span>
+		<div className="block-container">
+			<span className="txt-btn color-r" onClick={onClickBlock}>Bloquer | </span><span className="txt-btn color-r" onClick={onClickReport}>Signaler</span>
 		</div>
 	)
 }

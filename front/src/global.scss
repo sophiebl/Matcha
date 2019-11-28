@@ -18,13 +18,14 @@ body {
 }
 
 $f-base : 1.3em;
+$f-s : 0.9em;
 $f-m : 1.2em;
 $f-l : 1.5em;
 $f-xxl : 7em;
 
 .f-base {font-size: $f-base;}
 .f-xs {font-size: 0.8em;}
-.f-s {font-size: 0.9em;}
+.f-s {font-size: $f-s;}
 .f-m {font-size: 1.2em;}
 .f-l {font-size: $f-l;}
 .f-xl {font-size: 1.6em;}
@@ -43,15 +44,16 @@ $dark-grey: #C4C4C4;
 $txt-color: #7b7b7b;
 $online: #1AF816;
 $offline: #F81616;
+$liked: #f7e294;
 
 .color-w{color: $white;}
 .color-r{color: $red;}
+.color-liked{color: $liked;}
 .color-dg{color: $dark-grey;}
 
 .bg-bg{background-color: $blue-green;}
 .bg-g{background-color: $grey;}
 .bg-r{background-color: $red;}
-
 /* Dimension 
 .w-60{width: 60px;}
 .h-60{height: 60px;}*/
@@ -60,11 +62,14 @@ $offline: #F81616;
 /* Position */
 .txt-center{text-align: center;}
 .txt-left{text-align: left;}
+.txt-right{text-align: right;}
 
 .pos-rel {position: relative;}
 
 .mh-30{margin: 0 30px;}
 .mb-5{margin-bottom: 5px;}
+
+.ph-5{padding: 0 5px;}
 
 body * {
   box-sizing: border-box;
@@ -98,6 +103,15 @@ a {
   }
 }
 
+.valign50 {
+  width: 100%;
+  > div {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 49%;
+  }
+}
+
 .valign-50 {
   width: 100%;
   > div {
@@ -116,4 +130,12 @@ a {
     background: none;
     border: none;
     cursor: pointer;
+    font-size: $f-s;
+}
+
+.block-container{
+  height: 10vh;
+  position: relative;
+  text-align: center;
+  bottom: -40px;
 }

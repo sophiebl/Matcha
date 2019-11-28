@@ -3,10 +3,22 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Avatar from './Avatar.js';
+import { getCurrentUid } from '../../Helpers';
 
-const MainInfos = ({ user, isMyProfile }) => {
+const MainInfos = ({ user, isMyProfile, likedUsers }) => {
 	const { firstname, birthdate, avatar, elo, likesCount, prefRadius } = user;
 	const age = Math.abs(new Date(Date.now() - (new Date(birthdate))).getFullYear() - 1970);
+	const LikeIcon = () => {
+		if (likedUsers.find(u => u.uid === getCurrentUid())) {
+			return <div className="likedinfos txt-right color-liked">
+					<span>already liked you</span>
+					<FontAwesomeIcon className="ph-5" size="3x" icon={['fas', 'check']} />
+				</div>
+		}
+		else {
+			return <div></div>
+		}
+	}
 
 	return (
 		<div className="pos-rel img-container">
@@ -35,17 +47,12 @@ const MainInfos = ({ user, isMyProfile }) => {
 				</div>
 			)}
 			<Avatar src={avatar} />
-			<div className="main-infos">
+			<div className="main-infos valign50">
 				<div className="mb-5">
 					<h2>{firstname}</h2>
 					<span className="f-base">Paris • {age} ans • {elo} pts</span>
 				</div>
-				<div>
-					<div></div>
-				</div>
-				<div>
-
-				</div>
+				<LikeIcon/>
 			</div>
 		</div>
 	);

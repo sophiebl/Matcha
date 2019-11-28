@@ -6,13 +6,13 @@ import { getCurrentUid } from '../../Helpers';
 const LikeDislike = ({ uidUser, likedUsers, dispatch }) => {
 	const LikeIcon = () => {
 		if (likedUsers.find(u => u.uid === getCurrentUid()))
-			return <FontAwesomeIcon className="color-bg" size="3x" icon={['far', 'star']} />
+			return <FontAwesomeIcon className="color-liked" size="3x" icon={['far', 'star']} />
 		else
 			return <FontAwesomeIcon className="color-w" size="3x" icon={['far', 'star']} />
 	}
 
 	return (
-		<div className="valign">
+		<div className="valign action-container">
 			<div>
 				<button className="bg-g btn-rond dislike" onClick={() => dispatch({ type: 'dislike' })}>
 					<FontAwesomeIcon className="color-w" size="3x" icon="times" />

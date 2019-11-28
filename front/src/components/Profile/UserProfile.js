@@ -39,7 +39,7 @@ const UserProfile = ({ user, dispatch }) => {
 	return (
 		<div>
 			<div className="infos-container" key={uid}>
-				<MainInfos user={user} isMyProfile={false} />
+				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers}/>
 				<Bio bio={bio} />
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }

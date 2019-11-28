@@ -1,7 +1,8 @@
 @import '../../global';
 
 .infos-container {
-  height: 100vh;
+  //height: 100vh;
+  margin-bottom: 5vh;
 }
 
 /*
@@ -77,7 +78,9 @@ User bio
   width: 90%;
   margin: 30px 20px 15px;
   color: $txt-color;
-  font-size: $f-base;
+  font-size: 1em;
+  max-height: 7vh;
+  overflow: hidden;
 }
 
 /*
@@ -89,7 +92,7 @@ User tag
   flex-direction: row;
   flex-wrap: wrap;
   overflow-y: scroll;
-  height: 89px;
+  height: 11vh;
   //margin-bottom: 20px;
 }
 
@@ -117,4 +120,14 @@ User tag
   border-radius: 32px;
   background-image: url(/img/tag-travel.png);
   background-size: contain;
+}
+
+.action-container{
+  margin: 2vh auto;
+}
+
+.likedinfos > span{
+  font-family: "Meyrin";
+  font-weight: bold;
+  font-size: $f-m;
 }
