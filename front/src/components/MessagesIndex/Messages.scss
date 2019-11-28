@@ -1,0 +1,29 @@
+@import '../../global';
+
+#messages-header{
+    padding: 20px 25px !important;
+}
+
+.msg-container{
+    margin: 2px 0;    
+}
+
+.author-container{
+    position: relative;
+    width: 59px;
+    height: 56px;
+}
+
+.author-container > .rond{
+    position: absolute;
+    top:0;
+    right:0;
+    width: 11px;
+    height: 11px;
+}
+
+.author-container > .img{
+    position: absolute;
+    bottom:0;
+    left:0;
+}

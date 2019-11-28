@@ -2,6 +2,7 @@
 
 h2 {
   margin-top: 0;
+  font-size: $f-l;
 }
 
 .history {
@@ -13,5 +14,21 @@ h2 {
   flex-direction: row;
 }
 
-.action {
+.history-sections > a{
+  display: inline-block;
+  vertical-align: baseline;
+  width: 49%;
+  font-family: "Meyrin";
+  font-weight: bold;
+  font-size: 1.8em;
+  color: $blue-green;
+}
+
+.history-sections h3{
+  text-align: left;
+  font-size: 1em;
+}
+
+.history-sections > div{
+  text-align: left;
 }

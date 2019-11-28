@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getCurrentUid } from '../../Helpers';
 import Nav from "../Nav/Nav";
 
+import './Messages.scss'
+
 const GET_CONVS = gql`
 	query User($uid: ID) {
 	  User(uid: $uid) {
@@ -16,7 +18,8 @@ const GET_CONVS = gql`
 			uid
 			author {
 			  uid
-			  firstname
+				firstname
+				avatar
 			}
 			content
 		  }
@@ -28,12 +31,13 @@ const GET_CONVS = gql`
 const divStyle = {
   display: 'flex',
   flexDirection: 'row',
-  marginLeft: '25px',
+	marginLeft: '25px'
 };
 
 const imgStyle = {
-  borderRadius: '50%',
-  height: '10vh',
+  borderRadius: '50px',
+  height: '50px',
+  width: '50px'
 };
 
 const txtStyle = {
@@ -44,8 +48,8 @@ const txtStyle = {
 const hrStyle = {
   display: 'block',
   height: '1px',
-  border: 0,
-  borderTop: '1px solid #ccc',
+	border: 0,
+	borderBottom: '1px solid rgb(108, 123, 138,0.2)',
   margin: '1em 0',
   padding: 0
 };
@@ -54,12 +58,14 @@ const nameStyle = {
   color: 'black',
   fontSize: '15px',
   fontWeight: 'bold',
-  marginTop: '5px'
+  marginTop: '5px',
+  marginBottom: '2px'
 };
 
 const msgStyle = {
   color: '#27d5db',
-  fontSize: '15px',
+  fontSize: '13px',
+  margin: '0',
 };
 
 const MessagesList = () => {
@@ -75,17 +81,20 @@ const MessagesList = () => {
 
   const convs = data.User[0].conversations;
   return convs.map(({ uid, lastMessage }) => (
-	<div key={uid}>
+	<div key={uid} className="msg-container">
 	  <Link to={"/messages/" + uid}>
 		<div style={divStyle}>
-		  <img alt="user icon" style={imgStyle} src="https://bulma.io/images/placeholders/128x128.png" />
-		  <div style={txtStyle}>
+			<div className="author-container">
+					<div className="rond"></div>
+					<img alt="user icon" className="img" style={imgStyle} src={lastMessage.author.avatar} />
+			</div>
+			<div style={txtStyle}>
 			<p style={nameStyle}>{lastMessage.author.firstname}</p>
 			<p style={msgStyle}>{lastMessage.content}</p>
-		  </div>
+		</div>
 		</div>
 	  </Link>
-	  <hr style={hrStyle}/>
+	  <div style={hrStyle}></div>
 	</div>
   ));
 }
@@ -93,9 +102,10 @@ const MessagesList = () => {
 const MessagesIndex = () => {
   return (
 	<div>
-	  <Link to="/" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="3x" icon="times" /></Link>
-	  <br />
-	  <p style={{fontSize: '15px'}}><strong>Discussions</strong></p>
+		<div id="messages-header">
+	  	<Link to="/" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></Link>
+	  	<p style={{fontSize: '15px'}}><strong>Discussions</strong></p>
+		</div>
 	  <MessagesList />
 	  <Nav />
 	</div>

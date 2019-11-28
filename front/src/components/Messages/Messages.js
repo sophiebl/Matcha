@@ -70,7 +70,7 @@ const Messages = ({ match }) => {
 
   return (
 	<div>
-	  <Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="3x" icon="angle-left" /></Link>
+	  <Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="1x" icon="times" /></Link>
 	  <p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
 	  <Chat conv={data.Conversation[0]}/>
 	</div>

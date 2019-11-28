@@ -18,14 +18,13 @@ const History = () => {
 
 			<div>
 				<div className="history-sections">
-					<button onClick={() => setMode("own")}>Mes actions</button>
-					<button onClick={() => setMode("others")}>Actions des autres</button>
+					<a href="#" onClick={() => setMode("own")}>Moi</a>
+					<a href="#" onClick={() => setMode("others")}>Mes matchs</a>
 				</div>
 				<div className="history-sections">
 					<Actions mode={mode}/>
 				</div>
 			</div>
-
 			<Nav />
 		</div>
 	);
