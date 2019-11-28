@@ -6,6 +6,8 @@ import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getCurrentUid } from '../../Helpers';
 
+import '../MessagesIndex/Messages.scss'
+
 const GET_CONV = gql`
 	query Conversation($uid: ID) {
 	  Conversation(uid: $uid) {
@@ -16,8 +18,9 @@ const GET_CONV = gql`
 		messages(orderBy: uid_asc) {
 		  uid
 		  author {
-			uid
-			firstname
+				uid
+				firstname
+				avatar
 		  }
 		  content
 		}
@@ -43,11 +46,13 @@ const Chat = ({ conv }) => {
 	  bubbleStyles={
 		{
 		  text: {
-			fontSize: 13
+			fontSize: 12,
+			fontWeight: 600
 		  },
 		  chatbubble: {
+			background: 'linear-gradient(162.6deg, #2DC9EB 0%, #14D2B8 100%)',
 			borderRadius: 50,
-			padding: 10
+			padding: '15px 25px',
 		  }
 		}
 	  }
@@ -69,11 +74,11 @@ const Messages = ({ match }) => {
   const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.firstname).join(', ');
 
   return (
-	<div>
-	  <Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="1x" icon="times" /></Link>
-	  <p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
-	  <Chat conv={data.Conversation[0]}/>
-	</div>
+		<div id="messages-container">
+			<Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="angle-left" /></Link>
+			<p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
+			<Chat conv={data.Conversation[0]}/>
+		</div>
   );
 }
 
