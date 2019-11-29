@@ -5,19 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Avatar from './Avatar.js';
 import { getCurrentUid } from '../../Helpers';
 
-const MainInfos = ({ user, isMyProfile, likedUsers }) => {
-	const { firstname, birthdate, avatar, elo, likesCount, prefRadius } = user;
+const MainInfos = ({ user, isMyProfile }) => {
+	const { firstname, birthdate, avatar, elo, likesCount, prefRadius, likedUsers } = user;
 	const age = Math.abs(new Date(Date.now() - (new Date(birthdate))).getFullYear() - 1970);
 	const LikeIcon = () => {
-		if (likedUsers.find(u => u.uid === getCurrentUid())) {
-			return <div className="likedinfos txt-right color-liked">
-					<span>already liked you</span>
-					<FontAwesomeIcon className="ph-5" size="3x" icon={['fas', 'check']} />
-				</div>
-		}
-		else {
-			return <div></div>
-		}
+		return (likedUsers && likedUsers.find(u => u.uid === getCurrentUid())) ? (
+			<div className="likedinfos txt-right color-liked">
+				<span>already liked you</span>
+				<FontAwesomeIcon className="ph-5" size="3x" icon={['fas', 'check']} />
+			</div>
+		) : null
 	}
 
 	return (
