@@ -21,8 +21,8 @@ const MainInfos = ({ user, isMyProfile }) => {
 		<div className="pos-rel img-container">
 			{ isMyProfile ? (
 				<div className="nav-user w-100">
-					<Link to="/preferences" className="btn bg-r btn-rond more">
-						<FontAwesomeIcon className="color-w" size="lg" icon="plus" />
+					<Link to="/history" className="btn bg-r btn-rond more">
+						<FontAwesomeIcon className="color-w" size="2x" icon="history" />
 					</Link>
 					<Link to={{ pathname: '/uploadimages', state: {avatar}}} className="btn bg-bg btn-rond image">
 						<FontAwesomeIcon className="color-w" size="2x" icon="image" />
