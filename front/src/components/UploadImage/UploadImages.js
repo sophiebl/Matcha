@@ -55,11 +55,46 @@ const GET_IMGS = gql`
 
 
 const UploadImages = (avatar) => {
-    const { loading, error, data } = useQuery(GET_IMGS);
-    console.log(data);
+
+    // const [images, setImages] = useState({
+    //     first: true,
+    //     img: [],
+    // });
+    // // const { loading, error, data } = useQuery(GET_IMGS);
+    // console.log("get imgs");
+    //     if (images['first'] === true) {
+    //         if(data){
+    //         console.log(data);
+    //         console.log(data.Image[0].url);
+    //         var imgDB = data.Image[0].url;
+    //         console.log(imgDB);
+
+    //         let img = [];
+    //         for (const v of data.Image.values())
+    //         {
+    //             console.log('v', v.url);
+    //             img.push(v.url);
+    //         }
+    //         setImages({
+    //             first: false,
+    //             img: v.url,
+    //         });
+    //     }
+    // }
     avatar = avatar.location.state.avatar; 
     const [upload, setUpload] = useState(false);
     const [images, setImages] = useState([{avatar}]);
+    const { loading, error, data } = useQuery(GET_IMGS);
+    // if(data){
+    //     console.log(data);
+    //     console.log(data.Image[0].url);
+    //     var imgDB = data.Image[0].url;
+    //     console.log(imgDB);
+    //     var imgDB2 = data.Image[1].url;
+    // }
+    // const [images, setImages] = useState([{avatar, imgDB}]);
+    //     console.log(imgDB);
+
     const onError = data => console.log(data);
 
     const [addImg] = useMutation(ADD_IMG, {
