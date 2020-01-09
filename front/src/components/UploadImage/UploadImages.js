@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-//import { withRouter } from "react-router-dom";
+import React from "react";
 import { gql } from "apollo-boost";
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import UploadSpinner from './UploadSpinner';
 import Images from './Images';
 import UploadButton from './UploadButton';
 import nextId from "react-id-generator";
-import { getCurrentUid } from '../../Helpers';
 
 const CREATE_IMG = gql`
     mutation CreateImage($uid: ID!, $url: String!) {
