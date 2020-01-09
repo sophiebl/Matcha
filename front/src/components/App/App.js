@@ -8,6 +8,7 @@ import Browse from '../Browse/Browse';
 import MyProfile from '../Profile/MyProfile';
 import MessagesIndex from '../MessagesIndex/MessagesIndex';
 import Messages from '../Messages/Messages';
+import Sockets from '../Sockets/Sockets';
 import Preferences from '../Preferences/Preferences';
 import History from '../History/History';
 import UploadImages from '../UploadImage/UploadImages';
@@ -71,6 +72,7 @@ const App = () => {
 				<Router>
 					<Switch>
 						<PublicRoute exact path="/login" component={Login} />
+						<PrivateRoute exact path="/sockets" component={Sockets} />
 						<Route exact path="/logout" component={Logout} />
 						<PublicRoute exact path="/signup" component={Signup} />
 						<PrivateRoute exact path="/browse" component={Browse} />
