@@ -7,7 +7,7 @@ type User @isAuthenticated {
 	passsword: String!
 	birthdate: String!
 	gender: String
-	images: [Image] @relation(name: "HAS_IMAGE", direction: "OUT")
+	images: [Image] @relation(name: "HAS_IMG", direction: "OUT")
 	avatar: String!
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")

@@ -161,8 +161,7 @@ const UploadImages = (avatar) => {
                     <UploadButton onChange={onChange} />
                 </div>
     }
-    else 
-        return <UploadButton onChange={onChange} />
+    else return <UploadButton onChange={onChange} />
 }
 
 export default UploadImages;

@@ -18,8 +18,8 @@ const History = () => {
 
 			<div>
 				<div className="history-sections">
-					<a href="#" onClick={() => setMode("own")}>Moi</a>
-					<a href="#" onClick={() => setMode("others")}>Mes matchs</a>
+					<a href="#me" onClick={() => setMode("own")}>Moi</a>
+					<a href="#others" onClick={() => setMode("others")}>Mes matchs</a>
 				</div>
 				<div className="history-sections">
 					<Actions mode={mode}/>
