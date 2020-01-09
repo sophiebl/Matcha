@@ -8,7 +8,7 @@ type User @isAuthenticated {
 	birthdate: String!
 	gender: String
 	images: [Image] @relation(name: "HAS_IMG", direction: "OUT")
-	avatar: String!
+	avatar: String! @cypher(statement: "MATCH (this)-[r:HAS_IMG]->(i:Image) RETURN collect(i)[0].url")
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
 	elo: Int!
