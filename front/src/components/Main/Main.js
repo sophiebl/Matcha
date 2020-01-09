@@ -10,7 +10,6 @@ const Start = () => {
         <Link to="/login" className="btn">Login</Link>
         <Link to="/signup" className="btn">Sign up</Link>
         <Link to="/browse" className="btn">Browse</Link>
-        <Link to="/sockets" className="btn">sockets</Link>
       </div>
     </div>
   );
