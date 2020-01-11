@@ -4,6 +4,7 @@ import { ApolloServer } from 'apollo-server';
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken';
 import cloudinary from 'cloudinary';
+import uniqid from 'uniqid';
 
 dotenv.config()
 
@@ -34,6 +35,7 @@ const apolloServer = new ApolloServer({
           return null;
         return decoded.uid;
       }),
+      uniqid: uniqid(),
     }
   }),
   playground: {

@@ -8,7 +8,7 @@ type User @isAuthenticated {
 	birthdate: String!
 	gender: String
 	images: [Image] @relation(name: "HAS_IMG", direction: "OUT")
-	avatar: String! @cypher(statement: "MATCH (this)-[r:HAS_IMG]->(i:Image) RETURN collect(i)[0].url")
+	avatar: String! @cypher(statement: "MATCH (this)-[r:HAS_IMG]->(i:Image) RETURN collect(i)[0].src")
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
 	elo: Int!
@@ -28,7 +28,7 @@ type User @isAuthenticated {
 
 type Image @isAuthenticated {
 	uid: ID!
-	url: String!
+	src: String!
 }
 
 type Tag @isAuthenticated {
@@ -68,4 +68,6 @@ type Mutation {
     resetPassword(password: String!, resetToken: String!): String
     visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
     reportUser(uid: ID!): User
+	uploadImage(src: String!): Image @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) CREATE (user)-[:HAS_IMG]->(image:Image {uid: 'img-' + $cypherParams.uniqid, src: $src}) RETURN image")
+	deleteImage(uid: ID!): [Image] @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[rel:HAS_IMG]->(img:Image {uid: $uid}) DELETE rel, img RETURN user.images")
 }
