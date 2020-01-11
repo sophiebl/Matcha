@@ -1,0 +1,22 @@
+@import '../../global';
+
+h2{
+  margin-top: 0;
+}
+
+
+.profile-images{
+  padding: 20px 25px !important;
+}
+
+.bio-area{
+  border: 1px solid transparent;
+  border-radius: 10px;
+  -webkit-appearance: none;
+  padding: 5px;
+  background-color: rgba(3, 218, 198, 0.2);
+  margin-bottom: 20px;
+  width: 90%;
+  color: #1f1f1f;
+  font-size: 1em;
+}

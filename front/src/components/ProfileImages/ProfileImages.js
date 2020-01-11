@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
@@ -7,6 +8,8 @@ import { gql } from "apollo-boost";
 import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import FileBase64 from "./FileBase64";
+
+import './ProfileImages.scss'
 
 const GET_IMGS = gql`
 {
@@ -97,10 +100,14 @@ const ProfileImages = () => {
 		setImages(data.me.images);
 	}
 
-	return <>
-		<Images getImages={getImages} setImages={setImages} />
-		<FileBase64 multiple={true} onDone={(files) => handleFiles(files, addImg)}/>
-	</>
+	return (
+		<div className="profile-images">
+			<Link to="/profile" style={{ color: 'black', display: 'inline-block', float: 'left' }}><FontAwesomeIcon size="2x" icon="times" /></Link>
+			<h2>Mes images</h2>
+			<Images getImages={getImages} setImages={setImages} />
+			<FileBase64 multiple={true} onDone={(files) => handleFiles(files, addImg)}/>
+		</div>
+	)
 }
 
 export default ProfileImages;
