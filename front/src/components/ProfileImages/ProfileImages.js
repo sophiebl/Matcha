@@ -48,7 +48,6 @@ const Images = ({ getImages, setImages }) => {
 				uid: image.uid,
 			}
 		});
-
 		getImages.splice(index, 1);
 		setImages(getImages);
 	}
@@ -67,7 +66,6 @@ const Images = ({ getImages, setImages }) => {
 
 const handleFiles = (files, addImg) => {
 	files.forEach((file) => {
-		console.log(file);
 		addImg({
 			variables: {
 				src: file.base64,

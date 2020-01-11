@@ -3,7 +3,6 @@ import { v1 as neo4j }  from 'neo4j-driver';
 import { ApolloServer } from 'apollo-server';
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken';
-import cloudinary from 'cloudinary';
 import uniqid from 'uniqid';
 
 dotenv.config()
@@ -14,12 +13,6 @@ var corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true
 };
-
-cloudinary.config({ 
-  cloud_name: process.env.CLOUD_NAME, 
-  api_key: process.env.API_KEY, 
-  api_secret: process.env.API_SECRET
-})
 
 const apolloServer = new ApolloServer({
   schema,
