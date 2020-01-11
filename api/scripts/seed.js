@@ -2,11 +2,12 @@ import { v1 as neo4j }  from 'neo4j-driver';
 import dotenv from 'dotenv'
 import faker from 'faker';
 import uniqid from 'uniqid';
+import fetch from 'node-fetch';
 
 import crypto from 'crypto'
 
 dotenv.config()
-const driver  = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
+const driver  = neo4j.driver('bolt://db:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
 const session = driver.session();
 
 
@@ -22,7 +23,7 @@ DETACH DELETE (a)
 
 const CREATE_USER = `
 CREATE (:User {
-  uid: $uuid,
+  uid: $uid,
   username: $firstname,
   firstname: $firstname,
   lastname: '{{name.lastName}}',
@@ -31,7 +32,6 @@ CREATE (:User {
   password: $hash,
   birthdate: $birthdate,
   gender: $gender,
-  avatar: $avatar,
   bio: '{{lorem.sentence}}',
   elo: $elo,
   prefAgeMin: $prefAgeMin,
@@ -40,7 +40,7 @@ CREATE (:User {
   prefDistance: $prefDistance,
   confirmToken: 'true',
   resetToken: 'null'
-})`;
+})-[:HAS_IMG]->(:Image {uid: $avatarUid, src: $avatarSrc})`;
 
 const CREATE_TAG = `
 CREATE (:Tag {
@@ -83,28 +83,35 @@ CREATE (msg1)<-[:AUTHORED]-(u2), (msg2)<-[:AUTHORED]-(u1)
 RETURN u1, u2, conv, msg1, msg2
 `;
 
-const generateImg = (gender) => {
-  const attr = gender === "homme" ? "man" : "woman";
-  return`https://source.unsplash.com/random/?${attr}`;
+/* -----[ Seeding functions ]----- */
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+} 
+
+async function gen() {
+ const res = (await fetch(`http://source.unsplash.com/random/?${gender === "homme" ? "man" : "woman"}`, { headers: {'Cache-Control': 'no-cache'} })).url.split('?')[0]; 
 }
 
-/* -----[ Seeding functions ]----- */
 async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
-	const uuid = uniqid('user-');
-	const firstname = faker.name.firstName();
-	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
-	const username = firstname;
-	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
-	const gender = faker.random.arrayElement(['homme', 'femme']);
-	const elo = faker.random.number({min: 0, max: 100});
-	const prefAgeMin = faker.random.number({min: 18, max: 100});
-	const prefAgeMax = prefAgeMin + 10;
-	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
-  const prefDistance = faker.random.number({min: 5, max: 200});
-  const avatar = generateImg(gender);
-
-	await session.run(faker.fake(CREATE_USER), {uuid, firstname, birthdate, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatar});
+  	const uid = uniqid('user-');
+  	const firstname = faker.name.firstName();
+  	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
+  	const username = firstname;
+  	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
+  	const gender = faker.random.arrayElement(['homme', 'femme']);
+  	const elo = faker.random.number({min: 0, max: 100});
+  	const prefAgeMin = faker.random.number({min: 18, max: 100});
+  	const prefAgeMax = prefAgeMin + 10;
+  	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
+    const prefDistance = faker.random.number({min: 5, max: 200});
+  	const avatarUid = uniqid('img-');
+    const avatarSrc = (await fetch(`http://source.unsplash.com/random/?${gender === "homme" ? "man" : "woman"}`, { headers: {'Cache-Control': 'no-cache'} })).url.split('?')[0];
+    await sleep(2000);
+  
+  	await session.run(faker.fake(CREATE_USER), {uid, firstname, birthdate, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
   }
 }
 
