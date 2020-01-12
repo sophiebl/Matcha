@@ -40,7 +40,7 @@ const REMOVE_IMG = gql`
 	}
 `;
 
-const Images = ({ getImages, setImages }) => {
+const Images = ({ getImages, setImages, doRender }) => {
 	const [removeImg] = useMutation(REMOVE_IMG, {
 		onError: data => console.log('Error: ', data),
 	});
@@ -53,14 +53,17 @@ const Images = ({ getImages, setImages }) => {
 		});
 		getImages.splice(index, 1);
 		setImages(getImages);
+		doRender(true);
 	}
 
 	return <>
 		{ getImages.map((image, index) =>
 		<div key={index} className="fadein">
-			<div onClick={() => removeImage(image, index)} className="delete">
-				<FontAwesomeIcon icon={faTimesCircle} size="2x" />
-			</div>
+			{ (getImages.length > 1) ? (
+				<div onClick={() => removeImage(image, index)} className="delete">
+					<FontAwesomeIcon icon={faTimesCircle} size="2x" />
+				</div>
+			) : ( null )}
 			<img src={image.src} alt="" className="user-img" />
 		</div>
 		) }
@@ -104,8 +107,8 @@ const ProfileImages = () => {
 		<div className="profile-images">
 			<Link to="/profile" style={{ color: 'black', display: 'inline-block', float: 'left' }}><FontAwesomeIcon size="2x" icon="times" /></Link>
 			<h2>Mes images</h2>
-			<Images getImages={getImages} setImages={setImages} />
-			<FileBase64 multiple={true} onDone={(files) => handleFiles(files, addImg)}/>
+			<Images getImages={getImages} setImages={setImages} doRender={doRender} />
+			{ (getImages.length < 5) ? <FileBase64 multiple={true} onDone={(files) => handleFiles(files, addImg)} /> : null }
 		</div>
 	)
 }
