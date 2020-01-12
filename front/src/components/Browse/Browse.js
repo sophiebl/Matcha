@@ -6,8 +6,8 @@ import Nav from "../Nav/Nav";
 import './Browse.scss'
 
 const GET_USERS = gql`
-{
-	User {
+query User($username: String) {
+	users: User {
 		uid
 		bio
 		gender
@@ -27,16 +27,37 @@ const GET_USERS = gql`
 			username
 		}
     }
+
+	firstUser: User(username: $username) {
+			uid
+			bio
+			gender
+			firstname
+			lastname
+			birthdate
+			avatar
+			elo
+			likesCount
+			prefDistance
+			tags {
+				uid
+				name
+			}
+			likedUsers {
+				uid
+				username
+			}
+	} 
 }
 `;
 
-const Browse = () => {
-	const { loading, error, data } = useQuery(GET_USERS);
+const Browse = ({ firstUsername = null }) => {
+	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
 
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'dislike':
-				return { user: data.User.shift() };
+				return { user: data.users.shift() };
 			case 'reset':
 				return { user: action.payload };
 			default:
@@ -46,7 +67,11 @@ const Browse = () => {
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 
 	useEffect(() => {
-		const onCompleted = (data) => dispatch({ type: 'reset', payload: data.User.shift() });
+		const onCompleted = (data) => {
+			if (data.firstUser.length > 0)
+				data.users.unshift(data.firstUser[0]);
+			dispatch({ type: 'reset', payload: data.users.shift() });
+		};
 		const onError = (error) => console.log(error);
 		if (onCompleted || onError)
 			if (onCompleted && !loading && !error)

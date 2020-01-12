@@ -73,7 +73,8 @@ const App = () => {
 						<PublicRoute exact path="/login" component={Login} />
 						<Route exact path="/logout" component={Logout} />
 						<PublicRoute exact path="/signup" component={Signup} />
-						<PrivateRoute exact path="/browse" component={Browse} />
+						<PrivateRoute exact path="/browse" component={Browse}/>
+						<PrivateRoute path="/user/:username" component={(props) => <Browse firstUsername={props.match.params.username} />}/>
 						<PrivateRoute exact path="/profile" component={MyProfile} />
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
