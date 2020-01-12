@@ -84,7 +84,7 @@ const App = () => {
 						<PublicRoute path="/confirm/:confirmToken" component={EmailVerification} />
 						<Route exact path="/reset" component={SendResetPassword} />
 						<Route path="/reset/:resetToken" component={ResetPassword} />
-						<Route exact path="/" component={Main} />
+						<PublicRoute exact path="/" component={Main} />
 					</Switch>
 				</Router>
 			</div>
