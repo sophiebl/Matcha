@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Main from '../Main/Main';
 import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
@@ -85,6 +85,8 @@ const App = () => {
 						<Route exact path="/reset" component={SendResetPassword} />
 						<Route path="/reset/:resetToken" component={ResetPassword} />
 						<PublicRoute exact path="/" component={Main} />
+
+						<Redirect to='/browse' />
 					</Switch>
 				</Router>
 			</div>
