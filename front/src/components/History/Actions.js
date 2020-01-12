@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
@@ -44,14 +44,12 @@ const GET_USERS_ACTIONS = gql`
 	}
 `;
 
-const div = (title, users) => <>
+const div = (title, users, history) => <>
 	<h3>{title}</h3>	
 	{ users.map(({ uid, username }) => (
-		//<Link to="/user" style={{color: 'black', display: 'inline-block', float: 'left'}}>
-		<div className="action" key={uid}>
-			<Link to={`/user/{$username}`} >{username}</Link>
+		<div className="action" key={uid} onClick={() => history.push("/browse/" + username)}>
+			{username}
 		</div>
-		//</Link>
 	))}
 </>
 
@@ -63,13 +61,14 @@ const Actions = ({ mode }) => {
 		query = GET_USERS_ACTIONS;
 
 	const { loading, error, data } = useQuery(query);
+	const history = useHistory();
 
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error :(</p>;
 
 	return <div>
-		{ div(data.me.likedUsers ? 'Vous avez liké' : 'Ils vous ont liké', data.me.likedUsers || data.me.likedByUsers) }
-		{ div(data.me.visitedUsers ? 'Vous avez vu ces profils' : 'Ils ont vu votre profil', data.me.visitedUsers || data.me.visitedByUsers) }
+		{ div(data.me.likedUsers ? 'Vous avez liké' : 'Ils vous ont liké', data.me.likedUsers || data.me.likedByUsers, history) }
+		{ div(data.me.visitedUsers ? 'Vous avez vu ces profils' : 'Ils ont vu votre profil', data.me.visitedUsers || data.me.visitedByUsers, history) }
 	</div>
 }
 

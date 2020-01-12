@@ -5,6 +5,8 @@ import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
 
+import cookie from 'react-cookies';
+
 const GET_USERS = gql`
 query User($username: String) {
 	users: User {
@@ -51,7 +53,9 @@ query User($username: String) {
 }
 `;
 
-const Browse = ({ firstUsername = null }) => {
+const Browse = () => {
+	const firstUsername = cookie.load('firstUsername');
+	//cookie.remove('firstUsername');
 	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
 
 	function reducer(state, action) {
@@ -59,6 +63,7 @@ const Browse = ({ firstUsername = null }) => {
 			case 'dislike':
 				return { user: data.users.shift() };
 			case 'reset':
+				cookie.remove('firstUsername');
 				return { user: action.payload };
 			default:
 				throw new Error();

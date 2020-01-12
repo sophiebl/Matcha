@@ -30,6 +30,8 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { setContext } from 'apollo-link-context';
 
+import cookie from 'react-cookies';
+
 library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory);
 
 const authLink = setContext((_, { headers }) => {
@@ -74,7 +76,7 @@ const App = () => {
 						<Route exact path="/logout" component={Logout} />
 						<PublicRoute exact path="/signup" component={Signup} />
 						<PrivateRoute exact path="/browse" component={Browse}/>
-						<PrivateRoute path="/user/:username" component={(props) => <Browse firstUsername={props.match.params.username} />}/>
+						<PrivateRoute path="/browse/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browse"/> }}/>
 						<PrivateRoute exact path="/profile" component={MyProfile} />
 						<PrivateRoute path="/messages/:uid" component={Messages} />
 						<PrivateRoute exact path="/messages" component={MessagesIndex} />
@@ -86,7 +88,7 @@ const App = () => {
 						<Route path="/reset/:resetToken" component={ResetPassword} />
 						<PublicRoute exact path="/" component={Main} />
 
-						<Redirect to='/browse' />
+						<Redirect to="/browse" />
 					</Switch>
 				</Router>
 			</div>
