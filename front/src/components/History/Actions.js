@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks';
@@ -49,7 +49,7 @@ const div = (title, users) => <>
 	{ users.map(({ uid, username }) => (
 		//<Link to="/user" style={{color: 'black', display: 'inline-block', float: 'left'}}>
 		<div className="action" key={uid}>
-			<div>{username}</div>
+			<Link to={`/user/{$username}`} >{username}</Link>
 		</div>
 		//</Link>
 	))}
