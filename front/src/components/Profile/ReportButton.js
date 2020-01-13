@@ -6,12 +6,8 @@ import { useMutation } from '@apollo/react-hooks';
 import { getCurrentUid } from '../../Helpers';
 
 const BLOCK_USER = gql`
-	mutation AddUserBlockedUsers($from: _UserInput!, $to: _UserInput!) {
-		AddUserBlockedUsers(from: $from, to: $to) {
-			to {
-				uid
-			}
-		}
+	mutation blockUser($uid: ID!) {
+		blockUser(uid: $uid)
 	}
 `;
 
@@ -36,8 +32,7 @@ const BlockButton = ({ uidUser, dispatch }) => {
 	const onClickBlock = () => {
 		block({
 			variables: {
-				from: { uid: getCurrentUid() },
-				to: { uid: uidUser },
+				uid: uidUser,
 			}
 		});
 	};
@@ -46,7 +41,6 @@ const BlockButton = ({ uidUser, dispatch }) => {
 	const [report] = useMutation(REPORT_USER,
 		{
 			onCompleted: data => {
-				console.log('reported');
 				dispatch({ type: 'dislike' });
 			},
 			onError: data => console.log(data),
