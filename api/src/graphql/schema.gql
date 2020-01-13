@@ -68,6 +68,6 @@ type Mutation {
     resetPassword(password: String!, resetToken: String!): String
     visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
     reportUser(uid: ID!): User
-	uploadImage(src: String!): Image @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) CREATE (user)-[:HAS_IMG]->(image:Image {uid: 'img-' + $cypherParams.uniqid, src: $src}) RETURN image")
-	deleteImage(uid: ID!): [Image] @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[rel:HAS_IMG]->(img:Image {uid: $uid}) DELETE rel, img RETURN user.images")
+	uploadImage(src: String!): Image @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image) WITH user, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount < 5 THEN [1] ELSE [] END | CREATE (user)-[:HAS_IMG]->(img:Image {uid: 'img-' + $cypherParams.uniqid, src: $src}) ) WITH user MATCH (user)-[:HAS_IMG]->(img:Image) RETURN img ORDER BY img.uid DESC LIMIT 1")
+	deleteImage(uid: ID!): ID @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image), (img:Image {uid: $uid}) WITH user, img, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount > 1 THEN [1] ELSE [] END | DETACH DELETE img ) RETURN $uid")
 }

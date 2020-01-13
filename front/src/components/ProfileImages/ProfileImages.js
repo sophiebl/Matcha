@@ -33,10 +33,7 @@ const ADD_IMG = gql`
 
 const REMOVE_IMG = gql`
 	mutation deleteImage($uid: ID!) {
-		deleteImage(uid: $uid) {
-			uid
-			src
-		}
+		deleteImage(uid: $uid)
 	}
 `;
 
