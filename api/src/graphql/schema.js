@@ -151,39 +151,7 @@ const resolvers = {
 					return user;
 				});	
 		},
-/*
-		async uploadImages(parent, { file }) {
-			return args.file.then(file => {
-			  //Contents of Upload scalar: https://github.com/jaydenseric/graphql-upload#class-graphqlupload
-			  //file.stream is a node stream that contains the contents of the uploaded file
-			  //node stream api: https://nodejs.org/api/stream.html
-			  return file;
-			});
-		  },
 
-
-		async uploadImages(parent, { file }) {
-			console.log('stream');
-			const { stream, filename, mimetype, encoding } = await file;
-	  
-			// 1. Validate file metadata.
-	  
-			// 2. Stream file contents into cloud storage:
-			// https://nodejs.org/api/stream.html
-			stream = fs.createReadStream("http://localhost:3000/profile");
-			console.log(stream);
-
-			stream.on("data", function(data) {
-				var chunk = data.toString();
-				console.log("debug : "+chunk);
-			});
-
-			// 3. Record the file upload in your DB.
-			// const id = await recordFile( … )
-	  
-			return { filename, mimetype, encoding };
-		  }
-		  */
 
 	}
 };
