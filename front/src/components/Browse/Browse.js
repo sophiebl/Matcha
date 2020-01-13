@@ -49,13 +49,12 @@ query User($username: String) {
 				uid
 				username
 			}
-	} 
+	}
 }
 `;
 
 const Browse = () => {
 	const firstUsername = cookie.load('firstUsername');
-	//cookie.remove('firstUsername');
 	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
 
 	function reducer(state, action) {
