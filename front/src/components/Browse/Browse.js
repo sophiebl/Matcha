@@ -59,6 +59,8 @@ const Browse = () => {
 
 	function reducer(state, action) {
 		switch (action.type) {
+			case 'like':
+				return { user: data.users.shift() };
 			case 'dislike':
 				return { user: data.users.shift() };
 			case 'reset':

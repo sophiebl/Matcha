@@ -6,6 +6,12 @@ import { gql } from "apollo-boost";
 
 import { getCurrentUid } from '../../Helpers';
 
+const LIKE_USER = gql`
+	mutation likeUser($uid: ID!) {
+		likeUser(uid: $uid)
+	}
+`;
+
 const DISLIKE_USER = gql`
 	mutation dislikeUser($uid: ID!) {
 		dislikeUser(uid: $uid)
@@ -13,6 +19,13 @@ const DISLIKE_USER = gql`
 `;
 
 const LikeDislike = ({ uidUser, likedUsers, dispatch }) => {
+	const [like] = useMutation(LIKE_USER,
+		{
+			onCompleted: data => dispatch({ type: 'like' }),
+			onError: data => console.log(data),
+		}
+	);
+
 	const [dislike] = useMutation(DISLIKE_USER,
 		{
 			onCompleted: data => dispatch({ type: 'dislike' }),
@@ -35,7 +48,7 @@ const LikeDislike = ({ uidUser, likedUsers, dispatch }) => {
 				</button>
 			</div>
 			<div>
-				<button className="bg-bg btn-rond like" onClick={() => dispatch({ type: 'like' })}>
+				<button className="bg-bg btn-rond like" onClick={() => like({ variables: { uid: uidUser } })}>
 					<LikeIcon/>
 				</button>
 			</div>

@@ -69,6 +69,7 @@ type Mutation {
     sendPwdReset(email: String!): String
     resetPassword(password: String!, resetToken: String!): String
     visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
+    likeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN $uid")
     dislikeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN $uid")
     reportUser(uid: ID!): User
 	uploadImage(src: String!): Image @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image) WITH user, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount < 5 THEN [1] ELSE [] END | CREATE (user)-[:HAS_IMG]->(img:Image {uid: 'img-' + $cypherParams.uniqid, src: $src}) ) WITH user MATCH (user)-[:HAS_IMG]->(img:Image) RETURN img ORDER BY img.uid DESC LIMIT 1")
