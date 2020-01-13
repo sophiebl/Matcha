@@ -6,7 +6,7 @@ WORKDIR /usr/src
 
 ENV PATH /usr/src/node_modules/.bin:$PATH
 
-RUN npm install --global nodemon
+RUN npm install --global nodemon esr
 COPY package*.json ./
 RUN npm install
 
