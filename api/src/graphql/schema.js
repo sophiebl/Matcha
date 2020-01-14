@@ -127,12 +127,14 @@ const resolvers = {
 			return await session.run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
 				.then(result => {
 					if (result.records.length < 1)
-						throw new Error('UnknownUsername')
+						throw new Error('UnknownUsername');
 					const user = result.records[0].get('u').properties;
 					if (hash !== user.password)
-						throw new Error('InvalidPassword')
+						throw new Error('InvalidPassword');
 					if (user.confirmToken != 'true')
-						throw new Error('EmailNotConfirmed')
+						throw new Error('EmailNotConfirmed');
+					if (user.banned == true)
+						throw new Error('UserBanned');
 					return jwt.sign(
 						{ uid: user.uid },
 						process.env.JWT_SECRET,
@@ -141,14 +143,15 @@ const resolvers = {
 				});	
 		},
 
-		async reportUser(_, { uid }) {
-			return await session.run(`MATCH (from:User {uid: "user-fvl84uzk16j2nsa"}), (to:User {uid: $uid}), (to)<-[ra:REPORTED]-(:User) CREATE (from)-[r:REPORTED]->(to) RETURN COUNT(ra)`, { uid }) //TODO: MERGE ?
-				.then(result => {
+		async reportUser(_, { uid }, ctx) {
+			return await session.run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) MERGE (me)-[:REPORTED]->(target) WITH me, target MATCH (:User)-[r:REPORTED]->(target) RETURN COUNT(r) as reportsCount`, { meUid: ctx.cypherParams.currentUserUid, uid })
+				.then(async result => {
 					if (result.records.length < 1)
 						throw new Error('UnknownUser')
-					const user = result.records[0].get('COUNT(ra)').properties;
-					console.log(user);
-					return user;
+					const reportsCount = result.records[0].get('reportsCount').low;
+					if (reportsCount >= 5)
+						await session.run(`MATCH (target:User {uid: $uid}) SET target.banned = true`, { uid })
+					return reportsCount;
 				});	
 		},
 

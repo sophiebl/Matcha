@@ -31,6 +31,9 @@ const Login = withRouter(({history, ...props}) => {
 					case 'EmailNotConfirmed':
 						alert('Merci de confirmer votre email avant de vous connecter.');
 						break;
+					case 'UserBanned':
+						alert('Vous etes banni(e) ! RIP');
+						break;
 					default:
 						console.log(data);
 				}

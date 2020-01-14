@@ -3,8 +3,6 @@ import React from 'react';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
-import { getCurrentUid } from '../../Helpers';
-
 const BLOCK_USER = gql`
 	mutation blockUser($uid: ID!) {
 		blockUser(uid: $uid)
@@ -13,9 +11,7 @@ const BLOCK_USER = gql`
 
 const REPORT_USER = gql`
 	mutation reportUser($uid: ID!) {
-		reportUser(uid: $uid) {
-			uid
-		}
+		reportUser(uid: $uid)
 	}
 `;
 
