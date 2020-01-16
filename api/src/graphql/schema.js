@@ -26,6 +26,21 @@ const resolvers = {
 
 	},
 
+	User: {
+		async elo(obj, args, ctx) {
+			return await session.run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC
+			`, { uid: obj.uid })
+				.then(result => {
+					const stats = {};
+					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
+					const elo = (~~stats.LIKED / ~~stats.VISITED) + (~~stats.LIKED - ~~stats.DISLIKED) - ((~~stats.BLOCKED + ~~stats.REPORTED) * 0.01);
+					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
+					const removeDot = string => string.replace('.', '');
+					return removeDot(numberToString(elo));
+				});
+		}
+	},
+
 	Mutation: {
 		async signup (_, { firstname, lastname, username, email, password }) {
 			const uid = uniqid('user-');
