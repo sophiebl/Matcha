@@ -11,7 +11,7 @@ type User @isAuthenticated {
 	avatar: String! @cypher(statement: "MATCH (this)-[r:HAS_IMG]->(i:Image) RETURN collect(i)[0].src")
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
-	elo: Float!
+	elo: Int!
 	prefAgeMin: Int
 	prefAgeMax: Int
 	prefOrientation: String

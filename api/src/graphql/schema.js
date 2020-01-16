@@ -36,7 +36,9 @@ const resolvers = {
 					const elo = (~~stats.LIKED / ~~stats.VISITED) + (~~stats.LIKED - ~~stats.DISLIKED) - ((~~stats.BLOCKED + ~~stats.REPORTED) * 0.01);
 					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
 					const removeDot = string => string.replace('.', '');
-					return removeDot(numberToString(elo));
+					console.log(removeDot(numberToString(elo)) || 0)
+					//return removeDot(numberToString(elo)) || 0;
+					return 42;
 				});
 		}
 	},
