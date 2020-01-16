@@ -1,10 +1,12 @@
 import { makeAugmentedSchema } from 'neo4j-graphql-js';
+import { PubSub } from 'apollo-server';
 import fs, { exists } from 'fs';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+
 dotenv.config()
 
 import { v1 as neo4j }  from 'neo4j-driver';
@@ -21,6 +23,8 @@ const transporter = nodemailer.createTransport({
 	}
 });
 
+const pubsub = new PubSub();
+
 const resolvers = {
 	Query: {
 
@@ -28,8 +32,7 @@ const resolvers = {
 
 	User: {
 		async elo(obj, args, ctx) {
-			return await session.run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC
-			`, { uid: obj.uid })
+			return await session.run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid: obj.uid })
 				.then(result => {
 					const stats = {};
 					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
@@ -83,11 +86,7 @@ const resolvers = {
 						if (result.records.length < 1)
 							throw new Error('UnknownUser')
 						const user = result.records[0].get('u').properties;
-						return jwt.sign(
-							{ uid: user.uid },
-							process.env.JWT_SECRET,
-							{ expiresIn: '1y' }
-						)
+						return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 					});
 			}
 		},
@@ -114,11 +113,7 @@ const resolvers = {
 					if (result.records.length < 1)
 						throw new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
-					return jwt.sign(
-						{ uid: user.uid },
-						process.env.JWT_SECRET,
-						{ expiresIn: '1y' }
-					)
+					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
 		},
 
@@ -129,11 +124,7 @@ const resolvers = {
 					if (result.records.length < 1)
 						throw new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
-					return jwt.sign(
-						{ uid: user.uid },
-						process.env.JWT_SECRET,
-						{ expiresIn: '1y' }
-					)
+					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
 		},
 
@@ -150,11 +141,8 @@ const resolvers = {
 						throw new Error('EmailNotConfirmed');
 					if (user.banned == true)
 						throw new Error('UserBanned');
-					return jwt.sign(
-						{ uid: user.uid },
-						process.env.JWT_SECRET,
-						{ expiresIn: '1d' }
-					)
+					pubsub.publish('USER_CONNECTED', user);
+					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});	
 		},
 
@@ -170,8 +158,15 @@ const resolvers = {
 				});	
 		},
 
+	},
 
-	}
+	Subscription: {
+		userConnected: {
+			subscribe: () => pubsub.asyncIterator(['USER_CONNECTED']),
+			resolve: (user) => user,
+		}
+	},
+
 };
 
 const typeDefs = fs.readFileSync('/usr/src/src/graphql/schema.gql', 'utf8');
@@ -181,7 +176,14 @@ const schema = makeAugmentedSchema({
 	config: {
 		auth: {
 			isAuthenticated: true,
-		}
+		},
+		query: {
+			exclude: ['Subscription'],
+		},
+		mutation: {
+			exclude: ['Subscription'],
+		},
 	}
 });
-export default schema
+
+export default schema;
