@@ -1,9 +1,9 @@
 import schema  from './graphql/schema.js';
 import { v1 as neo4j }  from 'neo4j-driver';
 import { ApolloServer } from 'apollo-server';
-import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
+import dotenv from 'dotenv'
 
 dotenv.config()
 

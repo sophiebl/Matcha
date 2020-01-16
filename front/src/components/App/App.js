@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+
+import { PublicRoute, PrivateRoute } from '../Routes/Routes';
 import Main from '../Main/Main';
 import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
@@ -14,8 +16,8 @@ import ProfileImages from '../ProfileImages/ProfileImages';
 import EmailVerification from '../EmailVerification/EmailVerification';
 import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
-import { PublicRoute, PrivateRoute } from '../Routes/Routes';
 //import Nav from "./components/Nav";
+
 import './App.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -29,6 +31,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { setContext } from 'apollo-link-context';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
 
 import cookie from 'react-cookies';
 
@@ -49,19 +53,39 @@ const client = new ApolloClient({
 	uri: 'http://localhost:4000/graphql',
 	link: ApolloLink.from([
 		authLink,
-		onError(({ graphQLErrors, networkError }) => {
-			if (graphQLErrors)
-				graphQLErrors.forEach(({ message, locations, path }) =>
-					console.log(
-						`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-					),
-				);
-			if (networkError) console.log(`[Network error]: ${networkError}`);
-		}),
-		new HttpLink({
-			uri: 'http://localhost:4000/graphql',
-			credentials: 'include'
-		}),
+		//onError(({ graphQLErrors, networkError }) => {
+		//	if (graphQLErrors)
+		//		graphQLErrors.forEach(({ message, locations, path }) =>	console.log( `[GraphQL error]: ${message}, Location: ${locations}, Path: ${path}`));
+		//	if (networkError) {
+		//		console.log('[Network error]:');
+		//		console.log(networkError);
+		//	}
+		//}),
+		ApolloLink.split(
+			({ query }) => {
+				const { kind, operation } = getMainDefinition(query);
+				return kind === 'OperationDefinition' && operation === 'subscription';
+			},
+			new WebSocketLink({
+				uri: `ws://localhost:4000/graphql`,
+				options: {
+					lazy: true,
+					reconnect: true,
+					connectionParams: async () => {
+						const token = localStorage.getItem('token');
+						return {
+							headers: {
+								Authorization: token ? `Bearer ${token}` : "",
+							},
+						}
+					},
+				}
+			}),
+			new HttpLink({
+				uri: 'http://localhost:4000/graphql',
+				credentials: 'include'
+			}),
+    ),
 	]),
 	cache: new InMemoryCache(),
 });

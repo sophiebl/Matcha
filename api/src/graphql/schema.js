@@ -1,5 +1,5 @@
 import { makeAugmentedSchema } from 'neo4j-graphql-js';
-import { PubSub } from 'apollo-server';
+import { PubSub, withFilter } from 'apollo-server';
 import fs, { exists } from 'fs';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
@@ -162,7 +162,10 @@ const resolvers = {
 
 	Subscription: {
 		userConnected: {
-			subscribe: () => pubsub.asyncIterator(['USER_CONNECTED']),
+			subscribe: withFilter(
+				() => pubsub.asyncIterator('USER_CONNECTED'),
+				(payload, variables) => payload.uid === variables.uid,
+			),
 			resolve: (user) => user,
 		}
 	},
