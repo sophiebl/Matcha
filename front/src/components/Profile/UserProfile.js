@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { gql } from "apollo-boost";
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useSubscription } from '@apollo/react-hooks';
 
 import MainInfos from './MainInfos';
 import Bio from './Bio';
@@ -21,6 +21,15 @@ const VISIT_PROFILE = gql`
 	}
 `;
 
+const USER_CONNECTED = gql`
+	subscription userConnected($uid: ID!) {
+		userConnected(uid: $uid) {
+			uid
+			username
+		}
+	}
+`;
+
 const UserProfile = ({ user, dispatch }) => {
 	const { uid, bio, tags, likedUsers } = user;
 
@@ -35,6 +44,20 @@ const UserProfile = ({ user, dispatch }) => {
 			}
 		});
 	}, [visitProfile, uid]);
+
+	const { loading, error, data } = useSubscription(USER_CONNECTED, { variables: { uid: uid } });
+
+	if (loading) {
+     return <span>Loading...</span>;
+   }
+   if (error) {
+     console.error(error);
+     return <span>Error!</span>;
+	 }
+	if (data) {
+		console.log("YYYYYYYYYYYYYYYYES");	
+		console.log(data);	
+  }
 
 	return (
 		<div>
