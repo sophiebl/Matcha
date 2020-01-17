@@ -36,7 +36,8 @@ const resolvers = {
 				.then(result => {
 					const stats = {};
 					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
-					const elo = (~~stats.LIKED / ~~stats.VISITED) + (~~stats.LIKED - ~~stats.DISLIKED) - ((~~stats.BLOCKED + ~~stats.REPORTED) * 0.01);
+					let elo = ((stats.LIKED || 0) / (stats.VISITED || 0)) + ((stats.LIKED || 0) - (stats.DISLIKED || 0)) - (((stats.BLOCKED ||0) + (stats.REPORTED || 0)) * 0.01);
+					elo = (elo == Infinity) ? 0 : elo;
 					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
 					const removeDot = string => string.replace('.', '');
 					return removeDot(numberToString(elo));
