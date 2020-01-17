@@ -32,12 +32,17 @@ const apolloServer = new ApolloServer({
 		}
 	}),
 	subscriptions: {
-		onConnect: (connectionParams, webSocket) => {
+		onConnect: (connectionParams, webSocket, context) => {
+			console.log(`Subscription client connected using Apollo server's built-in SubscriptionServer.`);
+			console.log(connectionParams);
 			return {
 				headers: {
-					Authorization: `Bearer ${connectionParams.Authorization.split(' ')[1]}`,
+					Authorization: `Bearer ${connectionParams.token}`,
 				},
 			}
+		},
+		onDisconnect: async (webSocket, context) => {
+			console.log(`Subscription client disconnected.`);
 		},
 	},
 	playground: {

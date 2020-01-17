@@ -1,9 +1,23 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+
+import { gql } from "apollo-boost";
+import { useSubscription } from '@apollo/react-hooks';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Avatar from './Avatar.js';
 import { getCurrentUid } from '../../Helpers';
+
+
+const USER_CONNECTED = gql`
+	subscription userConnected($uid: ID!) {
+		userConnected(uid: $uid) {
+			uid
+		}
+	}
+`;
+
 
 const MainInfos = ({ user, isMyProfile }) => {
 	const { firstname, birthdate, avatar, elo, likesCount, prefRadius, likedUsers } = user;
@@ -11,11 +25,15 @@ const MainInfos = ({ user, isMyProfile }) => {
 	const LikeIcon = () => {
 		return (likedUsers && likedUsers.find(u => u.uid === getCurrentUid())) ? (
 			<div className="likedinfos txt-right color-liked">
-				<span>already liked you</span>
+				<span>Already liked you</span>
 				<FontAwesomeIcon className="ph-5" size="3x" icon={['fas', 'check']} />
 			</div>
 		) : null
 	}
+
+	const { /*loading,*/ error, data } = useSubscription(USER_CONNECTED, { variables: { uid: user.uid } });
+	if (error) return <span>Subscription error!</span>;
+	if (data) console.log(data);	
 
 	return (
 		<div className="pos-rel img-container">
@@ -39,7 +57,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 						<span className="icon-top">{likesCount}</span>
 					</div>
 					<div>
-						<div className="rond"></div>
+						<div className={`rond ${data ? "online" : "offline"}`}></div>
 					</div>
 				</div>
 			)}
