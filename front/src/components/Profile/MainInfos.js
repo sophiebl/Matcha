@@ -11,9 +11,9 @@ import { getCurrentUid } from '../../Helpers';
 
 
 const USER_CONNECTED = gql`
-	subscription userConnected($uid: ID!) {
-		userConnected(uid: $uid) {
-			uid
+	subscription userStateChanged($uid: ID!) {
+		userStateChanged(uid: $uid) {
+			state
 		}
 	}
 `;
@@ -57,7 +57,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 						<span className="icon-top">{likesCount}</span>
 					</div>
 					<div>
-						<div className={`rond ${data ? "online" : "offline"}`}></div>
+						<div className={`rond ${(data && data.userStateChanged.state) ? "online" : "offline"}`}></div>
 					</div>
 				</div>
 			)}

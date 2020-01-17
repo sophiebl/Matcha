@@ -125,9 +125,14 @@ const resolvers = {
 						throw new Error('EmailNotConfirmed');
 					if (user.banned == true)
 						throw new Error('UserBanned');
-					ctx.pubsub.publish('USER_CONNECTED', user);
+					ctx.pubsub.publish('USER_STATE_CHANGED', { user: user, state: 1 });
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});	
+		},
+
+		async logout (_, { }, ctx) {
+			ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
+			return "Ok";
 		},
 
 		async reportUser(_, { uid }, ctx) {
@@ -145,13 +150,13 @@ const resolvers = {
 	},
 
 	Subscription: {
-		userConnected: {
+		userStateChanged: {
 			subscribe: withFilter(
-				(_, variables, context) => context.pubsub.asyncIterator('USER_CONNECTED'),
-				(payload, variables) => payload.uid === variables.uid,
+				(_, variables, context) => context.pubsub.asyncIterator('USER_STATE_CHANGED'),
+				(payload, variables) => payload.user.uid === variables.uid,
 			),
-			resolve: (user) => user,
-		}
+			resolve: (payload) => payload,
+		},
 	},
 
 };
@@ -160,15 +165,16 @@ const typeDefs = fs.readFileSync('/usr/src/src/graphql/schema.gql', 'utf8');
 const schema = makeAugmentedSchema({
 	typeDefs,
 	resolvers,
+	logger: console,
 	config: {
 		auth: {
 			isAuthenticated: true,
 		},
 		query: {
-			exclude: ['Subscription'],
+			exclude: ['Subscription', 'UserState'],
 		},
 		mutation: {
-			exclude: ['Subscription'],
+			exclude: ['Subscription', 'UserState'],
 		},
 	}
 });

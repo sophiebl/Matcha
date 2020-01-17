@@ -4,7 +4,7 @@ import { withRouter, Link } from "react-router-dom";
 import useForm from 'react-hook-form';
 
 import { gql } from "apollo-boost";
-import { useMutation/*, useSubscription*/ } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 
 import './Login.scss'
 
@@ -13,14 +13,6 @@ const LOGIN = gql`
 			login(username: $username, password: $password)
 		}
 `;
-
-//const USER_CONNECTED_SUBSCRIPTION = gql`
-//  subscription {
-//    userConnected {
-//      uid
-//    }
-//  }
-//`;
 
 const Login = withRouter(({history, ...props}) => {
 	const { register, handleSubmit, errors } = useForm();
@@ -57,11 +49,6 @@ const Login = withRouter(({history, ...props}) => {
 			}
 		});
 	};
-
-		//const { data, loading } = useSubscription(USER_CONNECTED_SUBSCRIPTION);
-
-		//if (loading) return 'Loading';
-		//console.log('sub: ' + data);
 
 	return (
 		<div>
