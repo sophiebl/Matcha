@@ -43,10 +43,15 @@ User info
 .rond {
   width: 13px;
   height: 13px;
-  background-color: $online;
   border-radius: 13px;
   float: right;
   margin-right: 5px;
+}
+.offline {
+	background-color: $offline;
+}
+.online {
+	background-color: $online;
 }
 
 .main-infos {

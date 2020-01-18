@@ -53,14 +53,14 @@ const client = new ApolloClient({
 	uri: 'http://localhost:4000/graphql',
 	link: ApolloLink.from([
 		authLink,
-		//onError(({ graphQLErrors, networkError }) => {
-		//	if (graphQLErrors)
-		//		graphQLErrors.forEach(({ message, locations, path }) =>	console.log( `[GraphQL error]: ${message}, Location: ${locations}, Path: ${path}`));
-		//	if (networkError) {
-		//		console.log('[Network error]:');
-		//		console.log(networkError);
-		//	}
-		//}),
+		onError(({ graphQLErrors, networkError }) => {
+			if (graphQLErrors)
+				graphQLErrors.forEach(({ message, locations, path }) =>	console.log( `[GraphQL error]: ${message}, Location: ${locations}, Path: ${path}`));
+			if (networkError) {
+				console.log('[Network error]:');
+				console.log(networkError);
+			}
+		}),
 		ApolloLink.split(
 			({ query }) => {
 				const { kind, operation } = getMainDefinition(query);
@@ -74,6 +74,7 @@ const client = new ApolloClient({
 					connectionParams: async () => {
 						const token = localStorage.getItem('token');
 						return {
+							token: token,
 							headers: {
 								Authorization: token ? `Bearer ${token}` : "",
 							},

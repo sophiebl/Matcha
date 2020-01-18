@@ -65,6 +65,7 @@ type Query {
 type Mutation {
     signup (firstname: String!, lastname: String!, username: String!, email: String!, password: String!): String
     login(username: String!, password: String!): String
+    logout: String
     emailVerif(confirmToken: String!): String
     sendPwdReset(email: String!): String
     resetPassword(password: String!, resetToken: String!): String
@@ -77,6 +78,11 @@ type Mutation {
 	deleteImage(uid: ID!): ID @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image), (img:Image {uid: $uid}) WITH user, img, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount > 1 THEN [1] ELSE [] END | DETACH DELETE img ) RETURN $uid")
 }
 
+type UserState {
+  user: User!
+  state: Int!
+}
+
 type Subscription {
-  userConnected(uid: ID!): User
+  userStateChanged(uid: ID!): UserState
 }
