@@ -20,12 +20,11 @@ const resolvers = {
 					const stats = {};
 					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
 					let elo = ((stats.LIKED || 0) / (stats.VISITED || 0)) + ((stats.LIKED || 0) - (stats.DISLIKED || 0)) - (((stats.BLOCKED ||0) + (stats.REPORTED || 0)) * 0.01);
-					elo = (elo == Infinity) ? 0 : elo;
+					elo = (elo == Infinity || elo == NaN || elo == undefined) ? 0 : elo;
 					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
 					const removeDot = string => string.replace('.', '');
 					console.log(removeDot(numberToString(elo)) || 0)
-					//return removeDot(numberToString(elo)) || 0;
-					return 42;
+					return removeDot(numberToString(elo)) || 0;
 				});
 		}
 	},
