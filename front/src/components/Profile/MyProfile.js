@@ -48,6 +48,9 @@ const MyProfile = () => {
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
 				</div>
+				<div className="logout-container">
+        			<Link to="/logout" className="color-r"><FontAwesomeIcon size="1x" icon="walking" />   Logout  <FontAwesomeIcon size="1x" icon="walking" /></Link>
+				</div>
 				<Link to="/preferences" className="btn bg-bg btn-rond pref">
 					<FontAwesomeIcon className="color-w" size="2x" icon="pen" />
 				</Link>

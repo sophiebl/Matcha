@@ -139,3 +139,16 @@ a {
   text-align: center;
   bottom: -40px;
 }
+.rond {
+  width: 13px;
+  height: 13px;
+  border-radius: 13px;
+  float: right;
+  margin-right: 5px;
+}
+.offline {
+	background-color: $offline;
+}
+.online {
+	background-color: $online;
+}

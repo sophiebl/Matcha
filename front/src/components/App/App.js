@@ -21,7 +21,7 @@ import ResetPassword from '../ResetPassword/ResetPassword';
 import './App.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory, faWalking } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faHeart, faCommentAlt, faUser } from '@fortawesome/free-regular-svg-icons';
 
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -36,7 +36,7 @@ import { getMainDefinition } from 'apollo-utilities';
 
 import cookie from 'react-cookies';
 
-library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory);
+library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
 
 const authLink = setContext((_, { headers }) => {
 	const token = localStorage.getItem('token');

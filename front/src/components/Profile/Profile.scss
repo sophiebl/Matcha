@@ -40,20 +40,6 @@ User info
   font-weight: $semi-b;
 }
 
-.rond {
-  width: 13px;
-  height: 13px;
-  border-radius: 13px;
-  float: right;
-  margin-right: 5px;
-}
-.offline {
-	background-color: $offline;
-}
-.online {
-	background-color: $online;
-}
-
 .main-infos {
   position: absolute;
   bottom: 0;
@@ -135,4 +121,9 @@ User tag
   font-family: "Meyrin";
   font-weight: bold;
   font-size: $f-m;
+}
+
+.logout-container{
+  cursor: pointer;
+  margin: 10px 0;
 }
