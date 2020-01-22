@@ -26,6 +26,7 @@ type User @isAuthenticated {
 	visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
 	visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
 	conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+    isConnected: Boolean!
 }
 
 type Image @isAuthenticated {
@@ -84,5 +85,6 @@ type UserState {
 }
 
 type Subscription {
+  connect: String
   userStateChanged(uid: ID!): UserState
 }

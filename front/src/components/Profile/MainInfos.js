@@ -33,7 +33,9 @@ const MainInfos = ({ user, isMyProfile }) => {
 
 	const { /*loading,*/ error, data } = useSubscription(USER_CONNECTED, { variables: { uid: user.uid } });
 	if (error) return <span>Subscription error!</span>;
-	if (data) console.log(data);	
+	if (data) console.log(data);
+
+	console.log(user.firstname + ' ' + user.isConnected);
 
 	return (
 		<div className="pos-rel img-container">
@@ -57,7 +59,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 						<span className="icon-top">{likesCount}</span>
 					</div>
 					<div>
-						<div className={`rond ${(data && data.userStateChanged.state) ? "online" : "offline"}`}></div>
+						<div className={`rond ${(data ? (data.userStateChanged.state ? "online" : "offline" ) : (user.isConnected ? "online" : "offline"))}`}></div>
 					</div>
 				</div>
 			)}

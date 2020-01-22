@@ -28,27 +28,29 @@ query User($username: String) {
 			uid
 			username
 		}
+		isConnected
     }
 
 	firstUser: User(username: $username) {
+		uid
+		bio
+		gender
+		firstname
+		lastname
+		birthdate
+		avatar
+		elo
+		likesCount
+		prefDistance
+		tags {
 			uid
-			bio
-			gender
-			firstname
-			lastname
-			birthdate
-			avatar
-			elo
-			likesCount
-			prefDistance
-			tags {
-				uid
-				name
-			}
-			likedUsers {
-				uid
-				username
-			}
+			name
+		}
+		likedUsers {
+			uid
+			username
+		}
+		isConnected
 	}
 }
 `;

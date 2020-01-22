@@ -98,7 +98,7 @@ const App = () => {
 				<Router>
 					<Switch>
 						<PublicRoute exact path="/login" component={Login} />
-						<Route exact path="/logout" component={Logout} />
+						<PrivateRoute exact path="/logout" component={Logout} />
 						<PublicRoute exact path="/signup" component={Signup} />
 						<PrivateRoute exact path="/browse" component={Browse}/>
 						<PrivateRoute path="/browse/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browse"/> }}/>

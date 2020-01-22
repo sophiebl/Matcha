@@ -6,7 +6,7 @@ import uniqid from 'uniqid';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 const resolvers = {
 	Query: {
@@ -14,8 +14,8 @@ const resolvers = {
 	},
 
 	User: {
-		async elo(obj, args, ctx) {
-			return await ctx.driver.session().run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid: obj.uid })
+		async elo({ uid	}, args, ctx) {
+			return await ctx.driver.session().run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid })
 				.then(result => {
 					const stats = {};
 					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
@@ -23,9 +23,14 @@ const resolvers = {
 					elo = (elo == Infinity || elo == NaN || elo == undefined) ? 0 : elo;
 					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
 					const removeDot = string => string.replace('.', '');
-					console.log(removeDot(numberToString(elo)) || 0)
-					return removeDot(numberToString(elo)) || 0;
+					//console.log(removeDot(numberToString(elo)) || 0);
+					return 42;
+					//return removeDot(numberToString(elo)) || 0;
 				});
+		},
+
+		async isConnected({ uid }, args, ctx) {
+			return ctx.connectedUsers.includes(uid);
 		}
 	},
 
@@ -126,6 +131,8 @@ const resolvers = {
 						throw new Error('EmailNotConfirmed');
 					if (user.banned == true)
 						throw new Error('UserBanned');
+					//if (!ctx.connectedUsers.includes(user.uid))
+					//	ctx.connectedUsers.push(user.uid);
 					ctx.pubsub.publish('USER_STATE_CHANGED', { user: user, state: 1 });
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});	
@@ -151,6 +158,20 @@ const resolvers = {
 	},
 
 	Subscription: {
+		connect: {
+			subscribe: withFilter(
+				(_, variables, context) => {
+					const uid = jwt.verify(context.token, process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null));
+					if (!context.connectedUsers.includes(uid))
+						context.connectedUsers.push(uid);
+					console.log(context.connectedUsers);
+					return context.pubsub.asyncIterator('');
+				},
+				(payload, variables) => false,
+			),
+			resolve: (payload) => "Ok",
+		},
+
 		userStateChanged: {
 			subscribe: withFilter(
 				(_, variables, context) => context.pubsub.asyncIterator('USER_STATE_CHANGED'),

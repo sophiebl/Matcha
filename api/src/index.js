@@ -27,22 +27,25 @@ const mailtransport = nodemailer.createTransport({
 
 const pubsub = new PubSub();
 
+const connectedUsers = [];
+
 const apolloServer = new ApolloServer({
 	schema,
 	cors: corsOptions,
-	context: ({ req, connection }) => connection ? ({...connection.context, pubsub}) : ({
+	context: ({ req, connection }) => connection ? ({
+		...connection.context,
+		pubsub,
+		connectedUsers,
+	}) : ({
 		driver,
 		pubsub,
 		req,
 		mailtransport,
 		headers: req.headers,
 		token: (req.headers.authorization && req.headers.authorization.slice(7)) || '',
+		connectedUsers,
 		cypherParams: {
-			currentUserUid: jwt.verify((req.headers.authorization && req.headers.authorization.slice(7)), process.env.JWT_SECRET, function(err, decoded) {
-				if (!decoded)
-					return null;
-				return decoded.uid;
-			}),
+			currentUserUid: jwt.verify((req.headers.authorization && req.headers.authorization.slice(7)), process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null)),
 			uniqid: uniqid(),
 		},
 	}),
@@ -53,10 +56,18 @@ const apolloServer = new ApolloServer({
 				headers: {
 					Authorization: `Bearer ${connectionParams.token}`,
 				},
-			}
+				token: connectionParams.token,
+				currentUserUid: jwt.verify(connectionParams.token, process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null)),
+			};
 		},
 		onDisconnect: async (webSocket, context) => {
+			const ctx = await context.initPromise;
 			console.log(`Subscription client disconnected.`);
+			const index = connectedUsers.indexOf(ctx.currentUserUid);
+			if (index !== -1)
+				connectedUsers.splice(index, 1);
+			if (!connectedUsers.includes(ctx.currentUserUid))
+				pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.currentUserUid }, state: 0 });
 		},
 	},
 	playground: {

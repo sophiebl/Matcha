@@ -1,35 +1,16 @@
 import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 
-/*
-import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
-
-const ME = gql`
-	{
-    me {
-      uid
-      firstname
-    }
-  }
-`;
-
-const PrivateRoute = ({ component: Component, ...rest }) => {
-    const { loading, error, data } = useQuery(ME, { fetchPolicy: 'cache-and-network' });
-    
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
-
-    return <Route {...rest} render={props => {
-        if (data && data.me && data.me.uid)
-            return <Component {...props} />
-        else
-            return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-    }} />
-};
-*/
+import { useSubscription } from '@apollo/react-hooks';
 
 //TODO: query me to check token
+
+const CONNECT = gql`
+	subscription {
+		connect
+	}
+`;
 
 const PublicRoute = ({ component: Component, ...rest }) => (
 	<Route {...rest} render={props => 
@@ -41,15 +22,18 @@ const PublicRoute = ({ component: Component, ...rest }) => (
 	} />
 );
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-	<Route {...rest} render={props => 
+const PrivateRoute = ({ component: Component, ...rest }) => {
+	const { /*loading,*/ error, data } = useSubscription(CONNECT);
+	if (error) return <span>Subscription error!</span>;
+	if (data) console.log(data);
+
+	return <Route {...rest} render={props => 
 			localStorage.getItem('token') ? (
 				<Component {...props} />
 			) : (
 				<Redirect to={{ pathname: '/login', state: { from: props.location } }} />
 			)
 	} />
-);
+};
 
-//export default PrivateRoute;
 export { PublicRoute, PrivateRoute };
