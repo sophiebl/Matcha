@@ -1,24 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-
-import { PublicRoute, PrivateRoute } from '../Routes/Routes';
-import Main from '../Main/Main';
-import Login from '../Login/Login';
-import Logout from '../Logout/Logout';
-import Signup from '../Signup/Signup';
-import Browse from '../Browse/Browse';
-import MyProfile from '../Profile/MyProfile';
-import MessagesIndex from '../MessagesIndex/MessagesIndex';
-import Messages from '../Messages/Messages';
-import Preferences from '../Preferences/Preferences';
-import History from '../History/History';
-import ProfileImages from '../ProfileImages/ProfileImages';
-import EmailVerification from '../EmailVerification/EmailVerification';
-import SendResetPassword from '../SendResetPassword/SendResetPassword';
-import ResetPassword from '../ResetPassword/ResetPassword';
-//import Nav from "./components/Nav";
-
-import './App.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory, faWalking } from '@fortawesome/free-solid-svg-icons';
@@ -34,7 +14,9 @@ import { setContext } from 'apollo-link-context';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
-import cookie from 'react-cookies';
+import { Router } from '../Routes/Routes';
+
+import './App.scss';
 
 library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
 
@@ -95,30 +77,9 @@ const App = () => {
 	return <>
 		<ApolloProvider client={client}>
 			<div className="App">
-				<Router>
-					<Switch>
-						<PublicRoute exact path="/login" component={Login} />
-						<PrivateRoute exact path="/logout" component={Logout} />
-						<PublicRoute exact path="/signup" component={Signup} />
-						<PrivateRoute exact path="/browse" component={Browse}/>
-						<PrivateRoute path="/browse/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browse"/> }}/>
-						<PrivateRoute exact path="/profile" component={MyProfile} />
-						<PrivateRoute path="/messages/:uid" component={Messages} />
-						<PrivateRoute exact path="/messages" component={MessagesIndex} />
-						<PrivateRoute exact path="/preferences" component={Preferences} />
-						<PrivateRoute exact path="/history" component={History} />
-						<PrivateRoute exact path="/profile/images" component={ProfileImages} />
-						<PublicRoute path="/confirm/:confirmToken" component={EmailVerification} />
-						<Route exact path="/reset" component={SendResetPassword} />
-						<Route path="/reset/:resetToken" component={ResetPassword} />
-						<PublicRoute exact path="/" component={Main} />
-
-						<Redirect to="/browse" />
-					</Switch>
-				</Router>
+				<Router />	
 			</div>
 		</ApolloProvider>
-		{/*<Nav/>*/}
 	</>
 }
 

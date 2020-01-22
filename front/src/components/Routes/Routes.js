@@ -1,39 +1,49 @@
 import React from 'react';
-import { Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
-import { gql } from "apollo-boost";
-import { useSubscription } from '@apollo/react-hooks';
+import cookie from 'react-cookies';
+
+import PublicRoute from './PublicRoute';
+import PrivateRoute from './PrivateRoute';
+import Main from '../Main/Main';
+import Login from '../Login/Login';
+import Logout from '../Logout/Logout';
+import Signup from '../Signup/Signup';
+import Browse from '../Browse/Browse';
+import MyProfile from '../Profile/MyProfile';
+import MessagesIndex from '../MessagesIndex/MessagesIndex';
+import Messages from '../Messages/Messages';
+import Preferences from '../Preferences/Preferences';
+import History from '../History/History';
+import ProfileImages from '../ProfileImages/ProfileImages';
+import EmailVerification from '../EmailVerification/EmailVerification';
+import SendResetPassword from '../SendResetPassword/SendResetPassword';
+import ResetPassword from '../ResetPassword/ResetPassword';
 
 //TODO: query me to check token
 
-const CONNECT = gql`
-	subscription {
-		connect
-	}
-`;
+const Router = () => (
+	<BrowserRouter>
+		<Switch>
+			<PublicRoute exact path="/login" component={Login} />
+			<PrivateRoute exact path="/logout" component={Logout} />
+			<PublicRoute exact path="/signup" component={Signup} />
+			<PrivateRoute exact path="/browse" component={Browse}/>
+			<PrivateRoute path="/browse/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browse"/> }}/>
+			<PrivateRoute exact path="/profile" component={MyProfile} />
+			<PrivateRoute path="/messages/:uid" component={Messages} />
+			<PrivateRoute exact path="/messages" component={MessagesIndex} />
+			<PrivateRoute exact path="/preferences" component={Preferences} />
+			<PrivateRoute exact path="/history" component={History} />
+			<PrivateRoute exact path="/profile/images" component={ProfileImages} />
+			<PublicRoute path="/confirm/:confirmToken" component={EmailVerification} />
+			<Route exact path="/reset" component={SendResetPassword} />
+			<Route path="/reset/:resetToken" component={ResetPassword} />
+			<PublicRoute exact path="/" component={Main} />
 
-const PublicRoute = ({ component: Component, ...rest }) => (
-	<Route {...rest} render={props => 
-			localStorage.getItem('token') ? (
-				<Redirect to={{ pathname: '/profile', state: { from: props.location } }} />
-			) : (
-				<Component {...props} />
-			)
-	} />
+			<Redirect to="/browse" />
+		</Switch>
+	</BrowserRouter>
 );
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-	const { /*loading,*/ error, data } = useSubscription(CONNECT);
-	if (error) return <span>Subscription error!</span>;
-	if (data) console.log(data);
-
-	return <Route {...rest} render={props => 
-			localStorage.getItem('token') ? (
-				<Component {...props} />
-			) : (
-				<Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-			)
-	} />
-};
-
-export { PublicRoute, PrivateRoute };
+export { Router, PublicRoute, PrivateRoute };
