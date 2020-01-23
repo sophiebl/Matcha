@@ -46,4 +46,4 @@ const Router = () => (
 	</BrowserRouter>
 );
 
-export { Router, PublicRoute, PrivateRoute };
+export default Router;

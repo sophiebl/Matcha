@@ -21,6 +21,7 @@ const Login = withRouter(({history, ...props}) => {
 			onCompleted: data => {
 				localStorage.setItem('token', data.login);
 				history.push("/browse");
+				//window.location.reload();
 			},
 			onError: data => {
 				switch (data.message.split(':', 2)[1].trim()) {

@@ -139,7 +139,19 @@ const resolvers = {
 		},
 
 		async logout (_, { }, ctx) {
-			ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
+			const index = ctx.connectedUsers.indexOf(ctx.cypherParams.currentUserUid);
+			if (index !== -1)
+			{
+				ctx.connectedUsers.splice(index, 1);
+				console.log('removed from array (logout)');
+			}
+			if (!ctx.connectedUsers.includes(ctx.cypherParams.currentUserUid))
+			{
+				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
+				console.log('publish disco (logout)');
+			}
+			console.log(ctx.connectedUsers);
+
 			return "Ok";
 		},
 
@@ -162,8 +174,9 @@ const resolvers = {
 			subscribe: withFilter(
 				(_, variables, context) => {
 					const uid = jwt.verify(context.token, process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null));
-					if (!context.connectedUsers.includes(uid))
+					//if (!context.connectedUsers.includes(uid))
 						context.connectedUsers.push(uid);
+					console.log('user connected');
 					console.log(context.connectedUsers);
 					return context.pubsub.asyncIterator('');
 				},
@@ -189,6 +202,7 @@ const schema = makeAugmentedSchema({
 	resolvers,
 	logger: console,
 	config: {
+		debug: false,
 		auth: {
 			isAuthenticated: true,
 		},

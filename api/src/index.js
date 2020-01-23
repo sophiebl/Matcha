@@ -65,9 +65,16 @@ const apolloServer = new ApolloServer({
 			console.log(`Subscription client disconnected.`);
 			const index = connectedUsers.indexOf(ctx.currentUserUid);
 			if (index !== -1)
+			{
 				connectedUsers.splice(index, 1);
+				console.log('removed from array (disco)');
+			}
 			if (!connectedUsers.includes(ctx.currentUserUid))
+			{
 				pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.currentUserUid }, state: 0 });
+				console.log('publish disco (disco)');
+			}
+			console.log(connectedUsers);
 		},
 	},
 	playground: {

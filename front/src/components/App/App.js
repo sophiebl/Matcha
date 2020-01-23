@@ -14,7 +14,8 @@ import { setContext } from 'apollo-link-context';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
-import { Router } from '../Routes/Routes';
+//import CommonStuff from './CommonStuff';
+import Router from '../Routes/Router';
 
 import './App.scss';
 
@@ -77,6 +78,7 @@ const App = () => {
 	return <>
 		<ApolloProvider client={client}>
 			<div className="App">
+				{/* <CommonStuff /> */}
 				<Router />	
 			</div>
 		</ApolloProvider>
