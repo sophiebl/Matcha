@@ -10,6 +10,8 @@ services:
       - '/usr/src/node_modules'
     ports:
       - '4000:4000'
+    labels:
+      traefik.enable: false
 
   front:
     image: alexandregv/matcha-front
@@ -20,6 +22,8 @@ services:
       - '/usr/src/node_modules'
     ports:
       - '3000:3000'
+    labels:
+      traefik.enable: false
 
   db:
     image: neo4j
@@ -39,4 +43,6 @@ services:
     volumes:
       - ./db/data:/data
       - ./db/plugins:/plugins
+    labels:
+      traefik.enable: false
 #   command: /bin/bash -c "[ -f /data/graph.db.dump ] && /var/lib/neo4j/bin/neo4j-admin load --from=/data/graph.db.dump --force; /sbin/tini -g -- /docker-entrypoint.sh neo4j"
