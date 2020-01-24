@@ -5,6 +5,7 @@ import { gql } from "apollo-boost";
 import { useSubscription } from '@apollo/react-hooks';
 
 import { getCurrentUid } from '../../Helpers';
+
 import './Messages.scss'
 
 const USER_STATE_CHANGED = gql`
