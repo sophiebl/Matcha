@@ -13,13 +13,13 @@ const GET_CONV = gql`
 	  Conversation(uid: $uid) {
 		members {
 		  uid
-		  firstname
+		  username
 		}
 		messages(orderBy: uid_asc) {
 		  uid
 		  author {
 				uid
-				firstname
+				username
 				avatar
 		  }
 		  content
@@ -29,9 +29,9 @@ const GET_CONV = gql`
   `;
 
 const Chat = ({ conv }) => {
-  const messages = conv.messages.map(({author, content}) => (
+  const messages = conv.messages.map(({ author, content }) => (
 	new ChatMessage({
-	  id: (author.uid === getCurrentUid()) >>> 0,
+		id: (author.uid === getCurrentUid()) ? 0 : 1,
 	  message: content,
 	})
   ));
@@ -71,7 +71,7 @@ const Messages = ({ match }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.firstname).join(', ');
+  const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.username).join(', ');
 
   return (
 		<div id="messages-container">
