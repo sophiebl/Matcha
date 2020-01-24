@@ -5,7 +5,6 @@ tags
 node_modules
 
 db/data/databases
-db/data/transactions
 db/logs
 
 .idea/
