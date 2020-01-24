@@ -49,7 +49,7 @@ const MessagesList = () => {
   if (error) return <p>Error :(</p>;
 
   const convs = data.User[0].conversations;
-  return <>{ convs.map((conv, index) => <ConvItem key={index} conv={conv} data={data} />) }</>
+  return <>{ convs.map((conv, index) => <ConvItem key={index} conv={conv} />) }</>
 }
 
 const MessagesIndex = () => {
