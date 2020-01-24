@@ -1,16 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { gql } from "apollo-boost";
-import { useSubscription } from '@apollo/react-hooks';
+
+//import { gql } from "apollo-boost";
+//import { useSubscription } from '@apollo/react-hooks';
+
+import { getCurrentUid } from '../../Helpers';
 import './Messages.scss'
 
-const USER_CONNECTED = gql`
-	subscription userStateChanged($uid: ID!) {
-		userStateChanged(uid: $uid) {
-			state
-		}
-	}
-`;
+//const USER_CONNECTED = gql`
+//	subscription userStateChanged($uid: ID!) {
+//		userStateChanged(uid: $uid) {
+//			state
+//		}
+//	}
+//`;
 
 const divStyle = {
 	display: 'flex',
@@ -53,32 +56,34 @@ const msgStyle = {
 };
 
 
-const ConvItem = ( {convs, data }) => {
-	console.log('convs in convItem', convs);	
-	console.log('data', data);	
+const ConvItem = ({ conv: { uid, members, lastMessage }, data }) => {
+	//const { err, success } = useSubscription(USER_CONNECTED, { variables: { uid: data.User[0].uid } });
+	//if (err) return <span>Subscription error!</span>;
+	//if (success) console.log(success);
+const success = false;
 
-	const { err, success } = useSubscription(USER_CONNECTED, { variables: { uid: data.User[0].uid } });
-	if (err) return <span>Subscription error!</span>;
-	if (success) console.log(success);
+	const externalMembers = (members.filter(member => member.uid !== getCurrentUid()));
+	const convTitle = externalMembers.map(member => member.username).join(', ');
+	const convImage = externalMembers[0].avatar;
 
-	return convs.map(({ uid, lastMessage }) => (
+	return (
 		<div key={uid} className="msg-container">
 			<Link to={"/messages/" + uid}>
 				<div style={divStyle}>
 					<div className="author-container">
 						<div className="rond"></div>
-						<img alt="user icon" className="img" style={imgStyle} src={lastMessage.author.avatar} />
+						<img alt="user icon" className="img" style={imgStyle} src={convImage} />
 						<div className={`rond ${(success && success.userStateChanged.state) ? "online" : "offline"}`}></div>
 					</div>
 					<div style={txtStyle}>
-						<p style={nameStyle}>{lastMessage.author.firstname}</p>
-						<p style={msgStyle}>{lastMessage.content}</p>
+						<p style={nameStyle}>{convTitle}</p>
+						<p style={msgStyle}>{lastMessage.author.uid === getCurrentUid() ? "Vous : " : null}{lastMessage.content}</p>
 					</div>
 				</div>
 			</Link>
 			<div style={hrStyle}></div>
 		</div>
-    ));
+    );
 
 }
 
