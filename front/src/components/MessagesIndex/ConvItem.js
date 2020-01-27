@@ -64,8 +64,10 @@ const ConvItem = ({ conv: { uid, members, lastMessage } }) => {
 
 	const { error, data } = useSubscription(USER_STATE_CHANGED, { variables: { uid: externalMembers[0].uid } });
 	if (error) return <span>Subscription error!</span>;
-	if (data) console.log(data);
-
+	if (data) {
+		console.log("NOTIF : Quelqu'un vient de se connecter !!!!!");
+		console.log(data);
+	}
 	return (
 		<div key={uid} className="msg-container">
 			<Link to={"/messages/" + uid}>
