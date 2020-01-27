@@ -27,6 +27,7 @@ type User @isAuthenticated {
 	visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
 	conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
     isConnected: Boolean!
+	lastVisite: String!
 }
 
 type Image @isAuthenticated {

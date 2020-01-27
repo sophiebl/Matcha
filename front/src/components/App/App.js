@@ -14,8 +14,12 @@ import { setContext } from 'apollo-link-context';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
-//import CommonStuff from './CommonStuff';
+
+// import CommonStuff from './CommonStuff';
 import Router from '../Routes/Router';
+
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 import './App.scss';
 
@@ -79,6 +83,7 @@ const App = () => {
 		<ApolloProvider client={client}>
 			<div className="App">
 				{/* <CommonStuff /> */}
+				<ReactNotification />
 				<Router />	
 			</div>
 		</ApolloProvider>

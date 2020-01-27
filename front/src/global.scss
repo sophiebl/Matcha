@@ -152,3 +152,10 @@ a {
 .online {
 	background-color: $online;
 }
+.lastVisite{
+  font-size: 0.8em;
+  font-weight: $semi-b;
+  color: $offline;
+  float: right;
+  text-align: right;
+}

@@ -30,6 +30,7 @@ const resolvers = {
 		},
 
 		async isConnected({ uid }, args, ctx) {
+			//console.log("context dans isConnected:", ctx);
 			return ctx.connectedUsers.includes(uid);
 		}
 	},
@@ -148,10 +149,7 @@ const resolvers = {
 			if (!ctx.connectedUsers.includes(ctx.cypherParams.currentUserUid))
 			{
 				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
-				console.log('publish disco (logout)');
 			}
-			console.log(ctx.connectedUsers);
-
 			return "Ok";
 		},
 
@@ -175,9 +173,13 @@ const resolvers = {
 				(_, variables, context) => {
 					const uid = jwt.verify(context.token, process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null));
 					//if (!context.connectedUsers.includes(uid))
-						context.connectedUsers.push(uid);
-					console.log('user connected');
-					console.log(context.connectedUsers);
+					let date_ob = new Date();
+					let day = ("0" + date_ob.getDate()).slice(-2);
+					let year = date_ob.getFullYear();
+					let hours = date_ob.getHours();
+					const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ];
+					let date = day + " " + monthNames[date_ob.getMonth()] + " " + year + " à " + hours + "h";
+					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date})
 					return context.pubsub.asyncIterator('');
 				},
 				(payload, variables) => false,

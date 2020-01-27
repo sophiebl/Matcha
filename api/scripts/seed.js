@@ -39,7 +39,8 @@ CREATE (:User {
   prefOrientation: $prefOrientation,
   prefDistance: $prefDistance,
   confirmToken: 'true',
-  resetToken: 'null'
+  resetToken: 'null',
+  lastVisite: '15 janvier à 17h'
 })-[:HAS_IMG]->(:Image {uid: $avatarUid, src: $avatarSrc})`;
 
 const CREATE_TAG = `

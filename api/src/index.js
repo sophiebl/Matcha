@@ -36,6 +36,7 @@ const apolloServer = new ApolloServer({
 		...connection.context,
 		pubsub,
 		connectedUsers,
+		driver
 	}) : ({
 		driver,
 		pubsub,
@@ -74,7 +75,6 @@ const apolloServer = new ApolloServer({
 				pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.currentUserUid }, state: 0 });
 				console.log('publish disco (disco)');
 			}
-			console.log(connectedUsers);
 		},
 	},
 	playground: {

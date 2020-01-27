@@ -6,6 +6,7 @@ import Nav from "../Nav/Nav";
 import './Browse.scss'
 
 import cookie from 'react-cookies';
+// import UsersState from '../App/UsersState';
 
 const GET_USERS = gql`
 query User($username: String) {
@@ -29,6 +30,7 @@ query User($username: String) {
 			username
 		}
 		isConnected
+		lastVisite
     }
 
 	firstUser: User(username: $username) {
@@ -51,6 +53,7 @@ query User($username: String) {
 			username
 		}
 		isConnected
+		lastVisite
 	}
 }
 `;
@@ -73,6 +76,8 @@ const Browse = () => {
 		}
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
+	// const user = state.user;
+	// console.log(state);
 
 	useEffect(() => {
 		const onCompleted = (data) => {
@@ -98,6 +103,7 @@ const Browse = () => {
 				) : (
 					<div className="browse">
 						<UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} />
+						{/* <UsersState user={state.user}/> */}
 					</div>
 				)
 		}
