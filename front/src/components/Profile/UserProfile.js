@@ -23,6 +23,7 @@ const VISIT_PROFILE = gql`
 
 const UserProfile = ({ user, dispatch }) => {
 	const { uid, bio, tags, likedUsers } = user;
+	console.log(user);
 
 	const [visitProfile] = useMutation(VISIT_PROFILE, {
 		onError: data => console.log(data),

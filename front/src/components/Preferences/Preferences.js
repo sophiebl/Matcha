@@ -31,6 +31,9 @@ const ME_AND_TAGS = gql`
 				prefAgeMax
 				prefDistance
 				prefOrientation
+				lat
+				long
+				location
 			}
 
 			Tag {
@@ -41,8 +44,8 @@ const ME_AND_TAGS = gql`
 `;
 
 const EDIT_PREFERENCES = gql`
-	mutation UpdateUser($uid: ID!, $bio: String!, $gender: String!, $prefAgeMin: Int!, $prefAgeMax: Int!, $prefOrientation: String!, $prefDistance: Int!) {
-		UpdateUser(uid: $uid, bio: $bio, gender: $gender, prefAgeMin: $prefAgeMin, prefAgeMax: $prefAgeMax, prefOrientation: $prefOrientation, prefDistance: $prefDistance) {
+	mutation UpdateUser($uid: ID!, $bio: String!, $gender: String!, $prefAgeMin: Int!, $prefAgeMax: Int!, $prefOrientation: String!, $prefDistance: Int!, $lat: String!, $long: String!, $location: String!) {
+		UpdateUser(uid: $uid, bio: $bio, gender: $gender, prefAgeMin: $prefAgeMin, prefAgeMax: $prefAgeMax, prefOrientation: $prefOrientation, prefDistance: $prefDistance, lat: $lat, long: $long, location: $location) {
 			uid
 			bio
 			gender
@@ -50,6 +53,9 @@ const EDIT_PREFERENCES = gql`
 			prefAgeMax
 			prefDistance
 			prefOrientation
+			lat
+			long
+			location
 		}
 	}
 `;
@@ -84,6 +90,7 @@ const REMOVE_TAG = gql`
 const Preferences = () => {
 	const wrapperStyle = { width: '80%', margin: 30 };
 	const Handle = Slider.Handle;
+
 	const distanceHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;
 		return (
@@ -123,6 +130,9 @@ const Preferences = () => {
 		prefAgeMax: 25,
 		prefDistance: 25,
 		chips: [],
+		lat: null,
+		long: null,
+		location: null,
 	});
 
 	const onError = data => console.log(data);
@@ -182,6 +192,13 @@ const Preferences = () => {
 		});	
 	}
 
+	const [isClicked, setClicked] = useState(false);
+	const [isLocation, setLocation] = useState({
+		lat: null,
+		long: null,
+		location: null,
+	});
+
 	const { loading, error, data } = useQuery(ME_AND_TAGS);
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
@@ -202,8 +219,39 @@ const Preferences = () => {
 			prefAgeMin: data.me.prefAgeMin,
 			prefAgeMax: data.me.prefAgeMax,
 			prefDistance: data.me.prefDistance,
+			lat: data.me.lat,
+			long: data.me.long,
+			location: data.me.location,
 		});
 	}
+
+	const showPosition = async position => {
+        const obj = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lon=${position.coords.longitude}&lat=${position.coords.latitude}`
+        );
+        const data = await obj.json();
+        let location = '';
+        if (data.address.city_district)
+            location = data.address.city_district;
+        else
+			location = data.address.city;
+		setLocation({...isLocation,
+			lat: data.lat,
+			long: data.lon,
+			location: location,
+		});
+    };
+
+    const getLocation = () => {
+        if (navigator.geolocation) {
+			setClicked(true);
+            const city = navigator.geolocation.getCurrentPosition(showPosition);
+            console.log(city);
+        } else {
+            //setClicked(false);
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
 
 	const onChipsChange = chips => {
 		const added = chips.filter(x => !state['chips'].includes(x))[0];	
@@ -316,7 +364,13 @@ const Preferences = () => {
 				onChange={onChipsChange}
 				suggestions={state['tags'].map(tag => tag.name.charAt(0).toUpperCase() + tag.name.slice(1))}
 			/>
-			
+
+			<div>
+				<p className="txt-left f-m bio-title">Localisation</p>
+				{!isClicked && (<button onClick={getLocation}>Get my location</button>)}
+				{(isClicked === true) && (<span>{isLocation.location}</span>)}
+			</div>		
+
 			<button className="pref" onClick={() => editPreferences({
 				variables: {
 					uid: data.me.uid,
@@ -326,6 +380,9 @@ const Preferences = () => {
 					prefAgeMax: state['prefAgeMax'],
 					prefOrientation: state['prefOrientation'],
 					prefDistance: state['prefDistance'],
+					lat: isLocation.lat,
+					long: isLocation.long,
+					location: isLocation.location,
 				}
 			})}>Enregistrer</button>
 

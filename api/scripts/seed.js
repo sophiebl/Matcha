@@ -40,7 +40,10 @@ CREATE (:User {
   prefDistance: $prefDistance,
   confirmToken: 'true',
   resetToken: 'null',
-  lastVisite: '15 janvier à 17h'
+  lastVisite: '15 janvier à 17h',
+  lat: $lat,
+  long: $long,
+  location: $location
 })-[:HAS_IMG]->(:Image {uid: $avatarUid, src: $avatarSrc})`;
 
 const CREATE_TAG = `
@@ -103,6 +106,9 @@ async function users(amount = 1) {
   	const username = firstname;
   	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
   	const gender = faker.random.arrayElement(['homme', 'femme']);
+  	const lat = faker.address.latitude();
+    const long = faker.address.longitude();
+    const location = faker.address.city();
   	const elo = faker.random.number({min: 0, max: 100});
   	const prefAgeMin = faker.random.number({min: 18, max: 100});
   	const prefAgeMax = prefAgeMin + 10;
@@ -112,9 +118,11 @@ async function users(amount = 1) {
     const avatarSrc = (await fetch(`http://source.unsplash.com/random/?${gender === "homme" ? "man" : "woman"}`, { headers: {'Cache-Control': 'no-cache'} })).url.split('?')[0];
     await sleep(2000);
   
-  	await session.run(faker.fake(CREATE_USER), {uid, firstname, birthdate, username, hash, gender, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
+  	await session.run(faker.fake(CREATE_USER), {uid, firstname, birthdate, username, hash, gender, lat, long, location, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
   }
 }
+
+
 
 async function tags() {
 	const names = ['Sport', 'Cinema', 'Tech', 'Design', 'Mode', 'Art', 'Culture', 'Science-Fiction', 'Dessin', 'Peinture', 'Street-Art', 'Cuisine', 'Jeux-video'];

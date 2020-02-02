@@ -31,6 +31,8 @@ query User($username: String) {
 		}
 		isConnected
 		lastVisite
+		lat
+		long
     }
 
 	firstUser: User(username: $username) {
@@ -54,6 +56,8 @@ query User($username: String) {
 		}
 		isConnected
 		lastVisite
+		lat
+		long
 	}
 }
 `;
@@ -76,8 +80,8 @@ const Browse = () => {
 		}
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
-	// const user = state.user;
-	// console.log(state);
+	//const user = state.user;
+	//console.log(state);
 
 	useEffect(() => {
 		const onCompleted = (data) => {

@@ -21,7 +21,8 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile }) => {
-	const { firstname, birthdate, avatar, elo, likesCount, prefRadius, likedUsers, lastVisite } = user;
+	const { firstname, birthdate, avatar, elo, likesCount, prefRadius, likedUsers, lastVisite, lat, long } = user;
+	console.log(isMyProfile);
 	const age = Math.abs(new Date(Date.now() - (new Date(birthdate))).getFullYear() - 1970);
 	const LikeIcon = () => {
 		return (likedUsers && likedUsers.find(u => u.uid === getCurrentUid())) ? (
@@ -59,7 +60,8 @@ const MainInfos = ({ user, isMyProfile }) => {
 				<div className="nav-user w-100">
 					<div>
 						<FontAwesomeIcon className="icon white" icon={['fa', 'map-marker-alt']} />
-						<span className="icon-top">{prefRadius} Km</span>
+						{/* <span className="icon-top">{prefRadius} Km</span> */}
+						<span className="icon-top">{lat}</span>
 					</div>
 					<div>
 						<FontAwesomeIcon className="icon white" icon={['far', 'heart']} />
@@ -89,7 +91,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 					</div>
 				</div>
 			)}
-				<Avatar src={avatar} />
+			<Avatar src={avatar} />
 			<div className="main-infos valign50">
 				<div className="mb-5">
 					<h2>{firstname}</h2>

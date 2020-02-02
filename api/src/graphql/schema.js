@@ -36,7 +36,7 @@ const resolvers = {
 	},
 
 	Mutation: {
-		async signup (_, { firstname, lastname, username, email, password }) {
+		async signup (_, { firstname, lastname, username, email, password, lat, long, location}, context) {
 			const uid = uniqid('user-');
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
@@ -49,14 +49,15 @@ const resolvers = {
 				text: `Click here to confirm your email : ${url}`,
 				html: `Click here to confirm your email : <a href="${url}">${url}</a>`,
 			};
-
-			ctx.mailtransport.sendMail(mailOptions, (error, info) => {
+			//console.log(ctx);
+			console.log(context);
+			context.mailtransport.sendMail(mailOptions, (error, info) => {
 				if (error) console.log(error);
 				else console.log('Email sent: ' + info.response);
 			});
 
-			return await ctx.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $confirmToken}) RETURN u`,
-				{uid, firstname, lastname, username, email, hash, confirmToken})
+			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location}) RETURN u`,
+				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location})
 				.then(result => {
 					if (result.records.length < 1)
 						throw new Error('CouldNotCreateUser')
@@ -118,7 +119,7 @@ const resolvers = {
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
 		},
-
+		
 		async login (_, { username, password }, ctx) {
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			return await ctx.driver.session().run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
