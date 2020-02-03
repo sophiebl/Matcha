@@ -20,9 +20,13 @@ const USER_STATE_CHANGED = gql`
 	}
 `;
 
-const MainInfos = ({ user, isMyProfile }) => {
-	const { firstname, birthdate, avatar, elo, likesCount, prefRadius, likedUsers, lastVisite, lat, long } = user;
-	console.log(isMyProfile);
+const MainInfos = ({ user, isMyProfile, km }) => {
+	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite } = user;
+
+	var kmArrondi = km*100;
+	kmArrondi = Math.round(kmArrondi);
+	kmArrondi = kmArrondi/100;  
+
 	const age = Math.abs(new Date(Date.now() - (new Date(birthdate))).getFullYear() - 1970);
 	const LikeIcon = () => {
 		return (likedUsers && likedUsers.find(u => u.uid === getCurrentUid())) ? (
@@ -61,7 +65,7 @@ const MainInfos = ({ user, isMyProfile }) => {
 					<div>
 						<FontAwesomeIcon className="icon white" icon={['fa', 'map-marker-alt']} />
 						{/* <span className="icon-top">{prefRadius} Km</span> */}
-						<span className="icon-top">{lat}</span>
+						<span className="icon-top">{kmArrondi} Km</span>
 					</div>
 					<div>
 						<FontAwesomeIcon className="icon white" icon={['far', 'heart']} />

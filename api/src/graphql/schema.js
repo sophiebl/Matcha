@@ -56,8 +56,8 @@ const resolvers = {
 				else console.log('Email sent: ' + info.response);
 			});
 
-			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location}) RETURN u`,
-				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location})
+			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, birthdate: 'null', password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location})-[:HAS_IMG]->(i:Image {uid: 'img-' + $uniqid, src: "https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png"}) RETURN u`,
+				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, uniqid:context.cypherParams.uniqid})
 				.then(result => {
 					if (result.records.length < 1)
 						throw new Error('CouldNotCreateUser')

@@ -6,10 +6,15 @@ import Nav from "../Nav/Nav";
 import './Browse.scss'
 
 import cookie from 'react-cookies';
-// import UsersState from '../App/UsersState';
+import UserData from '../App/UserData';
 
 const GET_USERS = gql`
 query User($username: String) {
+	me: me{
+		uid
+		lat
+		long
+	}
 	users: User {
 		uid
 		bio
@@ -62,10 +67,11 @@ query User($username: String) {
 }
 `;
 
+
+
 const Browse = () => {
 	const firstUsername = cookie.load('firstUsername');
 	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
-
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
@@ -81,7 +87,6 @@ const Browse = () => {
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	//const user = state.user;
-	//console.log(state);
 
 	useEffect(() => {
 		const onCompleted = (data) => {
@@ -100,14 +105,15 @@ const Browse = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
+
 	return <>	
 		{ state.user == null ?
 				(
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
 					<div className="browse">
-						<UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} />
-						{/* <UsersState user={state.user}/> */}
+						<UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} userMe={data}/>
+						{/* <UserData/> */}
 					</div>
 				)
 		}
