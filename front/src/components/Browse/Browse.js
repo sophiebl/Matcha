@@ -6,7 +6,6 @@ import Nav from "../Nav/Nav";
 import './Browse.scss'
 
 import cookie from 'react-cookies';
-import UserData from '../App/UserData';
 
 const GET_USERS = gql`
 query User($username: String) {
