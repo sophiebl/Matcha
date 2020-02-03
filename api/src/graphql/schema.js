@@ -120,9 +120,9 @@ const resolvers = {
 				});
 		},
 		
-		async login (_, { username, password }, ctx) {
+		async login (_, { username, password, lat, long, location }, ctx) {
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
-			return await ctx.driver.session().run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
+			return await ctx.driver.session().run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) SET u.lat = $lat SET u.long = $long SET u.location = $location RETURN u`, { username, long, lat, location })
 				.then(result => {
 					if (result.records.length < 1)
 						throw new Error('UnknownUsername');

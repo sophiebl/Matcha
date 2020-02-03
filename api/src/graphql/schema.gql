@@ -69,7 +69,7 @@ type Query {
 
 type Mutation {
     signup (firstname: String!, lastname: String!, username: String!, email: String!, password: String!, lat: String!, long: String!, location: String!): String
-    login(username: String!, password: String!): String
+    login(username: String!, password: String!, lat: String!, long: String!, location: String!): String
     logout: String
     emailVerif(confirmToken: String!): String
     sendPwdReset(email: String!): String

@@ -74,30 +74,6 @@ const Signup = withRouter(({history, ...props}) => {
         }
 	}
 	
-	const getLocationAnyway = () => {
-		fetch("https://api.ipify.org/?format=json")
-			.then(res => res.json())
-			.then(data => {
-			  fetch(`http://ip-api.com/json/${data.ip}`)
-				.then(res => res.json())
-				.then(data => {
-					let lat = parseFloat(data.lat).toString();
-					let long = parseFloat(data.lon).toString();
-					let city = data.city;
-					console.log(data);
-					console.log(lat);
-					console.log(long);
-				  	setLocation({...isLocation,
-						lat: lat,
-						long: long,
-						location: city,
-					});
-				})
-				.catch(e => console.log(e));
-			})
-			.catch(e => console.log(e));
-	}
-	
 	return (
 		<div>
 			<form method="POST" id="signup-banner" className="signup bg-desc" onSubmit={handleSubmit(onSubmit)}>
@@ -110,7 +86,6 @@ const Signup = withRouter(({history, ...props}) => {
 				<p className="txt-left f-m bio-title">Localisation</p>
 				{!isClicked && (<button onClick={getLocation}>Get my location</button>)}
 				{(isClicked === true) && (<span>{isLocation.location}</span>)}
-				<input type="checkbox" onClick={getLocationAnyway}/>Je ne veux pas être géolocalisé
 				<button>Sign up</button>
 			</form>
 			{showBanner && <Banner content="Please confirm your account by following the link in the mail we sent to you.">
