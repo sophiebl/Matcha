@@ -33,6 +33,10 @@ query User($username: String) {
 			uid
 			username
 		}
+		images {
+			uid
+			src
+		}
 		isConnected
 		lastVisite
 		lat
@@ -57,6 +61,10 @@ query User($username: String) {
 		likedUsers {
 			uid
 			username
+		}
+		images {
+			uid
+			src
 		}
 		isConnected
 		lastVisite
@@ -86,7 +94,7 @@ const Browse = () => {
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	//const user = state.user;
-
+	console.log(state.user);
 	useEffect(() => {
 		const onCompleted = (data) => {
 			if (data.firstUser.length > 0)
