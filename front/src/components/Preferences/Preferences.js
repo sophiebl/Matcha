@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Chips from 'react-chips';
-//import Avatar from '@material-ui/core/Avatar';
+// import Avatar from '@material-ui/core/Avatar';
 //import Chip from '@material-ui/core/Chip';
 //import { withStyles } from "@material-ui/core/styles";
 //import Button from "@material-ui/core/Button";

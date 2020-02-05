@@ -28,6 +28,10 @@ const ME = gql`
 					uid
 					name
 				}
+				images {
+					uid
+					src
+				}
 			}
 		}
 `;
@@ -38,12 +42,12 @@ const MyProfile = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
-	const { uid, bio, tags } = data.me;
+	const { uid, bio, tags, images } = data.me;
 
 	return (
 		<div>
 			<div className="infos-container" key={uid}>
-				<MainInfos user={data.me} isMyProfile={true} />
+				<MainInfos user={data.me} isMyProfile={true} userMe={images} />
 				<Bio content={bio} />
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }

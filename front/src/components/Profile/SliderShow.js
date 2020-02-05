@@ -1,20 +1,19 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-class Slider extends React.Component {
+class SliderShow extends React.Component {
     constructor(props) {
       super(props)
-        console.log(props.src[0].src);
+      console.log(props.src);
+      
+      var images = [];
+      var i = 0;
+      while(props.src[i] != null){
+        images.push(props.src[i++].src);
+      }
+      console.log(images);
       this.state = {
-        images: [
-            props.src[0].src,
-            props.src[1].src,
-            props.src[2].src,
-          "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/aurora.jpg",
-          "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/canyon.jpg",
-          "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/city.jpg",
-          "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/desert.jpg",
-          "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/mountains.jpg"
-        ],
+        images,
         currentIndex: 0,
         translateValue: 0
       }
@@ -95,8 +94,9 @@ class Slider extends React.Component {
   const LeftArrow = (props) => {
     return (
       <div className="backArrow arrow" onClick={props.goToPrevSlide}>
-        {/* <i className="fa fa-arrow-left fa-2x" aria-hidden="true"></i> */}
-        <i className="fas fa-chevron-circle-right fa-2x" aria-hidden="true"></i>
+         {/* <i className="fa fa-arrow-left fa-2x" aria-hidden="true"></i> */}
+         {/* <i className="fas fa-chevron-circle-right fa-2x" aria-hidden="true"></i> */}
+        <FontAwesomeIcon className="color-arrow" size="2x" icon={['fas', 'chevron-circle-left']} />
       </div>
     );
   }
@@ -106,9 +106,10 @@ class Slider extends React.Component {
     return (
       <div className="nextArrow arrow" onClick={props.goToNextSlide}>
         {/* <i className="fa fa-arrow-right fa-2x" aria-hidden="true"></i> */}
-        <i className="fas fa-chevron-circle-right fa-2x" aria-hidden="true"></i>
+        {/* <i className="fas fa-chevron-circle-right fa-2x" aria-hidden="true"></i> */}
+        <FontAwesomeIcon className="color-arrow" size="2x" icon={['fas', 'chevron-circle-right']} />
       </div>
     );
   }
 
-export default Slider;
+export default SliderShow;

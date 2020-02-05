@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory, faWalking } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory, faWalking, faChevronCircleRight, faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faHeart, faCommentAlt, faUser } from '@fortawesome/free-regular-svg-icons';
 
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -14,7 +14,6 @@ import { setContext } from 'apollo-link-context';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 
-
 // import CommonStuff from './CommonStuff';
 import Router from '../Routes/Router';
 
@@ -23,7 +22,7 @@ import 'react-notifications-component/dist/theme.css'
 
 import './App.scss';
 
-library.add(faCheckSquare, faCoffee, faStar, faTimes, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
+library.add(faCheckSquare, faCoffee, faStar, faTimes, faChevronCircleRight, faChevronCircleLeft, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
 
 const authLink = setContext((_, { headers }) => {
 	const token = localStorage.getItem('token');

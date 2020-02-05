@@ -32,10 +32,6 @@ const Login = withRouter(({history, ...props}) => {
 					let lat = parseFloat(data.lat).toString();
 					let long = parseFloat(data.lon).toString();
 					let city = data.city;
-					console.log(data);
-					console.log(lat);
-					console.log(lat);
-					console.log(long);
 				  	setLocation({...isLocation,
 						lat: lat,
 						long: long,

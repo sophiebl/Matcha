@@ -11,6 +11,8 @@ import Tag from './Tag';
 import Nav from "../Nav/Nav";
 import './Profile.scss'
 
+import UsersState from '../App/UsersState';
+
 const VISIT_PROFILE = gql`
 	mutation visitProfile($uid: ID!) {
 		visitProfile(uid: $uid) {
@@ -27,6 +29,7 @@ const UserProfile = ({ user, dispatch, userMe }) => {
 	const [visitProfile] = useMutation(VISIT_PROFILE, {
 		onError: data => console.log(data),
 	});
+
 
 	const latMe = parseFloat(userMe.me.lat);
 	const longMe = parseFloat(userMe.me.long);
@@ -70,6 +73,7 @@ const UserProfile = ({ user, dispatch, userMe }) => {
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<BlockButton uidUser={uid} dispatch={dispatch} />
+				<UsersState user={user} dispatch={dispatch} userMe={userMe}/>
 			</div>
 			<Nav />
 		</div>

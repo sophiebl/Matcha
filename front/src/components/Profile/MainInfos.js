@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { store } from 'react-notifications-component';
 import Avatar from './Avatar.js';
-import Slider from './Slider.js';
+import SliderShow from './SliderShow.js';
 // import UsersState from '../App/UsersState';
 // import CommonStuff from '../App/CommonStuff';
 import { getCurrentUid } from '../../Helpers';
@@ -23,7 +23,7 @@ const USER_STATE_CHANGED = gql`
 
 const MainInfos = ({ user, isMyProfile, km }) => {
 	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite, images } = user;
-	console.log(images);
+	console.log(km);
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
@@ -47,6 +47,7 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 	}
 
 	console.log(user.firstname + ' ' + user.isConnected);
+	console.log(images);
 
 	return (
 		<div className="pos-rel img-container">
@@ -98,7 +99,7 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 				</div>
 			)}
 			{/* <Avatar src={avatar} /> */}
-			<Slider src={images}/>
+			<SliderShow src={images}/>
 			<div className="main-infos valign50">
 				<div className="mb-5">
 					<h2>{firstname}</h2>

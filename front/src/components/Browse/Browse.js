@@ -4,6 +4,8 @@ import React, { useEffect, useReducer } from 'react';
 import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
+import UsersState from '../App/UsersState';
+
 
 import cookie from 'react-cookies';
 
@@ -11,9 +13,11 @@ const GET_USERS = gql`
 query User($username: String) {
 	me: me{
 		uid
+		firstname
 		lat
 		long
 	}
+	
 	users: User {
 		uid
 		bio
@@ -74,8 +78,6 @@ query User($username: String) {
 }
 `;
 
-
-
 const Browse = () => {
 	const firstUsername = cookie.load('firstUsername');
 	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
@@ -94,7 +96,7 @@ const Browse = () => {
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	//const user = state.user;
-	console.log(state.user);
+	console.log(data);
 	useEffect(() => {
 		const onCompleted = (data) => {
 			if (data.firstUser.length > 0)
