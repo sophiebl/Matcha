@@ -6,7 +6,7 @@ import uniqid from 'uniqid';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 const resolvers = {
 	Query: {
@@ -14,22 +14,29 @@ const resolvers = {
 	},
 
 	User: {
-		async elo(obj, args, ctx) {
-			return await ctx.driver.session().run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid: obj.uid })
+		async elo({ uid	}, args, ctx) {
+			return await ctx.driver.session().run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid })
 				.then(result => {
 					const stats = {};
 					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
 					let elo = ((stats.LIKED || 0) / (stats.VISITED || 0)) + ((stats.LIKED || 0) - (stats.DISLIKED || 0)) - (((stats.BLOCKED ||0) + (stats.REPORTED || 0)) * 0.01);
-					elo = (elo == Infinity) ? 0 : elo;
+					elo = (elo == Infinity || elo == NaN || elo == undefined) ? 0 : elo;
 					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
 					const removeDot = string => string.replace('.', '');
-					return removeDot(numberToString(elo));
+					//console.log(removeDot(numberToString(elo)) || 0);
+					return 42;
+					//return removeDot(numberToString(elo)) || 0;
 				});
+		},
+
+		async isConnected({ uid }, args, ctx) {
+			//console.log("context dans isConnected:", ctx);
+			return ctx.connectedUsers.includes(uid);
 		}
 	},
 
 	Mutation: {
-		async signup (_, { firstname, lastname, username, email, password }) {
+		async signup (_, { firstname, lastname, username, email, password, lat, long, location}, context) {
 			const uid = uniqid('user-');
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
@@ -42,14 +49,15 @@ const resolvers = {
 				text: `Click here to confirm your email : ${url}`,
 				html: `Click here to confirm your email : <a href="${url}">${url}</a>`,
 			};
-
-			ctx.mailtransport.sendMail(mailOptions, (error, info) => {
+			//console.log(ctx);
+			console.log(context);
+			context.mailtransport.sendMail(mailOptions, (error, info) => {
 				if (error) console.log(error);
 				else console.log('Email sent: ' + info.response);
 			});
 
-			return await ctx.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, password: $hash, confirmToken: $confirmToken}) RETURN u`,
-				{uid, firstname, lastname, username, email, hash, confirmToken})
+			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, birthdate: 'null', password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location})-[:HAS_IMG]->(i:Image {uid: 'img-' + $uniqid, src: "https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png"}) RETURN u`,
+				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, uniqid:context.cypherParams.uniqid})
 				.then(result => {
 					if (result.records.length < 1)
 						throw new Error('CouldNotCreateUser')
@@ -111,10 +119,10 @@ const resolvers = {
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
 		},
-
-		async login (_, { username, password }, ctx) {
+		
+		async login (_, { username, password, lat, long, location }, ctx) {
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
-			return await ctx.driver.session().run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) RETURN u`, { username })
+			return await ctx.driver.session().run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) SET u.lat = $lat SET u.long = $long SET u.location = $location RETURN u`, { username, long, lat, location })
 				.then(result => {
 					if (result.records.length < 1)
 						throw new Error('UnknownUsername');
@@ -125,13 +133,24 @@ const resolvers = {
 						throw new Error('EmailNotConfirmed');
 					if (user.banned == true)
 						throw new Error('UserBanned');
+					//if (!ctx.connectedUsers.includes(user.uid))
+					//	ctx.connectedUsers.push(user.uid);
 					ctx.pubsub.publish('USER_STATE_CHANGED', { user: user, state: 1 });
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});	
 		},
 
 		async logout (_, { }, ctx) {
-			ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
+			const index = ctx.connectedUsers.indexOf(ctx.cypherParams.currentUserUid);
+			if (index !== -1)
+			{
+				ctx.connectedUsers.splice(index, 1);
+				console.log('removed from array (logout)');
+			}
+			if (!ctx.connectedUsers.includes(ctx.cypherParams.currentUserUid))
+			{
+				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
+			}
 			return "Ok";
 		},
 
@@ -150,6 +169,25 @@ const resolvers = {
 	},
 
 	Subscription: {
+		connect: {
+			subscribe: withFilter(
+				(_, variables, context) => {
+					const uid = jwt.verify(context.token, process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null));
+					//if (!context.connectedUsers.includes(uid))
+					let date_ob = new Date();
+					let day = ("0" + date_ob.getDate()).slice(-2);
+					let year = date_ob.getFullYear();
+					let hours = date_ob.getHours();
+					const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ];
+					let date = day + " " + monthNames[date_ob.getMonth()] + " " + year + " à " + hours + "h";
+					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date})
+					return context.pubsub.asyncIterator('');
+				},
+				(payload, variables) => false,
+			),
+			resolve: (payload) => "Ok",
+		},
+
 		userStateChanged: {
 			subscribe: withFilter(
 				(_, variables, context) => context.pubsub.asyncIterator('USER_STATE_CHANGED'),
@@ -167,6 +205,7 @@ const schema = makeAugmentedSchema({
 	resolvers,
 	logger: console,
 	config: {
+		debug: false,
 		auth: {
 			isAuthenticated: true,
 		},

@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@apollo/react-hooks';
+
 import { gql } from "apollo-boost";
+import { useQuery, useSubscription } from '@apollo/react-hooks';
+
 import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { getCurrentUid } from '../../Helpers';
 
 import '../MessagesIndex/Messages.scss'
@@ -13,13 +16,13 @@ const GET_CONV = gql`
 	  Conversation(uid: $uid) {
 		members {
 		  uid
-		  firstname
+		  username
 		}
 		messages(orderBy: uid_asc) {
 		  uid
 		  author {
 				uid
-				firstname
+				username
 				avatar
 		  }
 		  content
@@ -28,15 +31,30 @@ const GET_CONV = gql`
 	}
   `;
 
+const USER_STATE_CHANGED = gql`
+	subscription userStateChanged($uid: ID!) {
+		userStateChanged(uid: $uid) {
+			state
+		}
+	}
+`;
+
 const Chat = ({ conv }) => {
-  const messages = conv.messages.map(({author, content}) => (
+  const externalMembers = (conv.members.filter(member => member.uid !== getCurrentUid()));
+
+  const { error, data } = useSubscription(USER_STATE_CHANGED, { variables: { uid: externalMembers[0].uid } });
+  if (error) return <span>Subscription error!</span>;
+  if (data) console.log(data);
+
+  const messages = conv.messages.map(({ author, content }) => (
 	new ChatMessage({
-	  id: (author.uid === getCurrentUid()) >>> 0,
+		id: (author.uid === getCurrentUid()) ? 0 : 1,
 	  message: content,
 	})
   ));
 
-  return (
+  return <>
+	<div className={`rond ${(data && data.userStateChanged.state) ? "online" : "offline"}`}></div>
 	<ChatFeed
 	  messages={messages}
 	  isTyping={false}
@@ -57,7 +75,7 @@ const Chat = ({ conv }) => {
 		}
 	  }
 	/>
-  );
+  </>;
 }
 
 const Messages = ({ match }) => {
@@ -71,7 +89,7 @@ const Messages = ({ match }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.firstname).join(', ');
+  const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.username).join(', ');
 
   return (
 		<div id="messages-container">

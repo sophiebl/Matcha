@@ -1,4 +1,5 @@
 import React from 'react';
+import './ProfileImages.scss'
 
 export default class FileBase64 extends React.Component {
 
@@ -56,10 +57,15 @@ export default class FileBase64 extends React.Component {
 
   render() {
     return (
-      <input
-        type="file"
-        onChange={ this.handleChange.bind(this) }
-        multiple={ this.props.multiple } />
+      <>
+        <label for="file" className="label-file">Choisir une image</label>
+        <input
+          type="file"
+          className="input-file"
+          onChange={ this.handleChange.bind(this) }
+          multiple={ this.props.multiple } />
+      </>
+        
     );
   }
 }

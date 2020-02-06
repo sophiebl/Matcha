@@ -20,3 +20,25 @@ h2{
   color: #1f1f1f;
   font-size: 1em;
 }
+
+.label-file {
+  cursor: pointer;
+  display: inline-block;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+  padding: 7px 15px;
+  margin-top: 10px;
+  color: #2196F3;
+}
+
+.label-file:hover {
+  background: #2196F3;
+  color: white;
+}
+
+.input-file {
+  position: relative;
+  top: -43px;
+  z-index: 100;
+  opacity: 0;
+}

@@ -27,6 +27,7 @@ User info
   position: absolute;
   top: 5px;
   right: 4px;
+  z-index: 1000;
   > * {
     display: inline-block;
     width: 33%;
@@ -38,20 +39,6 @@ User info
   color: #fff;
   font-size: $f-base;
   font-weight: $semi-b;
-}
-
-.rond {
-  width: 13px;
-  height: 13px;
-  border-radius: 13px;
-  float: right;
-  margin-right: 5px;
-}
-.offline {
-	background-color: $offline;
-}
-.online {
-	background-color: $online;
 }
 
 .main-infos {
@@ -135,4 +122,59 @@ User tag
   font-family: "Meyrin";
   font-weight: bold;
   font-size: $f-m;
+}
+
+.logout-container{
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.slider {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.slider-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.slide {
+  display: inline-block;
+  height: 58vh;
+  width: 100%;
+}
+
+.arrow {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform ease-in .1s;
+}
+
+.nextArrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 999;
+  color: #fff;
+}
+
+.backArrow {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 999;
+  color: #fff;
+}
+
+.fa-arrow-right:before, .fa-arrow-left:before {
+  color: #222
 }

@@ -4,11 +4,20 @@ import React, { useEffect, useReducer } from 'react';
 import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
+import UsersState from '../App/UsersState';
+
 
 import cookie from 'react-cookies';
 
 const GET_USERS = gql`
 query User($username: String) {
+	me: me{
+		uid
+		firstname
+		lat
+		long
+	}
+	
 	users: User {
 		uid
 		bio
@@ -28,27 +37,43 @@ query User($username: String) {
 			uid
 			username
 		}
+		images {
+			uid
+			src
+		}
+		isConnected
+		lastVisite
+		lat
+		long
     }
 
 	firstUser: User(username: $username) {
+		uid
+		bio
+		gender
+		firstname
+		lastname
+		birthdate
+		avatar
+		elo
+		likesCount
+		prefDistance
+		tags {
 			uid
-			bio
-			gender
-			firstname
-			lastname
-			birthdate
-			avatar
-			elo
-			likesCount
-			prefDistance
-			tags {
-				uid
-				name
-			}
-			likedUsers {
-				uid
-				username
-			}
+			name
+		}
+		likedUsers {
+			uid
+			username
+		}
+		images {
+			uid
+			src
+		}
+		isConnected
+		lastVisite
+		lat
+		long
 	}
 }
 `;
@@ -56,7 +81,6 @@ query User($username: String) {
 const Browse = () => {
 	const firstUsername = cookie.load('firstUsername');
 	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
-
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
@@ -71,7 +95,8 @@ const Browse = () => {
 		}
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
-
+	//const user = state.user;
+	console.log(data);
 	useEffect(() => {
 		const onCompleted = (data) => {
 			if (data.firstUser.length > 0)
@@ -89,13 +114,15 @@ const Browse = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
+
 	return <>	
 		{ state.user == null ?
 				(
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
 					<div className="browse">
-						<UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} />
+						<UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} userMe={data}/>
+						{/* <UserData/> */}
 					</div>
 				)
 		}

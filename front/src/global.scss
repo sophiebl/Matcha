@@ -50,6 +50,8 @@ $liked: #f7e294;
 .color-r{color: $red;}
 .color-liked{color: $liked;}
 .color-dg{color: $dark-grey;}
+.color-bg{color: $blue-green;}
+.color-arrow{color: #ccc;}
 
 .bg-bg{background-color: $blue-green;}
 .bg-g{background-color: $grey;}
@@ -138,4 +140,24 @@ a {
   position: relative;
   text-align: center;
   bottom: -40px;
+}
+.rond {
+  width: 13px;
+  height: 13px;
+  border-radius: 13px;
+  float: right;
+  margin-right: 5px;
+}
+.offline {
+	background-color: $offline;
+}
+.online {
+	background-color: $online;
+}
+.lastVisite{
+  font-size: 0.8em;
+  font-weight: $semi-b;
+  color: $offline;
+  float: right;
+  text-align: right;
 }

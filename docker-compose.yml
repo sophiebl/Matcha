@@ -26,7 +26,7 @@ services:
       traefik.enable: false
 
   db:
-    image: neo4j
+    image: neo4j:3.5.14
     env_file:
       - .env
     environment:

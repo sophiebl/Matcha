@@ -11,7 +11,7 @@ type User @isAuthenticated {
 	avatar: String! @cypher(statement: "MATCH (this)-[r:HAS_IMG]->(i:Image) RETURN collect(i)[0].src")
 	bio: String
 	tags: [Tag] @relation(name: "HAS_TAG", direction: "OUT")
-	elo: Float!
+	elo: Int!
 	prefAgeMin: Int
 	prefAgeMax: Int
 	prefOrientation: String
@@ -26,6 +26,11 @@ type User @isAuthenticated {
 	visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
 	visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
 	conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+    isConnected: Boolean!
+	lastVisite: String!
+	lat: String!
+	long: String!
+	location: String!
 }
 
 type Image @isAuthenticated {
@@ -63,8 +68,8 @@ type Query {
 }
 
 type Mutation {
-    signup (firstname: String!, lastname: String!, username: String!, email: String!, password: String!): String
-    login(username: String!, password: String!): String
+    signup (firstname: String!, lastname: String!, username: String!, email: String!, password: String!, lat: String!, long: String!, location: String!): String
+    login(username: String!, password: String!, lat: String!, long: String!, location: String!): String
     logout: String
     emailVerif(confirmToken: String!): String
     sendPwdReset(email: String!): String
@@ -84,5 +89,6 @@ type UserState {
 }
 
 type Subscription {
+  connect: String
   userStateChanged(uid: ID!): UserState
 }
