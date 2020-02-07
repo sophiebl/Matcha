@@ -4,7 +4,7 @@ import React, { useEffect, useReducer } from 'react';
 import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
-import UsersState from '../App/UsersState';
+//import UsersState from '../App/UsersState';
 
 
 import cookie from 'react-cookies';
@@ -96,7 +96,7 @@ const Browse = () => {
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	//const user = state.user;
-	console.log(data);
+	//console.log(data);
 	useEffect(() => {
 		const onCompleted = (data) => {
 			if (data.firstUser.length > 0)

@@ -41,7 +41,7 @@ const Login = withRouter(({history, ...props}) => {
 				.catch(e => console.log(e));
 			})
 			.catch(e => console.log(e));
-	}, [setLocation]);
+	}, [isLocation, setLocation]);
 
 	const [login] = useMutation(LOGIN,
 		{

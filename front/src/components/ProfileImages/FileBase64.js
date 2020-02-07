@@ -58,14 +58,13 @@ export default class FileBase64 extends React.Component {
   render() {
     return (
       <>
-        <label for="file" className="label-file">Choisir une image</label>
+        <label htmlFor="file" className="label-file">Choisir une image</label>
         <input
           type="file"
           className="input-file"
           onChange={ this.handleChange.bind(this) }
           multiple={ this.props.multiple } />
       </>
-        
     );
   }
 }

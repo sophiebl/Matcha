@@ -6,8 +6,9 @@ import { useSubscription } from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import { store } from 'react-notifications-component';
-import Avatar from './Avatar.js';
+//import { store } from 'react-notifications-component';
+
+//import Avatar from './Avatar.js';
 import SliderShow from './SliderShow.js';
 // import UsersState from '../App/UsersState';
 // import CommonStuff from '../App/CommonStuff';
@@ -22,12 +23,12 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile, km }) => {
-	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite, images } = user;
-	console.log(km);
+	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images } = user;
+	//console.log(km);
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
-	kmArrondi = kmArrondi/100;  
+	kmArrondi = kmArrondi/100;
 
 	const age = Math.abs(new Date(Date.now() - (new Date(birthdate))).getFullYear() - 1970);
 	const LikeIcon = () => {
@@ -42,12 +43,15 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 	const { /*loading,*/ error, data } = useSubscription(USER_STATE_CHANGED, { variables: { uid: user.uid } });
 	if (error) return <span>Subscription error!</span>;
 	if (data) {
-		console.log("NOOOOOOOOTIF");
-		console.log(data);
+		;//console.log("NOOOOOOOOTIF");
+		//console.log(data);
 	}
 
-	console.log(user.firstname + ' ' + user.isConnected);
-	console.log(images);
+	//console.log(user.firstname + ' ' + user.isConnected);
+	//console.log(images);
+
+	//console.log("username: ", user.firstname, "data: ", data, "isConnected: ", user.isConnected);
+	const connected = (data ? data.userStateChanged.state : user.isConnected);
 
 	return (
 		<div className="pos-rel img-container">
@@ -75,26 +79,11 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 						<span className="icon-top">{likesCount}</span>
 					</div>
 					<div>
-						<div className={`rond ${(data ? (data.userStateChanged.state ? "online" : "offline" ) : (user.isConnected ? "online" : "offline"))}`}></div>
+						<div className={`rond ${connected ? "online" : "offline"}`}>
+						</div>
 					</div>
-						<div className="lastVisite">
-							{(data ? (data.userStateChanged.state ? "" : "dernière visite le: " ) : (user.isConnected ? "" : "dernière visite le: "))}
-							<br/>
-							{(data ? (data.userStateChanged.state ? "" : lastVisite ) : (user.isConnected ? "" : lastVisite))}
-					</div>
-					<div className={`${(data ? (data.userStateChanged.state ? 
-						store.addNotification({
-							title: 'Nouvelle connection',
-							message: 'Un nouvel user vient de se connecter',
-							type: 'default',
-							container: 'bottom-left',
-							animationIn: ["animated", "fadeIn"],
-							animationOut: ["animated", "fadeOut"],
-							dismiss: {
-								duration: 3000 
-							}
-						}) 
-						: "offline" ) : (user.isConnected ? "" : ""))}`}>
+					<div className="lastVisite">
+						{ connected ? null : <>dernière visite le: <br />{lastVisite}</> }
 					</div>
 				</div>
 			)}

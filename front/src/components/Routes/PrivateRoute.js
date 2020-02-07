@@ -13,7 +13,7 @@ const CONNECT = gql`
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	const { /*loading,*/ error, data } = useSubscription(CONNECT);
 	if (error) return <span>Subscription error!</span>;
-	if (data) {console.log("afffiche des datas".data); }
+	if (data) {console.log("afffiche des datas", data); }
 
 	return <Route {...rest} render={props => 
 			localStorage.getItem('token') ? (
