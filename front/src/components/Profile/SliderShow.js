@@ -4,14 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 class SliderShow extends React.Component {
     constructor(props) {
       super(props)
-      console.log(props.src);
       
       var images = [];
       var i = 0;
       while(props.src[i] != null){
         images.push(props.src[i++].src);
       }
-      console.log(images);
       this.state = {
         images,
         currentIndex: 0,

@@ -56,9 +56,11 @@ $liked: #f7e294;
 .bg-bg{background-color: $blue-green;}
 .bg-g{background-color: $grey;}
 .bg-r{background-color: $red;}
+
 /* Dimension 
 .w-60{width: 60px;}
 .h-60{height: 60px;}*/
+.w-50 {width: 50%;}
 .w-100 {width: 100%;}
 
 /* Position */
@@ -68,10 +70,22 @@ $liked: #f7e294;
 
 .pos-rel {position: relative;}
 
+/* Margin */
+.m-auto{margin: 0 auto;}
 .mh-30{margin: 0 30px;}
+.mh-60{margin: 0 60px;}
 .mb-5{margin-bottom: 5px;}
 
 .ph-5{padding: 0 5px;}
+
+/* Breakpoints */
+$mobile: 320px;
+$mobileLandscape: 480px;
+$tablet: 768px;
+$tabletLandscape: 1024px;
+$desktop: 1200px;
+$desktopLarge: 1500px;
+$desktopWide: 1920px;
 
 body * {
   box-sizing: border-box;
@@ -94,6 +108,10 @@ a {
 
 .bg-desc {
   background-image: linear-gradient(rgba(3, 218, 198, 1), rgba(3, 218, 198, 0));
+}
+
+.bg-asc {
+  background-image: linear-gradient(rgba(3, 218, 198, 0) 58%, #03dac685);
 }
 
 .valign {

@@ -7,6 +7,26 @@ h2{
 
 .profile-images{
   padding: 20px 25px !important;
+  display: flex;
+  flex-wrap: wrap !important;
+}
+
+.profile-images .user-img{
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  margin: 0 59px;
+  flex: 1;
+}
+
+.title-profile-images{
+  position: relative;
+}
+
+.title-profile-images a{
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
 .bio-area{
@@ -41,4 +61,17 @@ h2{
   top: -43px;
   z-index: 100;
   opacity: 0;
+}
+
+@media (max-width: $tablet) { 
+  .fadein {
+    margin: 0 auto;
+  }
+  .profile-images .user-img{
+    width: 320px;
+    height: 320px;
+    object-fit: cover;
+    margin: 0;
+    flex: 1;
+  }
 }

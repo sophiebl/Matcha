@@ -15,8 +15,8 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const UsersState = ({user}) => {
-    console.log(user   );
-    console.log(user.uid   );
+    // console.log(user   );
+    // console.log(user.uid   );
     // console.log(userMe.me.uid   );
 	const { /*loading,*/ errorState, dataState } = useSubscription(USER_STATE_CHANGED, { variables: { uid: user.uid } });
 	if (errorState) {
@@ -27,7 +27,8 @@ const UsersState = ({user}) => {
 		console.log("UN USER VIENT DE SE CONNECTER");
 	 	console.log(dataState);
 	}
-    console.log("NE PASSE PAS PAR LA SUBSCRIPTION");
+
+    // console.log("NE PASSE PAS PAR LA SUBSCRIPTION");
 
 	return( 
 		<div className={`${(dataState ? (dataState.userStateChanged.state ? 

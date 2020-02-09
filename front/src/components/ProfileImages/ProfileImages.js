@@ -101,12 +101,16 @@ const ProfileImages = () => {
 	}
 
 	return (
-		<div className="profile-images">
-			<Link to="/profile" style={{ color: 'black', display: 'inline-block', float: 'left' }}><FontAwesomeIcon size="2x" icon="times" /></Link>
-			<h2>Mes images</h2>
-			<Images getImages={getImages} setImages={setImages} doRender={doRender} />
+		<>
+			<div className="title-profile-images">
+				<h2>Mes images</h2>
+				<Link to="/profile" style={{ color: 'black', display: 'inline-block', float: 'left' }}><FontAwesomeIcon size="2x" icon="times" /></Link>
+			</div>
+			<div className="profile-images">
+				<Images getImages={getImages} setImages={setImages} doRender={doRender} />
+			</div>
 			{ (getImages.length < 5) ? <FileBase64 multiple={true} onDone={(files) => handleFiles(files, addImg)} /> : null }
-		</div>
+		</>
 	)
 }
 

@@ -32,3 +32,16 @@ h2 {
 .history-sections > div{
   text-align: left;
 }
+
+@media (min-width: $tablet) { 
+  h2 {
+    font-size: 2.5em;
+  }
+  .history-container{
+    width: 50%;
+    margin: 0 auto;
+  }
+  .history-sections > a{
+    font-size: 2.5em;
+  }
+}

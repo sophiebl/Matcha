@@ -19,6 +19,7 @@ import Router from '../Routes/Router';
 
 import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
+import ReactBreakpoints from 'react-breakpoints'
 
 import './App.scss';
 
@@ -77,15 +78,27 @@ const client = new ApolloClient({
 	cache: new InMemoryCache(),
 });
 
+const breakpoints = {
+	mobile: 320,
+	mobileLandscape: 480,
+	tablet: 768,
+	tabletLandscape: 1024,
+	desktop: 1200,
+	desktopLarge: 1500,
+	desktopWide: 1920,
+}
+
 const App = () => {
 	return <>
-		<ApolloProvider client={client}>
-			<div className="App">
-				{/* <CommonStuff /> */}
-				<ReactNotification />
-				<Router />	
-			</div>
-		</ApolloProvider>
+		<ReactBreakpoints breakpoints={breakpoints}>
+			<ApolloProvider client={client}>
+				<div className="App">
+					{/* <CommonStuff /> */}
+					<ReactNotification />
+					<Router />	
+				</div>
+			</ApolloProvider>
+		</ReactBreakpoints>
 	</>
 }
 

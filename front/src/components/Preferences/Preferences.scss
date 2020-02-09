@@ -36,3 +36,10 @@ h2{
   color: #1f1f1f;
   font-size: 1em;
 }
+
+@media (min-width: $tablet) { 
+  .settings{
+    width: 50%;
+    margin: 0 auto;
+  }
+}
