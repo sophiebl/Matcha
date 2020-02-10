@@ -75,7 +75,8 @@ type Mutation {
     sendPwdReset(email: String!): String
     resetPassword(password: String!, resetToken: String!): String
     visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
-    likeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN $uid")
+    #likeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN $uid")
+    likeUser(uid: ID!): ID
     dislikeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN $uid")
     blockUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:BLOCKED]->(target) RETURN $uid")
     reportUser(uid: ID!): Int
@@ -88,7 +89,14 @@ type UserState {
   state: Int!
 }
 
+type Notification {
+  type: String!
+  title: String!
+  message: String!
+}
+
 type Subscription {
   connect: String
   userStateChanged(uid: ID!): UserState
+  receivedNotification(uid: ID!): Notification
 }

@@ -152,6 +152,7 @@ const resolvers = {
 				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
 				console.log('publis disco (logout)');
 			}
+
 			return "Ok";
 		},
 
@@ -165,6 +166,18 @@ const resolvers = {
 						await ctx.driver.session().run(`MATCH (target:User {uid: $uid}) SET target.banned = true`, { uid })
 					return reportsCount;
 				});	
+		},
+
+		async likeUser(_, { uid }, ctx) {
+			const meUid = ctx.cypherParams.currentUserUid;
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN target`, { meUid, uid })
+				.then(async result => {
+					if (result.records.length < 1)
+						throw new Error('UnknownUser')
+					const target = result.records[0].get('target').properties;
+					ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type: 'default', title: 'Noueau like', message: target.username + " vient de vous liker !" });
+					return target.uid;
+				});
 		},
 
 	},
@@ -199,6 +212,14 @@ const resolvers = {
 			subscribe: withFilter(
 				(_, variables, context) => context.pubsub.asyncIterator('USER_STATE_CHANGED'),
 				(payload, variables) => payload.user.uid === variables.uid,
+			),
+			resolve: (payload) => payload,
+		},
+
+		receivedNotification: {
+			subscribe: withFilter(
+				(_, variables, context) => context.pubsub.asyncIterator('RECEIVED_NOTIFICATION'),
+				(payload, variables) => payload.uid === variables.uid,
 			),
 			resolve: (payload) => payload,
 		},
