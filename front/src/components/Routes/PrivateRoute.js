@@ -25,7 +25,7 @@ const RECEIVED_NOTIFICATION = gql`
 `;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-	const { /*loading,*/ error, data } = useSubscription(CONNECT);
+	useSubscription(CONNECT);
 
 	useSubscription(RECEIVED_NOTIFICATION, {
 		variables: { uid: getCurrentUid() },
@@ -42,9 +42,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 			});
 		},
 	});
-
-	if (error) return <span>Subscription error!</span>;
-	if (data) {console.log("afffiche des datas", data); }
 
 	return <Route {...rest} render={props => 
 			localStorage.getItem('token') ? (
