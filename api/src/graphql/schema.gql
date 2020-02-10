@@ -74,7 +74,8 @@ type Mutation {
     emailVerif(confirmToken: String!): String
     sendPwdReset(email: String!): String
     resetPassword(password: String!, resetToken: String!): String
-    visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
+    #visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
+    visitProfile(uid: ID!): User
     #likeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN $uid")
     likeUser(uid: ID!): ID
     dislikeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN $uid")
