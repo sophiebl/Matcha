@@ -3,11 +3,13 @@ import React, { useEffect } from 'react';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
+import UserProfileDesktop from './UserProfileDesktop';
+import UserProfile from './UserProfile';
 import MainInfos from './MainInfos';
-import Bio from './Bio';
 import LikeDislike from './LikeDislike';
-import BlockButton from './ReportButton';
 import Tag from './Tag';
+import Nav from "../Nav/Nav";
+import { Link } from "react-router-dom";
 import './Profile.scss'
 
 import UsersState from '../App/UsersState';
@@ -22,13 +24,12 @@ const VISIT_PROFILE = gql`
 	}
 `;
 
-const UserProfile = ({ user, dispatch, userMe }) => {
-	const { uid, bio, tags, likedUsers, lat, long } = user;
+const UserPreview = ({ user, dispatch, userMe }) => {
+	const { uid, tags, likedUsers, lat, long } = user;
 
 	const [visitProfile] = useMutation(VISIT_PROFILE, {
 		onError: data => console.log(data),
 	});
-
 
 	const latMe = parseFloat(userMe.me.lat);
 	const longMe = parseFloat(userMe.me.long);
@@ -61,21 +62,25 @@ const UserProfile = ({ user, dispatch, userMe }) => {
 			}
 		});
 	}, [visitProfile, uid]);
-
+    console.log(user);
+    console.log(user.uid);
+    console.log(uid);
 	return (
 		<div>
-			<div className="infos-container" key={uid}>
+			<div className="infos-container infos-container-other-user" key={uid}>
 				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
-				<Bio bio={bio} />
+                <Link to={"/UserProfileDesktop/" + uid}>
+                    Voir son profil
+                </Link>
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
-				<BlockButton uidUser={uid} dispatch={dispatch} />
 				<UsersState user={user} dispatch={dispatch} userMe={userMe}/>
 			</div>
+			<Nav />
 		</div>
 	);
 }
 
-export default UserProfile;
+export default UserPreview;

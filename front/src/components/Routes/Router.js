@@ -19,6 +19,8 @@ import ProfileImages from '../ProfileImages/ProfileImages';
 import EmailVerification from '../EmailVerification/EmailVerification';
 import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
+import UserProfileDesktop from '../Profile/UserProfileDesktop';
+// import UserProfile from '../Profile/UserProfile';
 
 //TODO: query me to check token
 
@@ -32,6 +34,8 @@ const Router = () => (
 			<PrivateRoute path="/browseResponsive/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browseResponsive"/> }}/>
 			<PrivateRoute exact path="/profile" component={MyProfile} />
 			<PrivateRoute path="/messages/:uid" component={Messages} />
+			<PrivateRoute path="/UserProfileDesktop/:uid" component={UserProfileDesktop} />
+			{/* <PrivateRoute path="/UserProfile/:uid" component={UserProfile} /> */}
 			<PrivateRoute exact path="/messages" component={MessagesIndex} />
 			<PrivateRoute exact path="/preferences" component={Preferences} />
 			<PrivateRoute exact path="/history" component={History} />

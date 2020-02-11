@@ -21,3 +21,25 @@ Browse
 }
 
 .browse > div {width:100%;}
+
+@media (min-width: $tablet) { 
+  .browse {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .browse > div {
+    width: 400px;
+    min-height: 500px;
+    margin: 10px 15px;
+    background: #fff;
+    box-shadow: 5px 2px 12px #03dac60d;
+    border-radius: 2px;
+  }
+  .infos-container-other-user .icon{
+    margin: 0;
+  }
+  .infos-container-other-user .icon-top{
+    font-size: $f-s;
+  }
+
+}

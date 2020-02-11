@@ -23,7 +23,6 @@ const USER_STATE_CHANGED = gql`
 
 const MainInfos = ({ user, isMyProfile, km }) => {
 	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite, images } = user;
-	// console.log(km);
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
@@ -45,9 +44,6 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 		console.log("NOOOOOOOOTIF");
 		console.log(data);
 	}
-
-	// console.log(user.firstname + ' ' + user.isConnected);
-	// console.log(images);
 
 	return (
 		<div className="pos-rel img-container">

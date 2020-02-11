@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import React, { useEffect, useReducer } from 'react';
-import UserProfile from '../Profile/UserProfile';
+import UserPreview from '../Profile/UserPreview';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
 import UsersState from '../App/UsersState';
@@ -95,8 +95,8 @@ const BrowseDesktop = () => {
 		}
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
-	//const user = state.user;
-	console.log(data);
+	const users = state.user;
+	console.log(users);
 	console.log("Browse DEsktop");
 
 	useEffect(() => {
@@ -106,10 +106,8 @@ const BrowseDesktop = () => {
 			{
 				data.users.unshift(data.firstUser[0]);
 				console.log(data.users);
-
-
 			}
-			dispatch({ type: 'reset', payload: data.users.shift() });
+			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);
 		if (onCompleted || onError)
@@ -122,6 +120,12 @@ const BrowseDesktop = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
+	if(users) {
+		var renderedUsersProfiles = users.map(user => 
+			<UserPreview key={user.uid} user={user} dispatch={dispatch} userMe={data}/>
+		);
+	}
+
 
 	return <>	
 		{ state.user == null ?
@@ -129,6 +133,7 @@ const BrowseDesktop = () => {
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
 					<div className="browse">
+						{renderedUsersProfiles}
 						{/* <UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} userMe={data}/> */}
 						{/* <UserData/> */}
 					</div>

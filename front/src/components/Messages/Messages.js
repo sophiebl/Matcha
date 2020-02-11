@@ -79,6 +79,7 @@ const Chat = ({ conv }) => {
 }
 
 const Messages = ({ match }) => {
+	console.log(match.params.uid);
   const { loading, error, data } = useQuery(GET_CONV, {
 	variables: {
 	  'uid': match.params.uid,

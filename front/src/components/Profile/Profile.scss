@@ -185,9 +185,39 @@ User tag
 
   }
 
-  .infos-container-my-profile {
+  .infos-container-my-profile, .infos-container {
     width: 50%;
     margin: 0 auto;
-
   }
+
+  .infos-container.infos-container-other-user{
+    width: 100%;
+    position: relative;
+    min-height: 550px;  
+    margin-bottom: 15px;
+  }
+
+  .infos-container-other-user .img-container{
+    height: 300px;
+  }
+
+  .infos-container-other-user .slider-wrapper{
+    height: 300px;
+    width: auto;
+  }
+
+  .infos-container-other-user .slide {
+    border-radius: 2px;
+  }
+
+  .infos-container-other-user .valign.action-container{
+    position: absolute;
+    bottom: 0;
+  }
+
+  .infos-container-other-user .tag-container{
+    height: inherit;
+  }
+
+
 }
