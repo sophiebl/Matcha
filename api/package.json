@@ -6,7 +6,7 @@
   "author": "aguiot-- <aguiot--@student.42.fr>",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --legacy-watch -e js,mjs,json,gql,coffee,litcoffee -- -r esm src/index.js",
+    "start": "nodemon --legacy-watch -e js,mjs,json,gql,coffee,litcoffee -- -r esm -r dotenv/config src/index.js",
     "seed": "node -r esm scripts/seed.js"
   },
   "dependencies": {

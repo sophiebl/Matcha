@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Redirect } from "react-router-dom";
 
 import { gql } from "apollo-boost";
 import { useSubscription } from '@apollo/react-hooks';
+
+import { store } from 'react-notifications-component';
+
+import { getCurrentUid } from '../../Helpers';
+import { StoreContext } from '../App/Store';
 
 const CONNECT = gql`
 	subscription {
@@ -10,10 +15,37 @@ const CONNECT = gql`
 	}
 `;
 
+const RECEIVED_NOTIFICATION = gql`
+	subscription receivedNotification($uid: ID!) {
+		receivedNotification(uid: $uid) {
+			type
+			title
+			message
+		}
+	}
+`;
+
 const PrivateRoute = ({ component: Component, ...rest }) => {
-	const { /*loading,*/ error, data } = useSubscription(CONNECT);
-	if (error) return <span>Subscription error!</span>;
-	if (data) {console.log("afffiche des datas".data); }
+	const { notifs } = useContext(StoreContext);
+
+	useSubscription(CONNECT);
+
+	useSubscription(RECEIVED_NOTIFICATION, {
+		variables: { uid: getCurrentUid() },
+		onSubscriptionData: ({ client, subscriptionData }) => {
+			const notif = subscriptionData.data.receivedNotification;
+			notifs.setCount(notifs.getCount + 1);
+			store.addNotification({
+				title: notif.title,
+				message: notif.message,
+				type: notif.type,
+				container: 'bottom-left',
+				animationIn: ["animated", "fadeIn"],
+				animationOut: ["animated", "fadeOut"],
+				dismiss: { duration: 3000 },
+			});
+		},
+	});
 
 	return <Route {...rest} render={props => 
 			localStorage.getItem('token') ? (

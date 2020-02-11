@@ -41,13 +41,13 @@ const Login = withRouter(({history, ...props}) => {
 				.catch(e => console.log(e));
 			})
 			.catch(e => console.log(e));
-	}, [setLocation]);
+	}, [isLocation, setLocation]);
 
 	const [login] = useMutation(LOGIN,
 		{
 			onCompleted: data => {
 				localStorage.setItem('token', data.login);
-				history.push("/browseResponsive");
+				history.push("/browse");
 				//window.location.reload();
 			},
 			onError: data => {

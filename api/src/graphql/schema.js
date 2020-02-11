@@ -150,7 +150,9 @@ const resolvers = {
 			if (!ctx.connectedUsers.includes(ctx.cypherParams.currentUserUid))
 			{
 				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
+				console.log('publis disco (logout)');
 			}
+
 			return "Ok";
 		},
 
@@ -166,6 +168,32 @@ const resolvers = {
 				});	
 		},
 
+		async likeUser(_, { uid }, ctx) {
+			const meUid = ctx.cypherParams.currentUserUid;
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN target`, { meUid, uid })
+				.then(async result => {
+					if (result.records.length < 1)
+						throw new Error('UnknownUser')
+					const target = result.records[0].get('target').properties;
+					ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type: 'default', title: 'Noueau like', message: target.username + " vient de vous liker !" });
+					return target.uid;
+				});
+		},
+
+		async visitProfile(_, { uid }, ctx) {
+			const meUid = ctx.cypherParams.currentUserUid;
+			if (uid === meUid)
+				return null;
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target`, { meUid, uid })
+				.then(async result => {
+					if (result.records.length < 1)
+						throw new Error('UnknownUser')
+					const target = result.records[0].get('target').properties;
+					ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type: 'default', title: 'Profile visite', message: target.username + " vient de voir votre profil !" });
+					return target;
+				});
+		},
+
 	},
 
 	Subscription: {
@@ -173,7 +201,12 @@ const resolvers = {
 			subscribe: withFilter(
 				(_, variables, context) => {
 					const uid = jwt.verify(context.token, process.env.JWT_SECRET, (err, decoded) => (decoded ? decoded.uid : null));
-					//if (!context.connectedUsers.includes(uid))
+					if (!context.connectedUsers.includes(uid))
+					{
+						context.connectedUsers.push(uid);
+						context.pubsub.publish('USER_STATE_CHANGED', { user: { uid: uid }, state: 1 });
+					}
+
 					let date_ob = new Date();
 					let day = ("0" + date_ob.getDate()).slice(-2);
 					let year = date_ob.getFullYear();
@@ -181,6 +214,7 @@ const resolvers = {
 					const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ];
 					let date = day + " " + monthNames[date_ob.getMonth()] + " " + year + " à " + hours + "h";
 					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date})
+
 					return context.pubsub.asyncIterator('');
 				},
 				(payload, variables) => false,
@@ -192,6 +226,14 @@ const resolvers = {
 			subscribe: withFilter(
 				(_, variables, context) => context.pubsub.asyncIterator('USER_STATE_CHANGED'),
 				(payload, variables) => payload.user.uid === variables.uid,
+			),
+			resolve: (payload) => payload,
+		},
+
+		receivedNotification: {
+			subscribe: withFilter(
+				(_, variables, context) => (context.currentUserUid === variables.uid ? context.pubsub.asyncIterator('RECEIVED_NOTIFICATION') : false),
+				(payload, variables) => payload.uid === variables.uid,
 			),
 			resolve: (payload) => payload,
 		},

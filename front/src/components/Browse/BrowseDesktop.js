@@ -4,8 +4,6 @@ import React, { useEffect, useReducer } from 'react';
 import UserPreview from '../Profile/UserPreview';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
-import UsersState from '../App/UsersState';
-
 
 import cookie from 'react-cookies';
 

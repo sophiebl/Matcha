@@ -21,6 +21,8 @@ import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import ReactBreakpoints from 'react-breakpoints'
 
+import StoreProvider from './Store'
+
 import './App.scss';
 
 library.add(faCheckSquare, faCoffee, faStar, faTimes, faChevronCircleRight, faChevronCircleLeft, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
@@ -37,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-	uri: 'http://localhost:4000/graphql',
+	uri: process.env.REACT_APP_API_HOST,
 	link: ApolloLink.from([
 		authLink,
 		onError(({ graphQLErrors, networkError }) => {
@@ -54,7 +56,7 @@ const client = new ApolloClient({
 				return kind === 'OperationDefinition' && operation === 'subscription';
 			},
 			new WebSocketLink({
-				uri: `ws://localhost:4000/graphql`,
+				uri: process.env.REACT_APP_WS_HOST,
 				options: {
 					lazy: true,
 					reconnect: true,
@@ -70,7 +72,7 @@ const client = new ApolloClient({
 				}
 			}),
 			new HttpLink({
-				uri: 'http://localhost:4000/graphql',
+				uri: process.env.REACT_APP_API_HOST,
 				credentials: 'include'
 			}),
     ),
@@ -92,11 +94,13 @@ const App = () => {
 	return <>
 		<ReactBreakpoints breakpoints={breakpoints}>
 			<ApolloProvider client={client}>
-				<div className="App">
-					{/* <CommonStuff /> */}
-					<ReactNotification />
-					<Router />	
-				</div>
+				<StoreProvider>
+					<div className="App">
+						{/* <CommonStuff /> */}
+						<ReactNotification />
+						<Router />
+					</div>
+				</StoreProvider>
 			</ApolloProvider>
 		</ReactBreakpoints>
 	</>
