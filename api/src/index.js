@@ -11,7 +11,7 @@ dotenv.config()
 const driver = neo4j.driver('bolt://db:7687', neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASS || 'letmein'));
 
 var corsOptions = {
-	origin: 'http://localhost:3000',
+	origin: process.env.FRONT_HOST,
 	credentials: true
 };
 
