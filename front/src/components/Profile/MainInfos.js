@@ -42,7 +42,7 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 	const { /*loading,*/ error, data } = useSubscription(USER_STATE_CHANGED, { variables: { uid: user.uid } });
 	if (error) return <span>Subscription error!</span>;
 	//if (loading) console.log("waiting for user state change");
-	if (data) console.log("user state changed", data.userStateChanged.state);
+	//if (data) console.log("user state changed", data.userStateChanged.state);
 
 	//console.log(user.firstname + ' ' + user.isConnected);
 	//console.log(images);

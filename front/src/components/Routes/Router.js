@@ -15,6 +15,7 @@ import MessagesIndex from '../MessagesIndex/MessagesIndex';
 import Messages from '../Messages/Messages';
 import Preferences from '../Preferences/Preferences';
 import History from '../History/History';
+import Notifications from '../Notifications/Notifications';
 import ProfileImages from '../ProfileImages/ProfileImages';
 import EmailVerification from '../EmailVerification/EmailVerification';
 import SendResetPassword from '../SendResetPassword/SendResetPassword';
@@ -37,6 +38,7 @@ const Router = () => (
 			<PrivateRoute path="/UserProfileDesktop/:uid" component={UserProfileDesktop} />
 			{/* <PrivateRoute path="/UserProfile/:uid" component={UserProfile} /> */}
 			<PrivateRoute exact path="/messages" component={MessagesIndex} />
+			<PrivateRoute exact path="/notifications" component={Notifications} />
 			<PrivateRoute exact path="/preferences" component={Preferences} />
 			<PrivateRoute exact path="/history" component={History} />
 			<PrivateRoute exact path="/profile/images" component={ProfileImages} />
