@@ -21,6 +21,8 @@ import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import ReactBreakpoints from 'react-breakpoints'
 
+import StoreProvider from './Store'
+
 import './App.scss';
 
 library.add(faCheckSquare, faCoffee, faStar, faTimes, faChevronCircleRight, faChevronCircleLeft, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
@@ -92,11 +94,13 @@ const App = () => {
 	return <>
 		<ReactBreakpoints breakpoints={breakpoints}>
 			<ApolloProvider client={client}>
-				<div className="App">
-					{/* <CommonStuff /> */}
-					<ReactNotification />
-					<Router />	
-				</div>
+				<StoreProvider>
+					<div className="App">
+						{/* <CommonStuff /> */}
+						<ReactNotification />
+						<Router />
+					</div>
+				</StoreProvider>
 			</ApolloProvider>
 		</ReactBreakpoints>
 	</>

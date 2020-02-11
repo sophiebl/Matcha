@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import { StoreContext } from '../App/Store';
+
 import './Nav.scss'
 
 const Nav = () => {
-    return (
+	const { notifs } = useContext(StoreContext);
+
+	return (
         <div className="nav">
+			{notifs.getCount}
+
 			{/*
 			<Link to="/" className="link">
                 <FontAwesomeIcon className="icon color-dg mh-30" icon={['fa', 'shopping-cart']} />

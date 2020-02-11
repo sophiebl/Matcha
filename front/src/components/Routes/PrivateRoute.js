@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Redirect } from "react-router-dom";
 
 import { gql } from "apollo-boost";
@@ -7,6 +7,7 @@ import { useSubscription } from '@apollo/react-hooks';
 import { store } from 'react-notifications-component';
 
 import { getCurrentUid } from '../../Helpers';
+import { StoreContext } from '../App/Store';
 
 const CONNECT = gql`
 	subscription {
@@ -25,12 +26,15 @@ const RECEIVED_NOTIFICATION = gql`
 `;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
+	const { notifs } = useContext(StoreContext);
+
 	useSubscription(CONNECT);
 
 	useSubscription(RECEIVED_NOTIFICATION, {
 		variables: { uid: getCurrentUid() },
 		onSubscriptionData: ({ client, subscriptionData }) => {
 			const notif = subscriptionData.data.receivedNotification;
+			notifs.setCount(notifs.getCount + 1);
 			store.addNotification({
 				title: notif.title,
 				message: notif.message,
