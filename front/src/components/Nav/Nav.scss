@@ -18,8 +18,25 @@ Navigation
 .icon{
   color: $dark-grey;
   font-size: $f-l;
+  margin: 0 30px;
 }
 
 .link:hover > .icon{
   color: $blue-green;
+}
+
+@media (min-width: $tablet) { 
+
+  .nav {
+    height: 80px;
+    background-color: white;
+    padding-top: 24px;
+    border-top: 1px solid #ccc;
+  }
+
+  .icon {
+    font-size: 2.5em;
+    margin: 0 60px;
+  }
+
 }

@@ -46,7 +46,7 @@ const MyProfile = () => {
 
 	return (
 		<div>
-			<div className="infos-container" key={uid}>
+			<div className="infos-container-my-profile" key={uid}>
 				<MainInfos user={data.me} isMyProfile={true} userMe={images} />
 				<Bio content={bio} />
 				<div className="tag-container">
@@ -55,9 +55,6 @@ const MyProfile = () => {
 				<div className="logout-container">
         			<Link to="/logout" className="color-r"><FontAwesomeIcon size="1x" icon="walking" />   Logout  <FontAwesomeIcon size="1x" icon="walking" /></Link>
 				</div>
-				<Link to="/preferences" className="btn bg-bg btn-rond pref">
-					<FontAwesomeIcon className="color-w" size="2x" icon="pen" />
-				</Link>
 			</div>
 			<Nav />
 		</div>

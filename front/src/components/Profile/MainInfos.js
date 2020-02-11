@@ -23,8 +23,8 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile, km }) => {
-	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images } = user;
-	//console.log(km);
+	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite, images } = user;
+	// console.log(km);
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
@@ -57,12 +57,17 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 			{/* <UsersState user={user}/> */}
 
 			{ isMyProfile ? (
-				<div className="nav-user w-100">
-					<Link to="/history" className="btn bg-r btn-rond more">
-						<FontAwesomeIcon className="color-w" size="2x" icon="history" />
-					</Link>
-					<Link to="/profile/images" className="btn bg-bg btn-rond image">
-						<FontAwesomeIcon className="color-w" size="2x" icon="image" />
+				<div>
+					<div className="nav-user w-100">
+						<Link to="/history" className="btn bg-r btn-rond more">
+							<FontAwesomeIcon className="color-w" size="2x" icon="history" />
+						</Link>
+						<Link to="/profile/images" className="btn bg-bg btn-rond image">
+							<FontAwesomeIcon className="color-w" size="2x" icon="image" />
+						</Link>
+					</div>
+					<Link to="/preferences" className="btn bg-bg btn-rond pref">
+						<FontAwesomeIcon className="color-w" size="2x" icon="pen" />
 					</Link>
 				</div>
 			) : (

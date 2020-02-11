@@ -178,3 +178,16 @@ User tag
 .fa-arrow-right:before, .fa-arrow-left:before {
   color: #222
 }
+
+@media (min-width: $tablet) { 
+  .App{
+    background-image: linear-gradient(rgba(3, 218, 198, 0) 58%, #03dac685);
+
+  }
+
+  .infos-container-my-profile {
+    width: 50%;
+    margin: 0 auto;
+
+  }
+}

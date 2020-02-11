@@ -47,7 +47,7 @@ const Login = withRouter(({history, ...props}) => {
 		{
 			onCompleted: data => {
 				localStorage.setItem('token', data.login);
-				history.push("/browse");
+				history.push("/browseResponsive");
 				//window.location.reload();
 			},
 			onError: data => {

@@ -78,13 +78,13 @@ query User($username: String) {
 }
 `;
 
-const Browse = () => {
+const BrowseMobile = () => {
 	const firstUsername = cookie.load('firstUsername');
 	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
-				return { user: data.users.shift() };
+				return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                user: data.users.shift() };
 			case 'dislike':
 				return { user: data.users.shift() };
 			case 'reset':
@@ -97,10 +97,19 @@ const Browse = () => {
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	//const user = state.user;
 	//console.log(data);
+	console.log(data);
+	console.log("BrowseMobile");
+
 	useEffect(() => {
 		const onCompleted = (data) => {
+			console.log(data.firstUser);
 			if (data.firstUser.length > 0)
+			{
 				data.users.unshift(data.firstUser[0]);
+				console.log(data.users);
+
+
+			}
 			dispatch({ type: 'reset', payload: data.users.shift() });
 		};
 		const onError = (error) => console.log(error);
@@ -130,4 +139,4 @@ const Browse = () => {
 	</>
 }
 
-export default Browse;
+export default BrowseMobile;

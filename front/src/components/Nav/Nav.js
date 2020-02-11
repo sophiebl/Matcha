@@ -13,19 +13,19 @@ const Nav = () => {
 			*/}
 
 			<Link to="/likes" className="link">
-                <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'heart']} />
+                <FontAwesomeIcon className="icon color-dg" icon={['far', 'heart']} />
 			</Link>
 			
-			<Link to="/browse" className="link">
-                <FontAwesomeIcon className="icon color-dg mh-30" icon={['fas', 'users']} />
+			<Link to="/browseResponsive" className="link">
+                <FontAwesomeIcon className="icon color-dg" icon={['fas', 'users']} />
 			</Link>
 
 			<Link to="/messages" className="link">
-                <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'comment-alt']} />
+                <FontAwesomeIcon className="icon color-dg" icon={['far', 'comment-alt']} />
 			</Link>
 			
 			<Link to="/profile" className="link">
-                <FontAwesomeIcon className="icon color-dg mh-30" icon={['far', 'user']} />
+                <FontAwesomeIcon className="icon color-dg" icon={['far', 'user']} />
 			</Link>
         </div>
     );

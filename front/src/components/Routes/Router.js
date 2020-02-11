@@ -9,7 +9,7 @@ import Main from '../Main/Main';
 import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
 import Signup from '../Signup/Signup';
-import Browse from '../Browse/Browse';
+import BrowseResponsive from '../Browse/BrowseResponsive';
 import MyProfile from '../Profile/MyProfile';
 import MessagesIndex from '../MessagesIndex/MessagesIndex';
 import Messages from '../Messages/Messages';
@@ -28,8 +28,8 @@ const Router = () => (
 			<PublicRoute exact path="/login" component={Login} />
 			<PrivateRoute exact path="/logout" component={Logout} />
 			<PublicRoute exact path="/signup" component={Signup} />
-			<PrivateRoute exact path="/browse" component={Browse}/>
-			<PrivateRoute path="/browse/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browse"/> }}/>
+			<PrivateRoute exact path="/browseResponsive" component={BrowseResponsive}/>
+			<PrivateRoute path="/browseResponsive/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browseResponsive"/> }}/>
 			<PrivateRoute exact path="/profile" component={MyProfile} />
 			<PrivateRoute path="/messages/:uid" component={Messages} />
 			<PrivateRoute exact path="/messages" component={MessagesIndex} />
@@ -41,7 +41,7 @@ const Router = () => (
 			<Route path="/reset/:resetToken" component={ResetPassword} />
 			<PublicRoute exact path="/" component={Main} />
 
-			<Redirect to="/browse" />
+			<Redirect to="/browseResponsive" />
 		</Switch>
 	</BrowserRouter>
 );

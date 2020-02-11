@@ -16,7 +16,7 @@ const History = () => {
 			<Link to="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></Link>
 			<h2>Historique</h2>
 
-			<div>
+			<div className="history-container">
 				<div className="history-sections">
 					<a href="#me" onClick={() => setMode("own")}>Moi</a>
 					<a href="#others" onClick={() => setMode("others")}>Mes matchs</a>
