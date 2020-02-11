@@ -1,11 +1,8 @@
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import React, { useEffect, useReducer } from 'react';
-import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
-import UsersState from '../App/UsersState';
-
 
 import cookie from 'react-cookies';
 

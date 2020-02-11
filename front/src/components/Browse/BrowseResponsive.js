@@ -1,28 +1,13 @@
 import React from 'react';
-import BrowseDesktop from './BrowseDesktop';
-import BrowseMobile from '../Browse/BrowseMobile';
-
-// const BrowseResponsive = () => {
-
-// }
-
-// export default BrowseResponsive;
-
 import { withBreakpoints } from 'react-breakpoints'
- 
-class Navigation extends React.Component {
-  render() {
-    const { breakpoints, currentBreakpoint } = this.props
-    return (
-      <div>
-        {breakpoints[currentBreakpoint] > breakpoints.desktop ? (
-          <BrowseDesktop />
-        ) : (
-          <BrowseMobile />
-        )}
-      </div>
-    )
-  }
+
+import BrowseDesktop from './BrowseDesktop';
+import BrowseMobile from './BrowseMobile';
+
+const Browse = (props) => {
+  const { breakpoints, currentBreakpoint } = props
+
+  return breakpoints[currentBreakpoint] > breakpoints.desktop ? <BrowseDesktop /> : <BrowseMobile />;
 }
- 
-export default withBreakpoints(Navigation)
+
+export default withBreakpoints(Browse);

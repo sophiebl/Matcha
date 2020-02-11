@@ -97,16 +97,16 @@ const BrowseMobile = () => {
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	//const user = state.user;
 	//console.log(data);
-	console.log(data);
-	console.log("BrowseMobile");
+	//console.log(data);
+	//console.log("BrowseMobile");
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			console.log(data.firstUser);
+			//console.log(data.firstUser);
 			if (data.firstUser.length > 0)
 			{
 				data.users.unshift(data.firstUser[0]);
-				console.log(data.users);
+				//console.log(data.users);
 
 
 			}
