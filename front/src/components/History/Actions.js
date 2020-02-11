@@ -47,7 +47,7 @@ const GET_USERS_ACTIONS = gql`
 const div = (title, users, history) => <>
 	<h3>{title}</h3>	
 	{ users.map(({ uid, username }) => (
-		<div className="action" key={uid} onClick={() => history.push("/browseResponsive/" + username)}>
+		<div className="action" key={uid} onClick={() => history.push("/browse/" + username)}>
 			{username}
 		</div>
 	))}

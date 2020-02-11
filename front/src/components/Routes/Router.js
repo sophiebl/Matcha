@@ -9,7 +9,7 @@ import Main from '../Main/Main';
 import Login from '../Login/Login';
 import Logout from '../Logout/Logout';
 import Signup from '../Signup/Signup';
-import Browse from '../Browse/BrowseResponsive';
+import Browse from '../Browse/Browse';
 import MyProfile from '../Profile/MyProfile';
 import MessagesIndex from '../MessagesIndex/MessagesIndex';
 import Messages from '../Messages/Messages';

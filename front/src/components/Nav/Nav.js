@@ -16,7 +16,7 @@ const Nav = () => {
                 <FontAwesomeIcon className="icon color-dg" icon={['far', 'heart']} />
 			</Link>
 			
-			<Link to="/browseResponsive" className="link">
+			<Link to="/browse" className="link">
                 <FontAwesomeIcon className="icon color-dg" icon={['fas', 'users']} />
 			</Link>
 
