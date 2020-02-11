@@ -23,7 +23,7 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile, km }) => {
-	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite, images } = user;
+	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images } = user;
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);

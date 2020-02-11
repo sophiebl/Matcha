@@ -6,8 +6,6 @@ import { useQuery } from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Nav from "../Nav/Nav";
-
 const GET_NOTIFS = gql`
 	query {
 	  me {

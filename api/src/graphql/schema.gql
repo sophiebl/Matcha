@@ -26,6 +26,7 @@ type User @isAuthenticated {
 	visitedUsers: [User] @relation(name: "VISITED", direction: "OUT")
 	visitedByUsers: [User] @relation(name: "VISITED", direction: "IN")
 	conversations: [Conversation] @relation(name: "HAS_CONV", direction: "OUT")
+	notifications: [Notification] @relation(name: "HAS_NOTIF", direction: "OUT")
     isConnected: Boolean!
 	lastVisite: String!
 	lat: String!
@@ -55,6 +56,14 @@ type Message @isAuthenticated {
     author: User @relation(name: "AUTHORED", direction: "IN")
     content: String!
 }
+
+type Notification @isAuthenticated {
+  uid: ID!
+  type: String!
+  title: String!
+  message: String!
+}
+
 
 type Blocked @isAuthenticated @relation(name: "BLOCKED") {
     uid: ID!
@@ -88,12 +97,6 @@ type Mutation {
 type UserState {
   user: User!
   state: Int!
-}
-
-type Notification {
-  type: String!
-  title: String!
-  message: String!
 }
 
 type Subscription {
