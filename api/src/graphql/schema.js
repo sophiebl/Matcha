@@ -182,6 +182,8 @@ const resolvers = {
 
 		async visitProfile(_, { uid }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
+			if (uid === meUid)
+				return null;
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target`, { meUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
