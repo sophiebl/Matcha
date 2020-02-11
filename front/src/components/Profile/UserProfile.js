@@ -16,9 +16,7 @@ import './Profile.scss'
 const VISIT_PROFILE = gql`
 	mutation visitProfile($uid: ID!) {
 		visitProfile(uid: $uid) {
-			visitedUsers {
-				username
-			}	
+			username
 		}
 	}
 `;

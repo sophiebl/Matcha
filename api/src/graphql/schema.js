@@ -230,7 +230,7 @@ const resolvers = {
 
 		receivedNotification: {
 			subscribe: withFilter(
-				(_, variables, context) => context.pubsub.asyncIterator('RECEIVED_NOTIFICATION'),
+				(_, variables, context) => (context.currentUserUid === variables.uid ? context.pubsub.asyncIterator('RECEIVED_NOTIFICATION') : false),
 				(payload, variables) => payload.uid === variables.uid,
 			),
 			resolve: (payload) => payload,
