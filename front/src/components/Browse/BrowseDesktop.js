@@ -117,9 +117,6 @@ const BrowseDesktop = () => {
 
 	let seen = [];
 	if(users) {
-		var renderedUsersProfiles = users.map(user => 
-			<UserPreview key={user.uid} user={user} dispatch={dispatch} userMe={data}/>
-		);
 		var renderedUsersProfiles = users.map(user => {
 		  let r = null;
 		  if (!seen.includes(user.uid))
