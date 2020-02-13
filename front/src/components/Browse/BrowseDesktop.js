@@ -115,12 +115,19 @@ const BrowseDesktop = () => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
+	let seen = [];
 	if(users) {
 		var renderedUsersProfiles = users.map(user => 
 			<UserPreview key={user.uid} user={user} dispatch={dispatch} userMe={data}/>
 		);
+		var renderedUsersProfiles = users.map(user => {
+		  let r = null;
+		  if (!seen.includes(user.uid))
+			r = <UserPreview key={user.uid} user={user} dispatch={dispatch} userMe={data}/>;
+		  seen.push(user.uid);
+		  return r;
+		});
 	}
-
 
 	return <>	
 		{ state == null ?
