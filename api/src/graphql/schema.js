@@ -8,6 +8,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+async function sendNotif(ctx, uid, type, title, message) {
+	ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type, title, message });
+	ctx.driver.session().run(`MATCH (user:User {uid: $uid}) CREATE (user)-[r:HAS_NOTIF]->(notif:Notification {uid: 'notif-' + $uniqid, type: $type, title: $title, message: $message}) RETURN "Ok"`, { uid, uniqid: ctx.cypherParams.uniqid, type, title, message });
+}
+
 const resolvers = {
 	Query: {
 
@@ -175,7 +180,7 @@ const resolvers = {
 					if (result.records.length < 1)
 						throw new Error('UnknownUser')
 					const target = result.records[0].get('target').properties;
-					ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type: 'default', title: 'Noueau like', message: target.username + " vient de vous liker !" });
+					await sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
 					return target.uid;
 				});
 		},
@@ -184,12 +189,13 @@ const resolvers = {
 			const meUid = ctx.cypherParams.currentUserUid;
 			if (uid === meUid)
 				return null;
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target`, { meUid, uid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN me, target`, { meUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
 						throw new Error('UnknownUser')
+					const me     = result.records[0].get('me').properties;
 					const target = result.records[0].get('target').properties;
-					ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type: 'default', title: 'Profile visite', message: target.username + " vient de voir votre profil !" });
+					await sendNotif(ctx, target.uid, 'default', 'Profil visite', me.username + " vient de voir votre profil !");
 					return target;
 				});
 		},
