@@ -14,9 +14,7 @@ import './Profile.scss'
 const VISIT_PROFILE = gql`
 	mutation visitProfile($uid: ID!) {
 		visitProfile(uid: $uid) {
-			visitedUsers {
-				username
-			}	
+			username
 		}
 	}
 `;
@@ -69,9 +67,9 @@ const UserProfileDesktop = ({ match }) => {
         fetchPolicy: 'cache-and-network',
 	});
 
-	const [visitProfile] = useMutation(VISIT_PROFILE, {
-		onError: data => console.log(data),
-	});
+	// const [visitProfile] = useMutation(VISIT_PROFILE, {
+	// 	onError: data => console.log(data),
+	// });
 
     function reducer(state, action) {
 		switch (action.type) {
@@ -89,13 +87,13 @@ const UserProfileDesktop = ({ match }) => {
     
 	const [userInfos, setUserInfos] = useState([]);  
 
-	useEffect(() =>	{
-		visitProfile({
-			variables: {
-				uid: match.params.uid,
-			}
-		});
-	}, [visitProfile, match.params.uid]);
+	// useEffect(() =>	{
+	// 	visitProfile({
+	// 		variables: {
+	// 			uid: match.params.uid,
+	// 		}
+	// 	});
+	// }, [visitProfile, match.params.uid]);
 
     useEffect(() => {
 		const onCompleted = (data) => {
@@ -154,7 +152,6 @@ const UserProfileDesktop = ({ match }) => {
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<BlockButton uidUser={uid} dispatch={dispatch} />
-				{/* <UsersState user={user} dispatch={dispatch} userMe={userMe}/> */}
 			</div> 
 		    <Nav />
 		</div>
