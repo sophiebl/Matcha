@@ -22,7 +22,10 @@ const Login = withRouter(({history, ...props}) => {
 		location: 'null',
 	});
 
+	const [isFirst, setFirst] = useState(true);
 	useEffect(() => {
+		if (isFirst) {
+		setFirst(false);
 		fetch("https://api.ipify.org/?format=json")
 			.then(res => res.json())
 			.then(data => {
@@ -41,7 +44,8 @@ const Login = withRouter(({history, ...props}) => {
 				.catch(e => console.log(e));
 			})
 			.catch(e => console.log(e));
-	}, [isLocation, setLocation]);
+		}
+	}, [isFirst, setFirst, isLocation, setLocation]);
 
 	const [login] = useMutation(LOGIN,
 		{
