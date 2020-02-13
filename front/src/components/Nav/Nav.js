@@ -14,7 +14,7 @@ const Nav = () => {
         <div className="nav">
 			{/* <div className="link">{notifs.getCount}</div> */}
 
-			<Link to="/likes" className="link" id="notif-icon">
+			<Link to="/notifications" className="link" id="notif-icon">
 				{/* <div id="notif-icon"> */}
                 	<FontAwesomeIcon className="icon color-dg" icon={['far', 'heart']} />
 					<span>{notifs.getCount}</span>

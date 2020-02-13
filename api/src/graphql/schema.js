@@ -37,7 +37,21 @@ const resolvers = {
 		async isConnected({ uid }, args, ctx) {
 			//console.log("context dans isConnected:", ctx);
 			return ctx.connectedUsers.includes(uid);
-		}
+		},
+
+		async notifications({ }, args, ctx) {
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_NOTIF]->(notifs:Notification) RETURN notifs`, { meUid: ctx.cypherParams.currentUserUid })
+				.then(result => {
+					if (result.records.length < 1)
+						return null;
+					let notifs = [];
+					result.records.forEach(record => {
+						notifs.push(record.get('notifs').properties);
+					});
+					ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[rels:HAS_NOTIF]->(notifs:Notification) DELETE rels, notifs`, { meUid: ctx.cypherParams.currentUserUid });
+					return notifs;	
+				});
+		},
 	},
 
 	Mutation: {
@@ -189,6 +203,7 @@ const resolvers = {
 			const meUid = ctx.cypherParams.currentUserUid;
 			if (uid === meUid)
 				return null;
+			//return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN me, target`, { meUid, uid })
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target AND NOT (me)-[:VISITED]->(target) MERGE (me)-[:VISITED]->(target) RETURN me, target`, { meUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
