@@ -27,7 +27,7 @@ const resolvers = {
 						return Array.from(reportedUsers);	
 					});
 			}
-			else throw new Error('NotAdmin');
+			else return new Error('NotAdmin');
 		},
 	},
 
@@ -90,7 +90,7 @@ const resolvers = {
 				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, uniqid:context.cypherParams.uniqid})
 				.then(result => {
 					if (result.records.length < 1)
-						throw new Error('CouldNotCreateUser')
+						return new Error('CouldNotCreateUser')
 					const user = result.records[0].get('u').properties;
 					return jwt.sign(
 						{ uid: user.uid },
@@ -106,7 +106,7 @@ const resolvers = {
 				return await ctx.driver.session().run(`MATCH (u:User {confirmToken: $confirmToken}) SET u.confirmToken = 'true' RETURN u`, { confirmToken })
 					.then(result => {
 						if (result.records.length < 1)
-							throw new Error('UnknownUser')
+							return new Error('UnknownUser')
 						const user = result.records[0].get('u').properties;
 						return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 					});
@@ -133,7 +133,7 @@ const resolvers = {
 			return await ctx.driver.session().run(`MATCH (u:User {email: $email}) SET u.resetToken = $resetToken RETURN u`, { email, resetToken })
 				.then(result => {
 					if (result.records.length < 1)
-						throw new Error('UnknownUser')
+						return new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
@@ -144,7 +144,7 @@ const resolvers = {
 			return await ctx.driver.session().run(`MATCH (u:User {resetToken: $resetToken}) SET u.password = $hash RETURN u`, { resetToken, hash })
 				.then(result => {
 					if (result.records.length < 1)
-						throw new Error('UnknownUser')
+						return new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
@@ -155,14 +155,14 @@ const resolvers = {
 			return await ctx.driver.session().run(`MATCH (u:User) WHERE toLower(u.username) = toLower($username) SET u.lat = $lat SET u.long = $long SET u.location = $location RETURN u`, { username, long, lat, location })
 				.then(result => {
 					if (result.records.length < 1)
-						throw new Error('UnknownUsername');
+						return new Error('UnknownUsername');
 					const user = result.records[0].get('u').properties;
 					if (hash !== user.password)
-						throw new Error('InvalidPassword');
+						return new Error('InvalidPassword');
 					if (user.confirmToken != 'true')
-						throw new Error('EmailNotConfirmed');
+						return new Error('EmailNotConfirmed');
 					if (user.banned == true)
-						throw new Error('UserBanned');
+						return new Error('UserBanned');
 					//if (!ctx.connectedUsers.includes(user.uid))
 					//	ctx.connectedUsers.push(user.uid);
 					ctx.pubsub.publish('USER_STATE_CHANGED', { user: user, state: 1 });
@@ -190,7 +190,7 @@ const resolvers = {
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) MERGE (me)-[:REPORTED]->(target) WITH me, target MATCH (:User)-[r:REPORTED]->(target) RETURN COUNT(r) as reportsCount`, { meUid: ctx.cypherParams.currentUserUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
-						throw new Error('UnknownUser')
+						return new Error('UnknownUser')
 					const reportsCount = result.records[0].get('reportsCount').low;
 					if (reportsCount >= 5)
 						await ctx.driver.session().run(`MATCH (target:User {uid: $uid}) SET target.banned = true`, { uid })
@@ -203,7 +203,7 @@ const resolvers = {
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN target`, { meUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
-						throw new Error('UnknownUser')
+						return new Error('UnknownUser')
 					const target = result.records[0].get('target').properties;
 					await sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
 					return target.uid;
@@ -232,7 +232,7 @@ const resolvers = {
 				ctx.driver.session().run(`MATCH (user:User {uid: $uid}) SET user.banned = true`, { uid });
 				return "Ok";
 			}
-			else throw new Error('NotAdmin');
+			else return new Error('NotAdmin');
 		},
 
 	},
