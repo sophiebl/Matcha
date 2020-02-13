@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 
 import { gql } from "apollo-boost";
 import { useMutation, useQuery } from '@apollo/react-hooks';
@@ -10,8 +10,6 @@ import BlockButton from './ReportButton';
 import Tag from './Tag';
 import Nav from "../Nav/Nav";
 import './Profile.scss'
-
-import UsersState from '../App/UsersState';
 
 const VISIT_PROFILE = gql`
 	mutation visitProfile($uid: ID!) {
@@ -25,6 +23,13 @@ const VISIT_PROFILE = gql`
 
 const GET_USER = gql`
     query User($uid: ID) {	
+        me: me{
+            uid
+            firstname
+            lat
+            long
+        }
+
         User(uid: $uid) {
             uid
             bio
@@ -62,8 +67,35 @@ const UserProfileDesktop = ({ match }) => {
           'uid': match.params.uid,
         },
         fetchPolicy: 'cache-and-network',
-      });
-    const [userInfos, setUserInfos] = useState([]);  
+	});
+
+	const [visitProfile] = useMutation(VISIT_PROFILE, {
+		onError: data => console.log(data),
+	});
+
+    function reducer(state, action) {
+		switch (action.type) {
+			case 'like':
+				return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     user: data.users.shift() };
+			case 'dislike':
+				return { };
+			case 'reset':
+				return {  };
+			default:
+				throw new Error();
+		}
+	}
+    const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
+    
+	const [userInfos, setUserInfos] = useState([]);  
+
+	useEffect(() =>	{
+		visitProfile({
+			variables: {
+				uid: match.params.uid,
+			}
+		});
+	}, [visitProfile, match.params.uid]);
 
     useEffect(() => {
 		const onCompleted = (data) => {
@@ -84,60 +116,45 @@ const UserProfileDesktop = ({ match }) => {
 
     console.log(data);
     const user = data.User[0];
-    console.log(user);
+    const userMe = data.me;
+
     const { uid, bio, tags, likedUsers, lat, long } = user;
-    
 
-	// const [visitProfile] = useMutation(VISIT_PROFILE, {
-	// 	onError: data => console.log(data),
-	// });
+	const latMe = parseFloat(userMe.lat);
+	const longMe = parseFloat(userMe.long);
+	const latUser = parseFloat(lat);
+	const longUser = parseFloat(long);
 
-	// const latMe = parseFloat(userMe.me.lat);
-	// const longMe = parseFloat(userMe.me.long);
-	// const latUser = parseFloat(lat);
-	// const longUser = parseFloat(long);
+	const deg2rad = deg => {
+		return deg * (Math.PI / 180);
+	};
 
-	// const deg2rad = deg => {
-	// 	return deg * (Math.PI / 180);
-	// };
+	const getDistanceBetweenUsers = (latMe, longMe, latUser, longUser) => {
+		var R = 6371; // Radius of the earth in km
+		var dLat = deg2rad(latUser - latMe); // deg2rad below
+		var dLon = deg2rad(longUser - longMe);
+		var a =
+		  Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		  Math.cos(deg2rad(latMe)) *
+			Math.cos(deg2rad(latUser)) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		var d = R * c; // Distance in km
+		return d;
+    }
 
-	// const getDistanceBetweenUsers = (latMe, longMe, latUser, longUser) => {
-	// 	var R = 6371; // Radius of the earth in km
-	// 	var dLat = deg2rad(latUser - latMe); // deg2rad below
-	// 	var dLon = deg2rad(longUser - longMe);
-	// 	var a =
-	// 	  Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-	// 	  Math.cos(deg2rad(latMe)) *
-	// 		Math.cos(deg2rad(latUser)) *
-	// 		Math.sin(dLon / 2) *
-	// 		Math.sin(dLon / 2);
-	// 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	// 	var d = R * c; // Distance in km
-	// 	return d;
-	// }
-
-	// useEffect(() =>	{
-	// 	visitProfile({
-	// 		variables: {
-	// 			uid: uid,
-	// 		}
-	// 	});
-	// }, [visitProfile, uid]);
-
-
-
-	return (
+		return (
 		<div>
 			<div className="infos-container" key={uid}>
-				{/* <MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/> */}
-				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} />
+				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
 				<Bio bio={bio} />
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
 				</div>
-				{/* <LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
+				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<BlockButton uidUser={uid} dispatch={dispatch} />
-				<UsersState user={user} dispatch={dispatch} userMe={userMe}/> */}
+				{/* <UsersState user={user} dispatch={dispatch} userMe={userMe}/> */}
 			</div> 
 		    <Nav />
 		</div>

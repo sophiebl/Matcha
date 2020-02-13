@@ -10,8 +10,6 @@ import BlockButton from './ReportButton';
 import Tag from './Tag';
 import './Profile.scss'
 
-//import UsersState from '../App/UsersState';
-
 const VISIT_PROFILE = gql`
 	mutation visitProfile($uid: ID!) {
 		visitProfile(uid: $uid) {
@@ -70,7 +68,6 @@ const UserProfile = ({ user, dispatch, userMe }) => {
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<BlockButton uidUser={uid} dispatch={dispatch} />
-				{/*<UsersState user={user} dispatch={dispatch} userMe={userMe}/>*/}
 			</div>
 		</div>
 	);

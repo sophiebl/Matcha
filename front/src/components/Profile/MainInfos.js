@@ -5,13 +5,7 @@ import { gql } from "apollo-boost";
 import { useSubscription } from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-//import { store } from 'react-notifications-component';
-
-//import Avatar from './Avatar.js';
 import SliderShow from './SliderShow.js';
-// import UsersState from '../App/UsersState';
-// import CommonStuff from '../App/CommonStuff';
 import { getCurrentUid } from '../../Helpers';
 
 const USER_STATE_CHANGED = gql`
@@ -23,7 +17,7 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile, km }) => {
-	const { firstname, birthdate, avatar, elo, likesCount, likedUsers, lastVisite, images } = user;
+	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images } = user;
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
@@ -44,17 +38,10 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 	//if (loading) console.log("waiting for user state change");
 	if (data) console.log("user state changed", data.userStateChanged.state);
 
-	//console.log(user.firstname + ' ' + user.isConnected);
-	//console.log(images);
-
-	//console.log("username: ", user.firstname, "data: ", data, "isConnected: ", user.isConnected);
 	const connected = (data ? data.userStateChanged.state : user.isConnected);
 
 	return (
 		<div className="pos-rel img-container">
-			{/* <CommonStuff user={user}/> */}
-			{/* <UsersState user={user}/> */}
-
 			{ isMyProfile ? (
 				<div>
 					<div className="nav-user w-100">
@@ -73,7 +60,6 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 				<div className="nav-user w-100">
 					<div>
 						<FontAwesomeIcon className="icon white" icon={['fa', 'map-marker-alt']} />
-						{/* <span className="icon-top">{prefRadius} Km</span> */}
 						<span className="icon-top">{kmArrondi} Km</span>
 					</div>
 					<div>
@@ -89,7 +75,6 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 					</div>
 				</div>
 			)}
-			{/* <Avatar src={avatar} /> */}
 			<SliderShow src={images}/>
 			<div className="main-infos valign50">
 				<div className="mb-5">

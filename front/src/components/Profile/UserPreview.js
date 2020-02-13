@@ -3,8 +3,6 @@ import React, { useEffect } from 'react';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
-import UserProfileDesktop from './UserProfileDesktop';
-import UserProfile from './UserProfile';
 import MainInfos from './MainInfos';
 import LikeDislike from './LikeDislike';
 import Tag from './Tag';
@@ -17,9 +15,7 @@ import UsersState from '../App/UsersState';
 const VISIT_PROFILE = gql`
 	mutation visitProfile($uid: ID!) {
 		visitProfile(uid: $uid) {
-			visitedUsers {
 				username
-			}	
 		}
 	}
 `;
@@ -62,14 +58,12 @@ const UserPreview = ({ user, dispatch, userMe }) => {
 			}
 		});
 	}, [visitProfile, uid]);
-    console.log(user);
-    console.log(user.uid);
-    console.log(uid);
+	
 	return (
 		<div>
 			<div className="infos-container infos-container-other-user" key={uid}>
 				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
-                <Link to={"/UserProfileDesktop/" + uid}>
+                <Link to={"/UserProfileDesktop/" + uid} className="link-to-profile">
                     Voir son profil
                 </Link>
 				<div className="tag-container">

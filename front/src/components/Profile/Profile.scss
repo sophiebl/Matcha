@@ -179,14 +179,14 @@ User tag
   color: #222
 }
 
-@media (min-width: $tablet) { 
+@media (min-width: $tabletLandscape) { 
   .App{
     background-image: linear-gradient(rgba(3, 218, 198, 0) 58%, #03dac685);
 
   }
 
   .infos-container-my-profile, .infos-container {
-    width: 50%;
+    width: 40%;
     margin: 0 auto;
   }
 

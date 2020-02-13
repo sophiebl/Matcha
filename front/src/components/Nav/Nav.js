@@ -12,10 +12,13 @@ const Nav = () => {
 
 	return (
         <div className="nav">
-			<div className="link">{notifs.getCount}</div>
+			{/* <div className="link">{notifs.getCount}</div> */}
 
-			<Link to="/likes" className="link">
-                <FontAwesomeIcon className="icon color-dg" icon={['far', 'heart']} />
+			<Link to="/likes" className="link" id="notif-icon">
+				{/* <div id="notif-icon"> */}
+                	<FontAwesomeIcon className="icon color-dg" icon={['far', 'heart']} />
+					<span>{notifs.getCount}</span>
+				{/* </div> */}
 			</Link>
 			
 			<Link to="/browse" className="link">

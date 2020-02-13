@@ -4,8 +4,6 @@ import React, { useEffect, useReducer } from 'react';
 import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
-//import UsersState from '../App/UsersState';
-
 
 import cookie from 'react-cookies';
 
@@ -95,20 +93,12 @@ const BrowseMobile = () => {
 		}
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
-	//const user = state.user;
-	//console.log(data);
-	//console.log(data);
-	//console.log("BrowseMobile");
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			//console.log(data.firstUser);
 			if (data.firstUser.length > 0)
 			{
 				data.users.unshift(data.firstUser[0]);
-				//console.log(data.users);
-
-
 			}
 			dispatch({ type: 'reset', payload: data.users.shift() });
 		};
@@ -131,7 +121,6 @@ const BrowseMobile = () => {
 				) : (
 					<div className="browse">
 						<UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} userMe={data}/>
-						{/* <UserData/> */}
 					</div>
 				)
 		}

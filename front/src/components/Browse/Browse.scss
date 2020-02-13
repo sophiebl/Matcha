@@ -22,7 +22,7 @@ Browse
 
 .browse > div {width:100%;}
 
-@media (min-width: $tablet) { 
+@media (min-width: $tabletLandscape) { 
   .browse {
     flex-wrap: wrap;
     justify-content: center;
@@ -41,5 +41,12 @@ Browse
   .infos-container-other-user .icon-top{
     font-size: $f-s;
   }
-
+  .link-to-profile{
+    font-family: "Meyrin";
+    font-size: 1.8em;
+    color: #02bad9;
+    display: inline-block;
+    margin: 17px 0;
+    font-weight: 600;
+  }
 }

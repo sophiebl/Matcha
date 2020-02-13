@@ -28,7 +28,8 @@ const LikeDislike = ({ uidUser, likedUsers, dispatch }) => {
 
 	const [dislike] = useMutation(DISLIKE_USER,
 		{
-			onCompleted: data => dispatch({ type: 'dislike' }),
+			onCompleted: data => {dispatch({ type: 'dislike', uid: uidUser })
+		},
 			onError: data => console.log(data),
 		}
 	);

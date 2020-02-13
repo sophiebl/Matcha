@@ -7,7 +7,7 @@ import BrowseMobile from './BrowseMobile';
 const Browse = (props) => {
   const { breakpoints, currentBreakpoint } = props
 
-  return breakpoints[currentBreakpoint] > breakpoints.desktop ? <BrowseDesktop /> : <BrowseMobile />;
+  return breakpoints[currentBreakpoint] > breakpoints.tablet ? <BrowseDesktop /> : <BrowseMobile />;
 }
 
 export default withBreakpoints(Browse);

@@ -84,7 +84,8 @@ const BrowseDesktop = () => {
 			case 'like':
 				return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                user: data.users.shift() };
 			case 'dislike':
-				return { user: data.users.shift() };
+				// return user.filter(user => user.uid !== action.uid);	 
+				return {}
 			case 'reset':
 				cookie.remove('firstUsername');
 				return { user: action.payload };
@@ -94,16 +95,12 @@ const BrowseDesktop = () => {
 	}
 	const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
 	const users = state.user;
-	console.log(users);
-	console.log("Browse DEsktop");
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			console.log(data.firstUser);
 			if (data.firstUser.length > 0)
 			{
 				data.users.unshift(data.firstUser[0]);
-				console.log(data.users);
 			}
 			dispatch({ type: 'reset', payload: data.users });
 		};
@@ -126,14 +123,12 @@ const BrowseDesktop = () => {
 
 
 	return <>	
-		{ state.user == null ?
+		{ state == null ?
 				(
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
 					<div className="browse">
 						{renderedUsersProfiles}
-						{/* <UserProfile key={state.user.uid} user={state.user} dispatch={dispatch} userMe={data}/> */}
-						{/* <UserData/> */}
 					</div>
 				)
 		}
