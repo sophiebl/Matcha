@@ -202,11 +202,15 @@ const resolvers = {
 			const meUid = ctx.cypherParams.currentUserUid;
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN target`, { meUid, uid })
 				.then(async result => {
-					if (result.records.length < 1)
-						return new Error('UnknownUser')
 					const target = result.records[0].get('target').properties;
-					await sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
-					return target.uid;
+					return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
+						.then(async result => {
+							if (result.records.length > 0)
+								sendNotif(ctx, uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
+							else
+								sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
+							return target.uid;
+						});
 				});
 		},
 
@@ -221,7 +225,7 @@ const resolvers = {
 						return null;
 					const me     = result.records[0].get('me').properties;
 					const target = result.records[0].get('target').properties;
-					await sendNotif(ctx, target.uid, 'default', 'Profil visite', me.username + " vient de voir votre profil !");
+					sendNotif(ctx, target.uid, 'default', 'Profil visite', me.username + " vient de voir votre profil !");
 					return target;
 				});
 		},
