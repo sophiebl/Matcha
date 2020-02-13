@@ -97,7 +97,7 @@ const App = () => {
 				<StoreProvider>
 					<div className="App">
 						{/* <CommonStuff /> */}
-						<ReactNotification />
+						<ReactNotification className="notif" />
 						<Router />
 					</div>
 				</StoreProvider>
