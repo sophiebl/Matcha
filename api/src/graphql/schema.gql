@@ -74,7 +74,7 @@ type Blocked @isAuthenticated @relation(name: "BLOCKED") {
 
 type Query {
     me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
-    #getNotifications: [Notification] @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_NOTIF]->(notif:Notification) RETURN notif")
+    getReportedUsers: [User]
 }
 
 type Mutation {
@@ -84,16 +84,14 @@ type Mutation {
     emailVerif(confirmToken: String!): String
     sendPwdReset(email: String!): String
     resetPassword(password: String!, resetToken: String!): String
-    #visitProfile(uid: ID!): User @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN target")
     visitProfile(uid: ID!): User
-    #likeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN $uid")
     likeUser(uid: ID!): ID
     dislikeUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN $uid")
     blockUser(uid: ID!): ID @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:BLOCKED]->(target) RETURN $uid")
     reportUser(uid: ID!): Int
 	uploadImage(src: String!): Image @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image) WITH user, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount < 5 THEN [1] ELSE [] END | CREATE (user)-[:HAS_IMG]->(img:Image {uid: 'img-' + $cypherParams.uniqid, src: $src}) ) WITH user MATCH (user)-[:HAS_IMG]->(img:Image) RETURN img ORDER BY img.uid DESC LIMIT 1")
 	deleteImage(uid: ID!): ID @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image), (img:Image {uid: $uid}) WITH user, img, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount > 1 THEN [1] ELSE [] END | DETACH DELETE img ) RETURN $uid")
-    #readNotifications: String @cypher(statement: "MATCH (me:User {uid: $cypherParams.currentUserUid})-[r:HAS_NOTIF]->(n:Notification) DELETE r, n RETURN 'Ok'")
+	banUser(uid: ID!): String
 }
 
 type UserState {

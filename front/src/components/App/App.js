@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory, faWalking, faChevronCircleRight, faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faCoffee, faTimes, faShoppingCart, faCartPlus, faMapMarkerAlt, faAngleLeft, faCog, faPen, faUsers, faPlus, faImage, faCheck, faHistory, faWalking, faChevronCircleRight, faChevronCircleLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faStar, faHeart, faCommentAlt, faUser } from '@fortawesome/free-regular-svg-icons';
 
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -25,7 +25,7 @@ import StoreProvider from './Store'
 
 import './App.scss';
 
-library.add(faCheckSquare, faCoffee, faStar, faTimes, faChevronCircleRight, faChevronCircleLeft, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking);
+library.add(faCheckSquare, faCoffee, faStar, faTimes, faChevronCircleRight, faChevronCircleLeft, faShoppingCart, faHeart, faCartPlus, faCommentAlt, faUser, faMapMarkerAlt, faAngleLeft, faCheck, faCog, faPen, faUsers, faPlus, faImage, faHistory, faWalking, faTrash);
 
 const authLink = setContext((_, { headers }) => {
 	const token = localStorage.getItem('token');

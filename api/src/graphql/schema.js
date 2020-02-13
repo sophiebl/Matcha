@@ -15,7 +15,20 @@ async function sendNotif(ctx, uid, type, title, message) {
 
 const resolvers = {
 	Query: {
-
+		async getReportedUsers(_, args, ctx) {
+			if (true || ctx.cypherParams.currentUserUid.startsWith('admin-'))
+			{
+				return await ctx.driver.session().run(`MATCH (reporter:User)-[r:REPORTED]->(reported:User) WHERE reported.banned IS NULL RETURN reported`)
+					.then(result => {
+						if (result.records.length < 1)
+							return null;
+						let reportedUsers = new Set();
+						result.records.forEach(record => reportedUsers.add(record.get('reported').properties));
+						return Array.from(reportedUsers);	
+					});
+			}
+			else throw new Error('NotAdmin');
+		},
 	},
 
 	User: {
@@ -39,15 +52,13 @@ const resolvers = {
 			return ctx.connectedUsers.includes(uid);
 		},
 
-		async notifications({ }, args, ctx) {
+		async notifications(_, args, ctx) {
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_NOTIF]->(notifs:Notification) RETURN notifs`, { meUid: ctx.cypherParams.currentUserUid })
 				.then(result => {
 					if (result.records.length < 1)
 						return null;
 					let notifs = [];
-					result.records.forEach(record => {
-						notifs.push(record.get('notifs').properties);
-					});
+					result.records.forEach(record => notifs.push(record.get('notifs').properties));
 					ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[rels:HAS_NOTIF]->(notifs:Notification) DELETE rels, notifs`, { meUid: ctx.cypherParams.currentUserUid });
 					return notifs;	
 				});
@@ -213,6 +224,15 @@ const resolvers = {
 					await sendNotif(ctx, target.uid, 'default', 'Profil visite', me.username + " vient de voir votre profil !");
 					return target;
 				});
+		},
+
+		async banUser(_, { uid }, ctx) {
+			if (true || ctx.cypherParams.currentUserUid.startsWith('admin-'))
+			{
+				ctx.driver.session().run(`MATCH (user:User {uid: $uid}) SET user.banned = true`, { uid });
+				return "Ok";
+			}
+			else throw new Error('NotAdmin');
 		},
 
 	},
