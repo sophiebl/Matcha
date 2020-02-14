@@ -200,13 +200,16 @@ const resolvers = {
 
 		async likeUser(_, { uid }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN target`, { meUid, uid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN me, target`, { meUid, uid })
 				.then(async result => {
+					const me = result.records[0].get('me').properties;
 					const target = result.records[0].get('target').properties;
 					return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => {
-							if (result.records.length > 0)
-								sendNotif(ctx, uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
+							if (result.records.length > 0) {
+								sendNotif(ctx, target.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + me.username + " !");
+								sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
+							}
 							else
 								sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
 							ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:DISLIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
@@ -218,17 +221,18 @@ const resolvers = {
 		async dislikeUser(_, { uid }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
 
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN target `, { meUid, uid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN me, target `, { meUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
 						return new Error('UnknownUser')
 					const target = result.records[0].get('target').properties;
+					const me = result.records[0].get('me').properties;
 					const heLiked = await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => result.records.length > 0);
 					const iLiked = await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:LIKED]->(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => result.records.length > 0);
 					if (heLiked && iLiked)
-						sendNotif(ctx, uid, 'danger', "U GOT UNMATCHED NOOB", target.username + " ne vous like plus :c");
+						sendNotif(ctx, uid, 'danger', "U GOT UNMATCHED NOOB", me.username + " ne vous like plus :c");
 					ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:LIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
 					return target.uid;
 				});
