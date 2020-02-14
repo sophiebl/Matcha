@@ -231,7 +231,16 @@ const resolvers = {
 							if (result.records.length > 0) {
 								sendNotif(ctx, target.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + me.username + " !");
 								sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
-								ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:HAS_CONV]->(c:Conversation {uid: 'conv-' + $uniqid})<-[:HAS_CONV]-(target) RETURN me, target`, { meUid, uid, uniqid: ctx.cypherParams.uniqid });
+
+								return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_CONV]->(conv:Conversation)<-[:HAS_CONV]-(target:User {uid: $uid}) RETURN conv`, { meUid, uid })
+									.then(async result => {
+											sendNotif(ctx, target.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + me.username + " !");
+											sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
+										if (result.records.length < 1)
+											ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:HAS_CONV]->(c:Conversation {uid: 'conv-' + $uniqid})<-[:HAS_CONV]-(target) RETURN me, target`, { meUid, uid, uniqid: ctx.cypherParams.uniqid });
+										ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:DISLIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
+										return target.uid;
+									});
 							}
 							else
 								sendNotif(ctx, uid, 'default', 'Nouveau like', me.username + " vient de vous liker !");
