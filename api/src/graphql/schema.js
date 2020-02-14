@@ -209,6 +209,7 @@ const resolvers = {
 							if (result.records.length > 0) {
 								sendNotif(ctx, target.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + me.username + " !");
 								sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
+								ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:HAS_CONV]->(c:Conversation {uid: 'conv-' + $uniqid})<-[:HAS_CONV]-(target) RETURN me, target`, { meUid, uid, uniqid: ctx.cypherParams.uniqid });
 							}
 							else
 								sendNotif(ctx, uid, 'default', 'Nouveau like', me.username + " vient de vous liker !");
@@ -263,9 +264,27 @@ const resolvers = {
 			else return new Error('NotAdmin');
 		},
 
-		async sendMessage(_, { toUid, message }, ctx) {
-			sendNotif(ctx, toUid, 'default', 'Nouveau message', message);
-			return "Ok";
+		async sendMessage(_, { convUid, userUid, message }, ctx) {
+			const meUid = ctx.cypherParams.currentUserUid;
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (conv:Conversation {uid: $convUid}) CREATE (conv)-[:HAS_MSG]->(msg:Message {uid: 'msg-' + $uniqid, content: $message})<-[:AUTHORED]-(me) RETURN conv.uid`, { meUid, convUid, userUid, message, uniqid: ctx.cypherParams.uniqid })
+				.then(async result => {
+					if (result.records.length < 1)
+						return null;
+					return await ctx.driver.session().run(`MATCH (member:User)-[:HAS_CONV]->(conv:Conversation {uid: $convUid}) RETURN member`, { convUid })
+						.then(async result => {
+							if (result.records.length < 1)
+								return null;
+							let members = new Set();
+							result.records.forEach(record => {
+								const member = record.get('member').properties;
+								if (member.uid !== meUid)
+									members.add(member);
+							});
+							Array.from(members).forEach(member => sendNotif(ctx, member.uid, 'default', 'Nouveau message', message));	
+							return message;
+						});
+					return message;
+				});
 		},
 
 	},
