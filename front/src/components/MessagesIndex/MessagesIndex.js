@@ -6,7 +6,6 @@ import { useQuery } from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { getCurrentUid } from '../../Helpers';
 import ConvItem from "./ConvItem";
 import Nav from "../Nav/Nav";
 

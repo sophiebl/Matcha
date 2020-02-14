@@ -75,6 +75,7 @@ type Blocked @isAuthenticated @relation(name: "BLOCKED") {
 type Query {
     me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
     getReportedUsers: [User]
+    getConv(uid: ID!): Conversation
 }
 
 type Mutation {
@@ -105,4 +106,5 @@ type Subscription {
   connect: String
   userStateChanged(uid: ID!): UserState
   receivedNotification(uid: ID!): Notification
+  newMessage(convUid: ID!): Message
 }

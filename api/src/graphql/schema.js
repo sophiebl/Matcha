@@ -29,6 +29,28 @@ const resolvers = {
 			}
 			else return new Error('NotAdmin');
 		},
+
+		async getConv(_, { uid }, ctx) {
+			return await ctx.driver.session().run(`MATCH (member:User)-[:HAS_CONV]->(conv:Conversation {uid: $uid}) RETURN member, conv`, { uid })
+				.then(async result => {
+					const record = result.records[0];
+					const conv = record.get('conv').properties;
+
+					let members = new Set();
+					result.records.forEach(record => members.add(record.get('member').properties));
+					members = Array.from(members);
+
+					return await ctx.driver.session().run(`MATCH (conv:Conversation {uid: $uid})-[:HAS_MSG]->(msg:Message)<-[:AUTHORED]-(author:User) RETURN msg, author`, { uid })
+						.then(result => {
+							let messages = new Set();
+							result.records.forEach(record => messages.add({ ...record.get('msg').properties, author: { ...record.get('author').properties, avatar: "", isConnected: true } }));
+							messages = Array.from(messages);
+
+							return { uid, members, messages };
+						});
+				});
+		},
+
 	},
 
 	User: {
@@ -266,10 +288,12 @@ const resolvers = {
 
 		async sendMessage(_, { convUid, userUid, message }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (conv:Conversation {uid: $convUid}) CREATE (conv)-[:HAS_MSG]->(msg:Message {uid: 'msg-' + $uniqid, content: $message})<-[:AUTHORED]-(me) RETURN conv.uid`, { meUid, convUid, userUid, message, uniqid: ctx.cypherParams.uniqid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (conv:Conversation {uid: $convUid}) CREATE (conv)-[:HAS_MSG]->(msg:Message {uid: 'msg-' + $uniqid, content: $message})<-[:AUTHORED]-(me) RETURN me, msg`, { meUid, convUid, userUid, message, uniqid: ctx.cypherParams.uniqid })
 				.then(async result => {
 					if (result.records.length < 1)
 						return null;
+					const me  = result.records[0].get('me').properties;
+					const msg = result.records[0].get('msg').properties;
 					return await ctx.driver.session().run(`MATCH (member:User)-[:HAS_CONV]->(conv:Conversation {uid: $convUid}) RETURN member`, { convUid })
 						.then(async result => {
 							if (result.records.length < 1)
@@ -280,7 +304,10 @@ const resolvers = {
 								if (member.uid !== meUid)
 									members.add(member);
 							});
-							Array.from(members).forEach(member => sendNotif(ctx, member.uid, 'default', 'Nouveau message', message));	
+							Array.from(members).forEach(member => {
+								sendNotif(ctx, member.uid, 'default', 'Nouveau message', message);
+								ctx.pubsub.publish('NEW_MESSAGE', { ...msg, author: { ...me, avatar: "", isConnected: true } });
+							});
 							return message;
 						});
 					return message;
@@ -330,6 +357,15 @@ const resolvers = {
 			),
 			resolve: (payload) => payload,
 		},
+
+		newMessage: {
+			subscribe: withFilter(
+				(_, variables, context) => context.pubsub.asyncIterator('NEW_MESSAGE'),
+				(payload, variables) => true//payload.uid === variables.uid,
+			),
+			resolve: (payload) => payload,
+		},
+
 	},
 
 };
