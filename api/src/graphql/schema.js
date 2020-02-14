@@ -286,7 +286,7 @@ const resolvers = {
 
 					return context.pubsub.asyncIterator('');
 				},
-				(payload, variables) => false,
+				(payload, variables) => true,
 			),
 			resolve: (payload) => "Ok",
 		},

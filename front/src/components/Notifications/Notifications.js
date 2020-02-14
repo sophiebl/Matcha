@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
 import { gql } from "apollo-boost";
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery} from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
