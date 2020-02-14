@@ -263,6 +263,11 @@ const resolvers = {
 			else return new Error('NotAdmin');
 		},
 
+		async sendMessage(_, { toUid, message }, ctx) {
+			sendNotif(ctx, toUid, 'default', 'Nouveau message', message);
+			return "Ok";
+		},
+
 	},
 
 	Subscription: {
