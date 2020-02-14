@@ -211,7 +211,7 @@ const resolvers = {
 								sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
 							}
 							else
-								sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
+								sendNotif(ctx, uid, 'default', 'Nouveau like', me.username + " vient de vous liker !");
 							ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:DISLIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
 							return target.uid;
 						});
@@ -287,7 +287,7 @@ const resolvers = {
 					let hours = date_ob.getHours();
 					const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ];
 					let date = day + " " + monthNames[date_ob.getMonth()] + " " + year + " à " + hours + "h";
-					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date})
+					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date});
 
 					return context.pubsub.asyncIterator('');
 				},
@@ -306,7 +306,7 @@ const resolvers = {
 
 		receivedNotification: {
 			subscribe: withFilter(
-				(_, variables, context) => (context.currentUserUid === variables.uid ? context.pubsub.asyncIterator('RECEIVED_NOTIFICATION') : false),
+				(_, variables, context) => (context.currentUserUid === variables.uid ? context.pubsub.asyncIterator('RECEIVED_NOTIFICATION') : context.pubsub.asyncIterator('BRUH')),
 				(payload, variables) => payload.uid === variables.uid,
 			),
 			resolve: (payload) => payload,
