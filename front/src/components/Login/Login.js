@@ -7,6 +7,7 @@ import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 import './Login.scss'
+import { get } from 'https';
 
 const LOGIN = gql`
 		mutation login($username: String!, $password: String!, $lat: String!, $long: String!, $location: String!) {
@@ -22,7 +23,8 @@ const Login = withRouter(({history, ...props}) => {
 		location: 'null',
 	});
 
-	useEffect(() => {
+	// useEffect(() => {
+	const getLocationAnyway = () => {
 		fetch("https://api.ipify.org/?format=json")
 			.then(res => res.json())
 			.then(data => {
@@ -41,7 +43,8 @@ const Login = withRouter(({history, ...props}) => {
 				.catch(e => console.log(e));
 			})
 			.catch(e => console.log(e));
-	}, [isLocation, setLocation]);
+	}
+	// }, [isLocation, setLocation]);
 
 	const [login] = useMutation(LOGIN,
 		{
@@ -89,7 +92,7 @@ const Login = withRouter(({history, ...props}) => {
 				{errors.username && 'Username is required.'}
 				<input type="password" name="password" placeholder="password" ref={register({ required: true })} required/>
 				{errors.password && 'Password is required.'}
-				<button>Login</button>
+				<button onClick={() => getLocationAnyway()}>Login</button>
 			</form>
 			<Link to="/reset" className="btn">Forgot password</Link>
 		</div>

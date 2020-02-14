@@ -74,7 +74,7 @@ const UserProfileDesktop = ({ match }) => {
     function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
-				return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     user: data.users.shift() };
+				return {  user: data.users.shift() };
 			case 'dislike':
 				return { };
 			case 'reset':

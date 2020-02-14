@@ -3,6 +3,7 @@ import { gql } from "apollo-boost";
 import React, { useEffect, useReducer } from 'react';
 import UserPreview from '../Profile/UserPreview';
 import Nav from "../Nav/Nav";
+import BrowseFilter from './BrowseFilter';
 import './Browse.scss'
 
 import cookie from 'react-cookies';
@@ -98,10 +99,10 @@ const BrowseDesktop = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			if (data.firstUser.length > 0)
-			{
-				data.users.unshift(data.firstUser[0]);
-			}
+			// if (data.firstUser.length > 0)
+			// {
+			// 	data.users.unshift(data.firstUser[0]);
+			// }
 			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);
@@ -127,9 +128,13 @@ const BrowseDesktop = () => {
 				(
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
-					<div className="browse">
-						{renderedUsersProfiles}
-					</div>
+					<>
+						<BrowseFilter/>
+						{console.log(data)}
+						<div className="browse">
+							{renderedUsersProfiles}
+						</div>
+					</>
 				)
 		}
 		<Nav />
