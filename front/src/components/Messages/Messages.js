@@ -17,13 +17,15 @@ const GET_CONV = gql`
 		members {
 		  uid
 		  username
+		  isConnected
 		}
 		messages(orderBy: uid_asc) {
 		  uid
 		  author {
-				uid
-				username
-				avatar
+			uid
+			username
+			avatar
+			isConnected
 		  }
 		  content
 		}
@@ -53,8 +55,10 @@ const Chat = ({ conv }) => {
 	})
   ));
 
+  const connected = (data ? data.userStateChanged.state : externalMembers[0].isConnected);
+
   return <>
-	<div className={`rond ${(data && data.userStateChanged.state) ? "online" : "offline"}`}></div>
+	<div className={`rond ${connected ? "online" : "offline"}`}></div>
 	<ChatFeed
 	  messages={messages}
 	  isTyping={false}

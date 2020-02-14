@@ -22,13 +22,15 @@ const GET_CONVS = gql`
 		    uid
 		    username
 			avatar
+			isConnected
 		  }
 		  lastMessage {
 			uid
 			author {
 			  uid
-				firstname
-				avatar
+			  firstname
+			  avatar
+			  isConnected
 			}
 			content
 		  }
