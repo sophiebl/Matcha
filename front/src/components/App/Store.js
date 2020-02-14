@@ -23,7 +23,10 @@ export default ({ children }) => {
 
   useEffect(() => {
 	const onCompleted = (data) => {
-		setCount(data.me.notifications ? data.me.notifications.length : 0);
+		if (!data || !data.me || !data.me.notifications)
+			setCount(0);
+		else
+			setCount(data.me.notifications.length);
 	};
 	const onError = (error) => console.log(error);
 	if (onCompleted || onError)
