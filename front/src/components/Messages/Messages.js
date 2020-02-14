@@ -164,10 +164,10 @@ const Messages = ({ match }) => {
 
   return (
 		<div id="messages-container">
-			<div style={{position: 'fixed', top: 0, zIndex: 10000000}}>
+			{/*<div style={{position: 'fixed', top: 0, zIndex: 10000000}}>*/}
 			  <Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="angle-left" /></Link>
 			  <p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
-			</div>
+			{/*</div>*/}
 			<Chat conv={data.getConv}/>
 		    <form method="POST" onSubmit={handleSubmit(onSubmit)}>
 		      <input type="text" name="message" placeholder="message" ref={register({ required: true })} required/>
