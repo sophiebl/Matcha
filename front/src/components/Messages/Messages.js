@@ -105,7 +105,7 @@ const Messages = ({ match }) => {
 	{
 	  onCompleted: data => {
 		//TODO: ?
-		window.location = "/messages/conv-406z03i4k6mf95em";
+		window.location = window.location;
 	  },
 	  onError: data => {
 		switch (data.message.split(':', 2)[1].trim()) {

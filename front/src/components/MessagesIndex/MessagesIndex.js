@@ -13,8 +13,8 @@ import Nav from "../Nav/Nav";
 import './Messages.scss'
 
 const GET_CONVS = gql`
-	query User($uid: ID) {
-	  User(uid: $uid) {
+	query  {
+	  me {
 		uid
 		conversations {
 		  uid
@@ -40,17 +40,13 @@ const GET_CONVS = gql`
   `;
 
 const MessagesList = () => {
-  const { loading, error, data } = useQuery(GET_CONVS, {
-	variables: {
-	  'uid': getCurrentUid(),
-	},
-	fetchPolicy: 'cache-and-network',
-  });
+  const { loading, error, data } = useQuery(GET_CONVS, { fetchPolicy: 'cache-and-network' });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const convs = data.User[0].conversations;
+  const convs = data.me.conversations;
+  console.log('convs', convs);
   return <>{ convs.map((conv, index) => <ConvItem key={index} conv={conv} />) }</>
 }
 
