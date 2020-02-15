@@ -10,8 +10,6 @@ import Slider, { Range } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
 
-import DatePicker from 'react-date-picker';
-
 import { store } from 'react-notifications-component';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -120,7 +118,7 @@ const Preferences = (props) => {
 				});
 			}
 		}
-	}, []);
+	}, [ props ]);
 
 	const distanceHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;
@@ -242,7 +240,6 @@ const Preferences = (props) => {
 	if (error) return <p>Error </p>;
 
 	if (state['first'] === true) {
-		console.log(data.me.birthdate);
 		let tags = [];
 		for (const v of data.me.tags.values())  //eslint-disable-line no-unused-vars
 			tags.push(v.name.charAt(0).toUpperCase() + v.name.slice(1));
@@ -284,7 +281,7 @@ const Preferences = (props) => {
     const getLocation = () => {
         if (navigator.geolocation) {
 			setClicked(true);
-            const city = navigator.geolocation.getCurrentPosition(showPosition);
+            navigator.geolocation.getCurrentPosition(showPosition);
         } else {
             //setClicked(false);
             console.log("Geolocation is not supported by this browser.");
@@ -397,7 +394,7 @@ const Preferences = (props) => {
 					]}
 				/>
 			</div>
-			
+
 			<div>
 				<p className="txt-left f-m bio-title">Bio</p>
 				<textarea className="bio-area" placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio'] || ''}/>

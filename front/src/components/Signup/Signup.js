@@ -79,7 +79,7 @@ const Signup = withRouter(({history, ...props}) => {
     const getLocation = () => {
         if (navigator.geolocation) {
 			setClicked(true);
-            const city = navigator.geolocation.getCurrentPosition(showPosition);
+            navigator.geolocation.getCurrentPosition(showPosition);
         } else {
             console.log("Geolocation is not supported by this browser.");
         }
