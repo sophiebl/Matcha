@@ -32,6 +32,10 @@ const Nav = () => {
 			<Link to="/profile" className="link">
                 <FontAwesomeIcon className="icon color-dg" icon={['far', 'user']} />
 			</Link>
+
+			<Link to="/logout" className="link">
+                <FontAwesomeIcon className="icon color-dg" icon={['fas', 'sign-out-alt']} />
+			</Link>
         </div>
     );
 }
