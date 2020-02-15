@@ -16,7 +16,7 @@ query User($username: String) {
 		long
 	}
 	
-	users: User {
+	users: getMatchingUsers {
 		uid
 		bio
 		gender
