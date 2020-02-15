@@ -71,7 +71,7 @@ const BrowseDesktop = () => {
 		console.log('prev', prev);
 		console.log('fmr', fetchMoreResult);
 		return Object.assign({}, prev, {
-		  users: [...prev.users, ...fetchMoreResult.users]
+		  users: [/*...prev.users,*/ ...fetchMoreResult.users]
 		});
 	  }
 	})
