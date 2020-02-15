@@ -113,7 +113,7 @@ const Messages = ({ match }) => {
 	fetchPolicy: 'cache-and-network',
   });
 
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const [sendMessage] = useMutation(SEND_MESSAGE,
 	{
@@ -160,6 +160,7 @@ const Messages = ({ match }) => {
 		message: inputs.message,
 	  }
 	});
+	document.querySelector('#msg').value = "";
   };
 
   return (
@@ -170,8 +171,7 @@ const Messages = ({ match }) => {
 			{/*</div>*/}
 			<Chat conv={data.getConv}/>
 		    <form method="POST" onSubmit={handleSubmit(onSubmit)}>
-		      <input type="text" name="message" placeholder="message" ref={register({ required: true })} required/>
-		      {errors.message && 'Message is required.'}
+		      <input type="text" name="message" id="msg" placeholder="message" ref={register({ required: true })} required/>
 		      <button>Envoyer</button>
 		    </form>
 		</div>
