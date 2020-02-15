@@ -71,13 +71,6 @@ const BrowseDesktop = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-<<<<<<< HEAD
-			// if (data.firstUser.length > 0)
-			// {
-			// 	data.users.unshift(data.firstUser[0]);
-			// }
-=======
->>>>>>> 77ed8665c0110a6489485df0b6944dc6dc3535a1
 			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);

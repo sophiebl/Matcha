@@ -56,8 +56,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 	const { notifs } = useContext(StoreContext);
 	const location = useLocation();
 
-	const location = useLocation();
-
 	useSubscription(CONNECT);
 
 	useSubscription(RECEIVED_NOTIFICATION, {
