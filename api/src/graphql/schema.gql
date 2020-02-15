@@ -77,7 +77,7 @@ type Query {
     me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
     getReportedUsers: [User]
     getConv(uid: ID!): Conversation
-    getMatchingUsers: [User]
+    getMatchingUsers(offset: Int): [User]
 }
 
 type Mutation {

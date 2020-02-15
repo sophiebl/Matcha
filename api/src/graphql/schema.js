@@ -73,9 +73,9 @@ const resolvers = {
 				});
 		},
 
-		async getMatchingUsers(_, args, ctx) {
+		async getMatchingUsers(_, { offset = 0 }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User) WHERE NOT user.uid = me.uid AND user.confirmToken = "true" AND user.gender = me.prefOrientation AND user.elo >= (me.elo - 50) AND user.elo <= (me.elo + 50) RETURN DISTINCT user, me`, { meUid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User) WHERE NOT user.uid = me.uid AND user.confirmToken = "true" AND user.gender = me.prefOrientation AND user.elo >= (me.elo - 50) AND user.elo <= (me.elo + 50) RETURN DISTINCT user, me SKIP $offset LIMIT 10`, { meUid, offset })
 				.then(async result => {
 					const records = await filter(result.records, async record => {
 						const me   = record.get('me').properties;

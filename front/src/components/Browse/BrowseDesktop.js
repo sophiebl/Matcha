@@ -11,7 +11,7 @@ import './Browse.scss'
 import './Browse.scss'
 
 const GET_USERS = gql`
-query {
+query bruh($offset: Int){
 	me: me{
 		uid
 		firstname
@@ -19,7 +19,7 @@ query {
 		long
 	}
 	
-	users: getMatchingUsers {
+	users: getMatchingUsers(offset: $offset) {
 		uid
 		bio
 		gender
@@ -51,7 +51,32 @@ query {
 `;
 
 const BrowseDesktop = () => {
-	const { loading, error, data } = useQuery(GET_USERS);
+	const { loading, error, data, fetchMore } = useQuery(
+	  GET_USERS,
+	  {
+		variables: {
+		  offset: 0,
+		},
+		fetchPolicy: "cache-and-network",
+	  }
+	);
+
+  const onClick =(() => {
+	fetchMore({
+	  variables: {
+		offset: 10//data.feed.length
+	  },
+	  updateQuery: (prev, { fetchMoreResult }) => {
+		if (!fetchMoreResult) return prev;
+		console.log('prev', prev);
+		console.log('fmr', fetchMoreResult);
+		return Object.assign({}, prev, {
+		  users: [...prev.users, ...fetchMoreResult.users]
+		});
+	  }
+	})
+  });
+
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
@@ -103,6 +128,7 @@ const BrowseDesktop = () => {
 					<>
 						<BrowseFilter/>
 						{/*console.log(data)*/}
+						<button onClick={onClick}>Fetch more</button>
 						<div className="browse">
 							{renderedUsersProfiles}
 						</div>
