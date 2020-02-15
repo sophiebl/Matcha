@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect } from 'react';
 
 import { gql } from "apollo-boost";
 import { useMutation, useQuery } from '@apollo/react-hooks';
@@ -71,21 +71,9 @@ const UserProfileDesktop = ({ match }) => {
 	 	onError: data => console.log(data),
 	 });
 
-    function reducer(state, action) {
-		switch (action.type) {
-			case 'like':
-				return {  user: data.users.shift() };
-			case 'dislike':
-				return { };
-			case 'reset':
-				return {  };
-			default:
-				throw new Error();
-		}
+    function dispatch() {
+	  window.location = "/browse";
 	}
-    const [state, dispatch] = useReducer(reducer, { uid: 'none', tags: [] });
-    
-	const [userInfos, setUserInfos] = useState([]);  
 
 	 useEffect(() =>	{
 	 	visitProfile({
@@ -97,7 +85,7 @@ const UserProfileDesktop = ({ match }) => {
 
     useEffect(() => {
 		const onCompleted = (data) => {
-            setUserInfos(data);
+            ;//setUserInfos(data);
 		};
 		const onError = (error) => console.log(error);
 		if (onCompleted || onError)
@@ -110,9 +98,6 @@ const UserProfileDesktop = ({ match }) => {
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
-    console.log(match);
-
-    console.log(data);
     const user = data.User[0];
     const userMe = data.me;
 

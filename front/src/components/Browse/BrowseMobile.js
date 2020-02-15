@@ -82,7 +82,7 @@ const BrowseMobile = () => {
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
-				return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                user: data.users.shift() };
+				return { user: data.users.shift() };
 			case 'dislike':
 				return { user: data.users.shift() };
 			case 'reset':
@@ -97,9 +97,7 @@ const BrowseMobile = () => {
 	useEffect(() => {
 		const onCompleted = (data) => {
 			if (data.firstUser.length > 0)
-			{
 				data.users.unshift(data.firstUser[0]);
-			}
 			dispatch({ type: 'reset', payload: data.users.shift() });
 		};
 		const onError = (error) => console.log(error);

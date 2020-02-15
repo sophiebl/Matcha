@@ -64,10 +64,9 @@ const ConvItem = ({ conv: { uid, members, lastMessage } }) => {
 
 	const { error, data } = useSubscription(USER_STATE_CHANGED, { variables: { uid: externalMembers[0].uid } });
 	if (error) return <span>Subscription error!</span>;
-	if (data) {
-		console.log("NOTIF : Quelqu'un vient de se connecter !!!!!");
-		console.log(data);
-	}
+
+	const connected = (data ? data.userStateChanged.state : externalMembers[0].isConnected);
+
 	return (
 		<div key={uid} className="msg-container">
 			<Link to={"/messages/" + uid}>
@@ -75,11 +74,11 @@ const ConvItem = ({ conv: { uid, members, lastMessage } }) => {
 					<div className="author-container">
 						<div className="rond"></div>
 						<img alt="user icon" className="img" style={imgStyle} src={convImage} />
-						<div className={`rond ${(data && data.userStateChanged.state) ? "online" : "offline"}`}></div>
+						<div className={`rond ${connected ? "online" : "offline"}`}></div>
 					</div>
 					<div style={txtStyle}>
 						<p style={nameStyle}>{convTitle}</p>
-						<p style={msgStyle}>{lastMessage.author.uid === getCurrentUid() ? "Vous : " : null}{lastMessage.content}</p>
+					  <p style={msgStyle}>{lastMessage ? (lastMessage.author.uid === getCurrentUid() ? "Vous : " + lastMessage.content : null) : ("Dites bonjour")}</p>
 					</div>
 				</div>
 			</Link>

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { gql } from "apollo-boost";
-import { useQuery, useSubscription } from '@apollo/react-hooks';
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
+
+import useForm from 'react-hook-form';
 
 import { ChatFeed, Message as ChatMessage } from 'react-chat-ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,24 +14,42 @@ import { getCurrentUid } from '../../Helpers';
 import '../MessagesIndex/Messages.scss'
 
 const GET_CONV = gql`
-	query Conversation($uid: ID) {
-	  Conversation(uid: $uid) {
+	query getConv($uid: ID!) {
+	  getConv(uid: $uid) {
+		uid
 		members {
 		  uid
 		  username
+		  isConnected
 		}
-		messages(orderBy: uid_asc) {
+		messages {
 		  uid
 		  author {
-				uid
-				username
-				avatar
+			uid
+			username
+			avatar
+			isConnected
 		  }
 		  content
 		}
 	  }
 	}
   `;
+
+const NEW_MESSAGE = gql`
+  subscription newMessage($convUid: ID!) {
+    newMessage(convUid: $convUid) {
+      uid
+	  author {
+		uid
+		username
+		avatar
+		isConnected
+	  }
+	  content
+    }
+  }
+`;
 
 const USER_STATE_CHANGED = gql`
 	subscription userStateChanged($uid: ID!) {
@@ -39,12 +59,18 @@ const USER_STATE_CHANGED = gql`
 	}
 `;
 
+const SEND_MESSAGE = gql`
+	mutation sendMessage($convUid: ID!, $message: String!) {
+	  sendMessage(convUid: $convUid, message: $message)
+	}
+`;
+
 const Chat = ({ conv }) => {
   const externalMembers = (conv.members.filter(member => member.uid !== getCurrentUid()));
 
   const { error, data } = useSubscription(USER_STATE_CHANGED, { variables: { uid: externalMembers[0].uid } });
   if (error) return <span>Subscription error!</span>;
-  if (data) console.log(data);
+  //if (data) console.log(data);
 
   const messages = conv.messages.map(({ author, content }) => (
 	new ChatMessage({
@@ -53,8 +79,10 @@ const Chat = ({ conv }) => {
 	})
   ));
 
+  const connected = (data ? data.userStateChanged.state : externalMembers[0].isConnected);
+
   return <>
-	<div className={`rond ${(data && data.userStateChanged.state) ? "online" : "offline"}`}></div>
+	<div className={`rond ${connected ? "online" : "offline"}`}></div>
 	<ChatFeed
 	  messages={messages}
 	  isTyping={false}
@@ -79,25 +107,73 @@ const Chat = ({ conv }) => {
 }
 
 const Messages = ({ match }) => {
-	console.log(match.params.uid);
-  const { loading, error, data } = useQuery(GET_CONV, {
-	variables: {
-	  'uid': match.params.uid,
-	},
+  const { subscribeToMore, loading, error, data } = useQuery(
+	GET_CONV,
+	{ variables: { 'uid': match.params.uid },
 	fetchPolicy: 'cache-and-network',
   });
+
+  const { register, handleSubmit } = useForm();
+
+  const [sendMessage] = useMutation(SEND_MESSAGE,
+	{
+	  //onCompleted: data => {},
+	  onError: data => {
+		switch (data.message.split(':', 2)[1].trim()) {
+		  case 'UnknownUsername':
+			alert("Nom d'utilisateur inconnu.");
+			break;
+		  default:
+			console.log(data);
+		}
+	  }
+	});
+
+  useEffect(() => {
+	subscribeToMore({
+	  document: NEW_MESSAGE,
+	  variables: { convUid: data ? data.getConv.uid : "" },
+	  updateQuery: (prev, { subscriptionData }) => {
+		if (!subscriptionData.data) return prev;
+		const newFeedItem = subscriptionData.data.newMessage;
+
+		return Object.assign({}, prev, {
+		  getConv: {
+			...prev.getConv,
+			messages: [...prev.getConv.messages, newFeedItem]
+		  }
+		});
+	  }
+	});
+	//eslint-disable-next-line
+  }, [/*data, subscribeToMore*/]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const members = data.Conversation[0].members.filter(m => (m.uid !== getCurrentUid())).map(m => m.username).join(', ');
+  const members = data.getConv.members.filter(m => (m.uid !== getCurrentUid())).map(m => m.username).join(', ');
+
+  const onSubmit = inputs => {
+	sendMessage({
+	  variables: {
+		convUid: data.getConv.uid,
+		message: inputs.message,
+	  }
+	});
+	document.querySelector('#msg').value = "";
+  };
 
   return (
 		<div id="messages-container">
-			<Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="angle-left" /></Link>
-			<p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
-			<Chat conv={data.Conversation[0]}/>
-			<input className="input-submit" type="text"/>
+			{/*<div style={{position: 'fixed', top: 0, zIndex: 10000000}}>*/}
+			  <Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="angle-left" /></Link>
+			  <p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
+			{/*</div>*/}
+			<Chat conv={data.getConv}/>
+		    <form method="POST" onSubmit={handleSubmit(onSubmit)}>
+		      <input type="text" name="message" id="msg" placeholder="message" ref={register({ required: true })} required/>
+		      <button>Envoyer</button>
+		    </form>
 		</div>
   );
 }

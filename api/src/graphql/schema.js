@@ -8,8 +8,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function sendNotif(ctx, uid, type, title, message) {
-	ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type, title, message });
+async function sendNotif(ctx, uid, type, title, message, context) {
+	context = context ? context : "";
+	ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type, title, message, context });
 	ctx.driver.session().run(`MATCH (user:User {uid: $uid}) MERGE (user)-[r:HAS_NOTIF]->(notif:Notification {uid: 'notif-' + $uniqid, type: $type, title: $title, message: $message}) RETURN "Ok"`, { uid, uniqid: ctx.cypherParams.uniqid, type, title, message });
 }
 
@@ -29,6 +30,28 @@ const resolvers = {
 			}
 			else return new Error('NotAdmin');
 		},
+
+		async getConv(_, { uid }, ctx) {
+			return await ctx.driver.session().run(`MATCH (member:User)-[:HAS_CONV]->(conv:Conversation {uid: $uid}) RETURN member, conv`, { uid })
+				.then(async result => {
+					const record = result.records[0];
+					const conv = record.get('conv').properties;
+
+					let members = new Set();
+					result.records.forEach(record => members.add(record.get('member').properties));
+					members = Array.from(members);
+
+					return await ctx.driver.session().run(`MATCH (conv:Conversation {uid: $uid})-[:HAS_MSG]->(msg:Message)<-[:AUTHORED]-(author:User) RETURN msg, author ORDER BY msg.uid`, { uid })
+						.then(result => {
+							let messages = new Set();
+							result.records.forEach(record => messages.add({ ...record.get('msg').properties, author: { ...record.get('author').properties, avatar: "", isConnected: true } }));
+							messages = Array.from(messages);
+
+							return { uid, members, messages };
+						});
+				});
+		},
+
 	},
 
 	User: {
@@ -201,15 +224,36 @@ const resolvers = {
 
 		async likeUser(_, { uid }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN target`, { meUid, uid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN me, target`, { meUid, uid })
 				.then(async result => {
+					const me = result.records[0].get('me').properties;
 					const target = result.records[0].get('target').properties;
 					return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => {
-							if (result.records.length > 0)
-								sendNotif(ctx, uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
-							else
-								sendNotif(ctx, uid, 'default', 'Nouveau like', target.username + " vient de vous liker !");
+							const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
+							if (result.records.length > 0) {
+								if (blocked) {
+									return new Error("Blocked user");
+								} else {
+									sendNotif(ctx, target.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + me.username + " !");
+									sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
+								}
+
+								return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_CONV]->(conv:Conversation)<-[:HAS_CONV]-(target:User {uid: $uid}) RETURN conv`, { meUid, uid })
+									.then(async result => {
+										if (result.records.length < 1)
+											ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:HAS_CONV]->(c:Conversation {uid: 'conv-' + $uniqid})<-[:HAS_CONV]-(target) RETURN me, target`, { meUid, uid, uniqid: ctx.cypherParams.uniqid });
+										ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:DISLIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
+										return target.uid;
+									});
+							}
+							else {
+								if (blocked) {
+									return new Error("Blocked user");
+								} else {
+									sendNotif(ctx, uid, 'default', 'Nouveau like', me.username + " vient de vous liker !");
+								}
+							}
 							ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:DISLIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
 							return target.uid;
 						});
@@ -219,17 +263,24 @@ const resolvers = {
 		async dislikeUser(_, { uid }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
 
-			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN target `, { meUid, uid })
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:DISLIKED]->(target) RETURN me, target `, { meUid, uid })
 				.then(async result => {
 					if (result.records.length < 1)
 						return new Error('UnknownUser')
 					const target = result.records[0].get('target').properties;
+					const me = result.records[0].get('me').properties;
 					const heLiked = await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => result.records.length > 0);
 					const iLiked = await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:LIKED]->(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => result.records.length > 0);
-					if (heLiked && iLiked)
-						sendNotif(ctx, uid, 'danger', "U GOT UNMATCHED NOOB", target.username + " ne vous like plus :c");
+					if (heLiked && iLiked) {
+						const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
+						if (blocked) {
+							return new Error("Blocked user");
+						} else {
+							sendNotif(ctx, uid, 'danger', "U GOT UNMATCHED NOOB", me.username + " ne vous like plus :c");
+						}
+					}
 					ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:LIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
 					return target.uid;
 				});
@@ -260,6 +311,39 @@ const resolvers = {
 			else return new Error('NotAdmin');
 		},
 
+		async sendMessage(_, { convUid, message }, ctx) {
+			const meUid = ctx.cypherParams.currentUserUid;
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (conv:Conversation {uid: $convUid}) CREATE (conv)-[:HAS_MSG]->(msg:Message {uid: 'msg-' + $uniqid, content: $message})<-[:AUTHORED]-(me) RETURN me, msg`, { meUid, convUid, message, uniqid: ctx.cypherParams.uniqid })
+				.then(async result => {
+					if (result.records.length < 1)
+						return null;
+					const me  = result.records[0].get('me').properties;
+					const msg = result.records[0].get('msg').properties;
+					return await ctx.driver.session().run(`MATCH (member:User)-[:HAS_CONV]->(conv:Conversation {uid: $convUid}) RETURN member`, { convUid })
+						.then(async result => {
+							if (result.records.length < 1)
+								return null;
+							let members = new Set();
+							result.records.forEach(record => {
+								const member = record.get('member').properties;
+								if (member.uid !== meUid)
+									members.add(member);
+							});
+							Array.from(members).forEach(async member => {
+								const blocked = (await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: ctx.cypherParams.currentUserUid, memberUid: member.uid }).then(async result => result.records.length > 0));
+								ctx.pubsub.publish('NEW_MESSAGE', { ...msg, author: { ...me, avatar: "", isConnected: true } });
+								if (blocked) {
+									return new Error("Blocked user");
+								} else {
+									sendNotif(ctx, member.uid, 'default', 'Nouveau message', message, convUid);
+								}
+							});
+							return message;
+						});
+					return message;
+				});
+		},
+
 	},
 
 	Subscription: {
@@ -279,11 +363,11 @@ const resolvers = {
 					let hours = date_ob.getHours();
 					const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre" ];
 					let date = day + " " + monthNames[date_ob.getMonth()] + " " + year + " à " + hours + "h";
-					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date})
+					context.driver.session().run(`MATCH (u:User {uid: $currentUid}) SET u.lastVisite = $date RETURN u`, { currentUid: context.currentUserUid, date});
 
 					return context.pubsub.asyncIterator('');
 				},
-				(payload, variables) => false,
+				(payload, variables) => true,
 			),
 			resolve: (payload) => "Ok",
 		},
@@ -298,11 +382,20 @@ const resolvers = {
 
 		receivedNotification: {
 			subscribe: withFilter(
-				(_, variables, context) => (context.currentUserUid === variables.uid ? context.pubsub.asyncIterator('RECEIVED_NOTIFICATION') : false),
+				(_, variables, context) => (context.currentUserUid === variables.uid ? context.pubsub.asyncIterator('RECEIVED_NOTIFICATION') : context.pubsub.asyncIterator('BRUH')),
 				(payload, variables) => payload.uid === variables.uid,
 			),
 			resolve: (payload) => payload,
 		},
+
+		newMessage: {
+			subscribe: withFilter(
+				(_, variables, context) => context.pubsub.asyncIterator('NEW_MESSAGE'),
+				(payload, variables) => true//payload.uid === variables.uid,
+			),
+			resolve: (payload) => payload,
+		},
+
 	},
 
 };

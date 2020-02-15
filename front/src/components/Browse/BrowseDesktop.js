@@ -1,15 +1,17 @@
+import React, { useEffect, useReducer } from 'react';
+
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
-import React, { useEffect, useReducer } from 'react';
+
 import UserPreview from '../Profile/UserPreview';
 import Nav from "../Nav/Nav";
 import BrowseFilter from './BrowseFilter';
 import './Browse.scss'
 
-import cookie from 'react-cookies';
+import './Browse.scss'
 
 const GET_USERS = gql`
-query User($username: String) {
+query {
 	me: me{
 		uid
 		firstname
@@ -45,50 +47,20 @@ query User($username: String) {
 		lat
 		long
     }
-
-	firstUser: User(username: $username) {
-		uid
-		bio
-		gender
-		firstname
-		lastname
-		birthdate
-		avatar
-		elo
-		likesCount
-		prefDistance
-		tags {
-			uid
-			name
-		}
-		likedUsers {
-			uid
-			username
-		}
-		images {
-			uid
-			src
-		}
-		isConnected
-		lastVisite
-		lat
-		long
-	}
 }
 `;
 
 const BrowseDesktop = () => {
-	const firstUsername = cookie.load('firstUsername');
-	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
+	const { loading, error, data } = useQuery(GET_USERS);
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
-				return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                user: data.users.shift() };
+				window.location = "/browse";
+				return {};
 			case 'dislike':
-				// return user.filter(user => user.uid !== action.uid);	 
-				return {}
+				window.location = "/browse";
+				return {};
 			case 'reset':
-				cookie.remove('firstUsername');
 				return { user: action.payload };
 			default:
 				throw new Error();
@@ -99,10 +71,13 @@ const BrowseDesktop = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
+<<<<<<< HEAD
 			// if (data.firstUser.length > 0)
 			// {
 			// 	data.users.unshift(data.firstUser[0]);
 			// }
+=======
+>>>>>>> 77ed8665c0110a6489485df0b6944dc6dc3535a1
 			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);

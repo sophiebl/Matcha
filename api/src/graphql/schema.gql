@@ -62,6 +62,7 @@ type Notification @isAuthenticated {
   type: String!
   title: String!
   message: String!
+  context: String
 }
 
 
@@ -75,6 +76,7 @@ type Blocked @isAuthenticated @relation(name: "BLOCKED") {
 type Query {
     me: User @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid}) RETURN user")
     getReportedUsers: [User]
+    getConv(uid: ID!): Conversation
 }
 
 type Mutation {
@@ -93,6 +95,7 @@ type Mutation {
 	uploadImage(src: String!): Image @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image) WITH user, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount < 5 THEN [1] ELSE [] END | CREATE (user)-[:HAS_IMG]->(img:Image {uid: 'img-' + $cypherParams.uniqid, src: $src}) ) WITH user MATCH (user)-[:HAS_IMG]->(img:Image) RETURN img ORDER BY img.uid DESC LIMIT 1")
 	deleteImage(uid: ID!): ID @cypher(statement: "MATCH (user:User {uid: $cypherParams.currentUserUid})-[r:HAS_IMG]->(:Image), (img:Image {uid: $uid}) WITH user, img, COUNT(r) as rcount FOREACH ( _ in CASE WHEN rcount > 1 THEN [1] ELSE [] END | DETACH DELETE img ) RETURN $uid")
 	banUser(uid: ID!): String
+	sendMessage(convUid: ID!, message: String!): String
 }
 
 type UserState {
@@ -104,4 +107,5 @@ type Subscription {
   connect: String
   userStateChanged(uid: ID!): UserState
   receivedNotification(uid: ID!): Notification
+  newMessage(convUid: ID!): Message
 }
