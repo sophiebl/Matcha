@@ -66,7 +66,8 @@ const resolvers = {
 	},
 
 	Mutation: {
-		async signup (_, { firstname, lastname, username, email, password, lat, long, location}, context) {
+
+		async signup (_, { firstname, lastname, username, email, password, lat, long, location, birthdate}, context) {
 			const uid = uniqid('user-');
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
@@ -80,14 +81,14 @@ const resolvers = {
 				html: `Click here to confirm your email : <a href="${url}">${url}</a>`,
 			};
 			//console.log(ctx);
-			console.log(context);
+			// console.log(context);
 			context.mailtransport.sendMail(mailOptions, (error, info) => {
 				if (error) console.log(error);
 				else console.log('Email sent: ' + info.response);
 			});
 
-			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, username: $username, email: $email, birthdate: 'null', password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location})-[:HAS_IMG]->(i:Image {uid: 'img-' + $uniqid, src: "https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png"}) RETURN u`,
-				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, uniqid:context.cypherParams.uniqid})
+			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, birthdate: $birthdate, username: $username, email: $email, birthdate: $birthdate, password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location})-[:HAS_IMG]->(i:Image {uid: 'img-' + $uniqid, src: "https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png"}) RETURN u`,
+				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, birthdate, uniqid:context.cypherParams.uniqid})
 				.then(result => {
 					if (result.records.length < 1)
 						return new Error('CouldNotCreateUser')
@@ -100,7 +101,7 @@ const resolvers = {
 				});
 		},
 
-		async emailVerif(_, { confirmToken }) {
+		async emailVerif(_, { confirmToken }, ctx) {
 			if (confirmToken !== 'true')
 			{
 				return await ctx.driver.session().run(`MATCH (u:User {confirmToken: $confirmToken}) SET u.confirmToken = 'true' RETURN u`, { confirmToken })
