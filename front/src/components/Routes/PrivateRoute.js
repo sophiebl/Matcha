@@ -80,7 +80,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 	const { loading, error, data } = useQuery(ME);
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
-	const redir = (data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
+	const redir = (!data || !data.me || data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
 
 	return <Route {...rest} render={props => 
 		localStorage.getItem('token') ? (

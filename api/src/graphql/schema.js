@@ -83,7 +83,7 @@ const resolvers = {
 
 						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
 						{
-							console.log('tej' + user.username);
+							//console.log('tej ' + user.username);
 							return false;
 						}
 						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
