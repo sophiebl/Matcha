@@ -7,7 +7,6 @@ import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 import './Login.scss'
-import { get } from 'https';
 
 const LOGIN = gql`
 		mutation login($username: String!, $password: String!, $lat: String!, $long: String!, $location: String!) {
