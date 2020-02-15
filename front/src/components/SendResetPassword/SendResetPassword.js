@@ -30,9 +30,10 @@ const SendResetPassword = withRouter(({history, ...props}) => {
 
   return (
     <form method="POST" className="resetPwdLink bg-desc" onSubmit={handleSubmit(onSubmit)}>
-	    <input type="text" name="email" placeholder="Email" ref={register({ required: true })} required/>
+      <h1>Reset Your password</h1>
+	    <input className="input-submit" type="text" name="email" placeholder="Email" ref={register({ required: true })} required/>
       {errors.email && 'Email is required.'}
-      <button>Reset password</button>
+      <button className="button-submit">Reset password</button>
     </form>
   )
 });

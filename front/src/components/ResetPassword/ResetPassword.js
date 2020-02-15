@@ -34,12 +34,12 @@ const ResetPassword = withRouter(({history, ...props}) => {
 	};
 
 	return (
-		<form method="POST" className="pwdReset bg-desc" onSubmit={handleSubmit(onSubmit)}>
-			<input type="password" name="password" placeholder="Password" ref={register({ required: true })} required/>
+		<form method="POST" className="pwdReset" onSubmit={handleSubmit(onSubmit)}>
+			<input className="input-submit" type="password" name="password" placeholder="Password" ref={register({ required: true })} required/>
 			{errors.password && 'Password is required.'}
-			<input type="password" name="passwordConfirmation" placeholder="Password confirmation" ref={register({ required: true })} required/>
+			<input className="input-submit" type="password" name="passwordConfirmation" placeholder="Password confirmation" ref={register({ required: true })} required/>
 			{errors.passwordConfirmation && 'Password confirmation is required.'}
-			<button>Login</button>
+			<button className="button-submit">Login</button>
 		</form>
 	)
 });

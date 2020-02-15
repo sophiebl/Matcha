@@ -5,6 +5,8 @@ import { gql } from "apollo-boost";
 
 import UserPreview from '../Profile/UserPreview';
 import Nav from "../Nav/Nav";
+import BrowseFilter from './BrowseFilter';
+import './Browse.scss'
 
 import './Browse.scss'
 
@@ -98,9 +100,13 @@ const BrowseDesktop = () => {
 				(
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
-					<div className="browse">
-						{renderedUsersProfiles}
-					</div>
+					<>
+						<BrowseFilter/>
+						{console.log(data)}
+						<div className="browse">
+							{renderedUsersProfiles}
+						</div>
+					</>
 				)
 		}
 		<Nav />

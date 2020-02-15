@@ -18,7 +18,7 @@ Link
 Button Submit
 *********/
 
-button {
+button.button-submit {
   display: block;
   width: 30%;
   margin: 10px auto;
@@ -91,9 +91,9 @@ Button Rond
 Input
 *********/
 
-input {
+input.input-submit {
   display: block;
-  width: 30%;
+  width: 70%;
   margin: 10px auto;
   padding: 5px 10px;
   border: 2px solid #2196F3;
@@ -101,4 +101,33 @@ input {
   border-radius: 3px;
   //color: #fff;
   background-color: transparent;
+}
+
+.react-calendar {
+  width: 70%;
+}
+
+@media (min-width: $tabletLandscape) { 
+  input.input-submit {
+    width: 30%;
+  }
+}
+
+/*
+Date picker
+*********/
+
+.react-calendar {
+  background: transparent;
+  font-family: 'Open Sans', sans-serif;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+}
+
+.react-date-picker__wrapper {
+    border: none;
+}
+
+.resetPwdLink{
+  height: 100vh;
 }

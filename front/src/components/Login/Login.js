@@ -7,6 +7,7 @@ import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
 
 import './Login.scss'
+import { get } from 'https';
 
 const LOGIN = gql`
 		mutation login($username: String!, $password: String!, $lat: String!, $long: String!, $location: String!) {
@@ -87,13 +88,14 @@ const Login = withRouter(({history, ...props}) => {
 	};
 
 	return (
-		<div>
-			<form method="POST" className="login bg-desc" onSubmit={handleSubmit(onSubmit)}>
-				<input type="text" name="username" placeholder="username" ref={register({ required: true })} required/>
+		<div className="bg-desc">
+			<form method="POST" className="login" onSubmit={handleSubmit(onSubmit)}>
+				<h1>Login</h1>
+				<input className="input-submit" type="text" name="username" placeholder="username" ref={register({ required: true })} required/>
 				{errors.username && 'Username is required.'}
-				<input type="password" name="password" placeholder="password" ref={register({ required: true })} required/>
+				<input className="input-submit" type="password" name="password" placeholder="password" ref={register({ required: true })} required/>
 				{errors.password && 'Password is required.'}
-				<button>Login</button>
+				<button className="button-submit">Login</button>
 			</form>
 			<Link to="/reset" className="btn">Forgot password</Link>
 		</div>

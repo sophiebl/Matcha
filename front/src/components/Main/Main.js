@@ -8,8 +8,8 @@ const Start = () => {
       <h1>Matcha</h1>
       <div>
         <Link to="/login" className="btn">Login</Link>
+        <p className="color-w">or</p>
         <Link to="/signup" className="btn">Sign up</Link>
-        <Link to="/browse" className="btn">Browse</Link>
       </div>
     </div>
   );
