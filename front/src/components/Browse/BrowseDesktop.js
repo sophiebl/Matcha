@@ -17,7 +17,7 @@ query {
 		long
 	}
 	
-	users: User {
+	users: getMatchingUsers {
 		uid
 		bio
 		gender

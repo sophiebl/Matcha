@@ -38,7 +38,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 		onSubscriptionData: ({ client, subscriptionData }) => {
 			const notif = subscriptionData.data.receivedNotification;
 			notifs.setCount(notifs.getCount + 1);
-			if (location.pathname !== "/messages/" + notif.context) {
+			//if (location.pathname !== "/messages/" + notif.context) {
 			  store.addNotification({
 			  	title: notif.title,
 			  	message: notif.message,
@@ -48,7 +48,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 			  	animationOut: ["animated", "fadeOut"],
 			  	dismiss: { duration: 3000 },
 			  });
-			}
+			//}
 		},
 	});
 
