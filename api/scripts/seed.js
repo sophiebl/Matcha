@@ -122,8 +122,15 @@ async function users(amount = 1) {
 	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
 	const username = firstname + i;
 	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
-	const lat = faker.address.latitude();
-	const long = faker.address.longitude();
+
+	// 50 43
+	//const lat = faker.address.latitude();
+	const lat = faker.random.number({min: 43, max: 50});
+
+	// -3 8
+	//const long = faker.address.longitude();
+	const long = faker.random.number({min: -3, max: 8});
+
 	const location = faker.address.city();
 	const elo = faker.random.number({min: 0, max: 100});
 	const prefAgeMin = faker.random.number({min: 18, max: 100});

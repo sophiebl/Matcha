@@ -87,7 +87,7 @@ const resolvers = {
 							return false;
 						}
 						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
-						console.log(dist <= me.prefDistance ? 'keep ' + user.username : 'tej ' + user.username);
+						console.log((dist <= me.prefDistance ? 'keep ' + user.username : 'tej ' + user.username), '(' + Math.round(dist) + ' km)');
 						return dist <= me.prefDistance;
 					});
 

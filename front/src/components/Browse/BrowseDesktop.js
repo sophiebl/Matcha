@@ -102,7 +102,7 @@ const BrowseDesktop = () => {
 				) : (
 					<>
 						<BrowseFilter/>
-						{console.log(data)}
+						{/*console.log(data)*/}
 						<div className="browse">
 							{renderedUsersProfiles}
 						</div>
