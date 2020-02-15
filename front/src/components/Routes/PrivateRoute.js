@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, useLocation } from "react-router-dom";
 
 import { gql } from "apollo-boost";
 import { useSubscription } from '@apollo/react-hooks';
@@ -21,12 +21,15 @@ const RECEIVED_NOTIFICATION = gql`
 			type
 			title
 			message
+			context
 		}
 	}
 `;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	const { notifs } = useContext(StoreContext);
+
+	const location = useLocation();
 
 	useSubscription(CONNECT);
 
@@ -35,15 +38,17 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 		onSubscriptionData: ({ client, subscriptionData }) => {
 			const notif = subscriptionData.data.receivedNotification;
 			notifs.setCount(notifs.getCount + 1);
-			store.addNotification({
-				title: notif.title,
-				message: notif.message,
-				type: notif.type,
-				container: 'bottom-left',
-				animationIn: ["animated", "fadeIn"],
-				animationOut: ["animated", "fadeOut"],
-				dismiss: { duration: 3000 },
-			});
+			if (location.pathname !== "/messages/" + notif.context) {
+			  store.addNotification({
+			  	title: notif.title,
+			  	message: notif.message,
+			  	type: notif.type,
+			  	container: 'bottom-left',
+			  	animationIn: ["animated", "fadeIn"],
+			  	animationOut: ["animated", "fadeOut"],
+			  	dismiss: { duration: 3000 },
+			  });
+			}
 		},
 	});
 

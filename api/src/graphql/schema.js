@@ -8,8 +8,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function sendNotif(ctx, uid, type, title, message) {
-	ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type, title, message });
+async function sendNotif(ctx, uid, type, title, message, context) {
+	context = context ? context : "";
+	ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type, title, message, context });
 	ctx.driver.session().run(`MATCH (user:User {uid: $uid}) MERGE (user)-[r:HAS_NOTIF]->(notif:Notification {uid: 'notif-' + $uniqid, type: $type, title: $title, message: $message}) RETURN "Ok"`, { uid, uniqid: ctx.cypherParams.uniqid, type, title, message });
 }
 
@@ -333,7 +334,7 @@ const resolvers = {
 								if (blocked) {
 									return new Error("Blocked user");
 								} else {
-									sendNotif(ctx, member.uid, 'default', 'Nouveau message', message);
+									sendNotif(ctx, member.uid, 'default', 'Nouveau message', message, convUid);
 								}
 							});
 							return message;

@@ -62,6 +62,7 @@ type Notification @isAuthenticated {
   type: String!
   title: String!
   message: String!
+  context: String
 }
 
 
