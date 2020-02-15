@@ -30,6 +30,11 @@ function getDistanceBetweenUsers(latMe, longMe, latUser, longUser) {
 	return d;
 }
 
+async function filter(arr, callback) {
+	const fail = Symbol();
+	return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail);
+}
+
 const resolvers = {
 	Query: {
 		async getReportedUsers(_, args, ctx) {
@@ -72,9 +77,15 @@ const resolvers = {
 			const meUid = ctx.cypherParams.currentUserUid;
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User) WHERE NOT user.uid = me.uid AND user.confirmToken = "true" AND user.gender = me.prefOrientation AND user.elo >= (me.elo - 50) AND user.elo <= (me.elo + 50) RETURN DISTINCT user, me`, { meUid })
 				.then(async result => {
-					const records = result.records.filter(record => {
+					const records = await filter(result.records, async record => {
 						const me   = record.get('me').properties;
 						const user = record.get('user').properties;
+
+						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
+						{
+							console.log('tej' + user.username);
+							return false;
+						}
 						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
 						return dist <= me.prefDistance;
 					});
