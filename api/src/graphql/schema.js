@@ -41,7 +41,7 @@ const resolvers = {
 					result.records.forEach(record => members.add(record.get('member').properties));
 					members = Array.from(members);
 
-					return await ctx.driver.session().run(`MATCH (conv:Conversation {uid: $uid})-[:HAS_MSG]->(msg:Message)<-[:AUTHORED]-(author:User) RETURN msg, author`, { uid })
+					return await ctx.driver.session().run(`MATCH (conv:Conversation {uid: $uid})-[:HAS_MSG]->(msg:Message)<-[:AUTHORED]-(author:User) RETURN msg, author ORDER BY msg.uid`, { uid })
 						.then(result => {
 							let messages = new Set();
 							result.records.forEach(record => messages.add({ ...record.get('msg').properties, author: { ...record.get('author').properties, avatar: "", isConnected: true } }));
