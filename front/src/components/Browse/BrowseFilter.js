@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import Chips from 'react-chips';
+
 import Slider, { Range } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
@@ -182,10 +184,6 @@ const BrowseFilter = () => {
 					]}
 				/>
 			</div>
-        </div>
-        <div>
-            <label>Popularité</label>
-            <input></input>
         </div>
         <div>
             <label>Tag</label>

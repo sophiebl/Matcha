@@ -98,8 +98,10 @@ body * {
 
 h1 {
   margin: 0;
-  font-size: 7em;
+  margin-bottom: 5vh;
+  font-size: 5em;
   color: #fff;
+  font-family: "Meyrin";
 }
 
 a {
@@ -178,4 +180,8 @@ a {
   color: $offline;
   float: right;
   text-align: right;
+}
+
+.notif{
+  z-index: 420000 !important;
 }

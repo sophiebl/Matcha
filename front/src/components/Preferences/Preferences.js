@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Chips from 'react-chips';
@@ -10,6 +10,10 @@ import Slider, { Range } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
 
+import DatePicker from 'react-date-picker';
+
+import { store } from 'react-notifications-component';
+
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 
@@ -18,6 +22,7 @@ const ME_AND_TAGS = gql`
 			me {
 				uid
 				bio
+				birthdate
 				gender
 				tags {
 					uid
@@ -39,7 +44,7 @@ const ME_AND_TAGS = gql`
 		}
 `;
 
-const EDIT_PREFERENCES = gql`
+const EDIT_PREFERENCES_WITH_LOC = gql`
 	mutation UpdateUser($uid: ID!, $bio: String!, $gender: String!, $prefAgeMin: Int!, $prefAgeMax: Int!, $prefOrientation: String!, $prefDistance: Int!, $lat: String!, $long: String!, $location: String!) {
 		UpdateUser(uid: $uid, bio: $bio, gender: $gender, prefAgeMin: $prefAgeMin, prefAgeMax: $prefAgeMax, prefOrientation: $prefOrientation, prefDistance: $prefDistance, lat: $lat, long: $long, location: $location) {
 			uid
@@ -52,6 +57,20 @@ const EDIT_PREFERENCES = gql`
 			lat
 			long
 			location
+		}
+	}
+`;
+
+const EDIT_PREFERENCES = gql`
+	mutation UpdateUser($uid: ID!, $bio: String!, $gender: String!, $prefAgeMin: Int!, $prefAgeMax: Int!, $prefOrientation: String!, $prefDistance: Int!) {
+		UpdateUser(uid: $uid, bio: $bio, gender: $gender, prefAgeMin: $prefAgeMin, prefAgeMax: $prefAgeMax, prefOrientation: $prefOrientation, prefDistance: $prefDistance) {
+			uid
+			bio
+			gender
+			prefAgeMin
+			prefAgeMax
+			prefDistance
+			prefOrientation
 		}
 	}
 `;
@@ -83,9 +102,25 @@ const REMOVE_TAG = gql`
 `;
 
 
-const Preferences = () => {
+const Preferences = (props) => {
 	const wrapperStyle = { width: '80%', margin: 30 };
 	const Handle = Slider.Handle;
+
+	useEffect(() => {
+		if(props && props.location && props.location.state && props.location.state.notif) {
+			if (props.location.state.notif === true){
+				store.addNotification({
+					title: "Votre profil est incomplet",
+					message: "Veuillez remplir votre profil pour pouvoir matcher des utilisateurs",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				});
+			}
+		}
+	}, []);
 
 	const distanceHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;
@@ -134,6 +169,13 @@ const Preferences = () => {
 	const onError = data => console.log(data);
 
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
+		onCompleted: data => {
+			alert('Profil sauvegarde !');
+		},
+		onError,
+	});
+
+	const [editPreferencesWithLoc] = useMutation(EDIT_PREFERENCES_WITH_LOC, {
 		onCompleted: data => {
 			alert('Profil sauvegarde !');
 		},
@@ -200,6 +242,7 @@ const Preferences = () => {
 	if (error) return <p>Error </p>;
 
 	if (state['first'] === true) {
+		console.log(data.me.birthdate);
 		let tags = [];
 		for (const v of data.me.tags.values())  //eslint-disable-line no-unused-vars
 			tags.push(v.name.charAt(0).toUpperCase() + v.name.slice(1));
@@ -273,6 +316,12 @@ const Preferences = () => {
 			chips: chips
 		});
 	}
+
+
+	const checkWithLOc = (state['bio'] === null || state['gender'] === null || state['prefAgeMin'] === null|| state['prefAgeMax'] === null|| state['prefOrientation'] === null || state['prefDistance'] === null
+		|| isLocation.lat === null || isLocation.long === null || isLocation.location === null);
+
+	const check = (state['bio'] === null || state['gender'] === null || state['prefAgeMin'] === null|| state['prefAgeMax'] === null|| state['prefOrientation'] === null || state['prefDistance'] === null);
 
 	return (
 		<div className="settings">
@@ -348,10 +397,10 @@ const Preferences = () => {
 					]}
 				/>
 			</div>
-
+			
 			<div>
 				<p className="txt-left f-m bio-title">Bio</p>
-				<textarea className="bio-area" placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio']}/>
+				<textarea className="bio-area" placeholder="Decrivez vous en quelques mots !" rows="4" cols="35" onChange={onTextareaChange} value={state['bio'] || ''}/>
 			</div>		
 
 			<Chips
@@ -366,22 +415,53 @@ const Preferences = () => {
 				{(isClicked === true) && (<span>{isLocation.location}</span>)}
 			</div>		
 
-			<button className="pref" onClick={() => editPreferences({
-				variables: {
-					uid: data.me.uid,
-					bio: state['bio'],
-					gender: state['gender'],
-					prefAgeMin: state['prefAgeMin'],
-					prefAgeMax: state['prefAgeMax'],
-					prefOrientation: state['prefOrientation'],
-					prefDistance: state['prefDistance'],
-					lat: isLocation.lat,
-					long: isLocation.long,
-					location: isLocation.location,
-				}
-			})}>Enregistrer</button>
+			{(isClicked === true && (
+				<button className="pref" onClick={() => !checkWithLOc ? editPreferencesWithLoc({
+					variables: {
+						uid: data.me.uid,
+						bio: state['bio'],
+						gender: state['gender'],
+						prefAgeMin: state['prefAgeMin'],
+						prefAgeMax: state['prefAgeMax'],
+						prefOrientation: state['prefOrientation'],
+						prefDistance: state['prefDistance'],
+						lat: isLocation.lat,
+						long: isLocation.long,
+						location: isLocation.location,
+					}
+				}) : store.addNotification({
+					title: "Votre profil est incomplet",
+					message: "Veuillez remplir tous les champs",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				})}>Enregistrer</button>
+			))}
 
-			</div>
+			{(!isClicked && (
+				<button className="pref" onClick={() => !check ? editPreferences({
+					variables: {
+						uid: data.me.uid,
+						bio: state['bio'],
+						gender: state['gender'],
+						prefAgeMin: state['prefAgeMin'],
+						prefAgeMax: state['prefAgeMax'],
+						prefOrientation: state['prefOrientation'],
+						prefDistance: state['prefDistance'],
+					}
+				}) : store.addNotification({
+					title: "Votre profil est incomplet",
+					message: "Veuillez remplir tous les champs",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				})}>Enregistrer</button>
+			))}
+		</div>
 	);
 }
 

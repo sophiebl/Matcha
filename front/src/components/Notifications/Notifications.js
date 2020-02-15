@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { gql } from "apollo-boost";
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -32,17 +32,17 @@ const Notification = ({ notif, last }) => {
 }
 
 const Notifications = () => {
-  const { loading, error, data } = useQuery(GET_NOTIFS);
+  const { loading, error, data } = useQuery(GET_NOTIFS, { fetchPolicy: 'cache-and-network' });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const notifs = data.me.notifications;
+  const notifs = data.me.notifications || [];
   const last = notifs.length - 1;
 
   return (
 	<div className="settings">
-	  <Link to="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></Link>
+	  <a href="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></a>
 	  <h2>Notifications</h2>
 	  { notifs.map((notif, index) => <Notification key={index} notif={notif} last={index === last}/>) }
 	</div>

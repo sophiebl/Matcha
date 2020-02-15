@@ -8,3 +8,67 @@ Login
   height: 70vh;
   padding: 18vh 0 0;
 }
+
+.signup > div {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.signup p {
+  display: inline-block;
+  vertical-align: baseline;
+  width: 49%;
+  font-family: 'Open Sans', sans-serif;
+  color: #7b7b7b;
+  font-size: 1em;
+  text-align: left;
+  margin: 10px auto;
+  padding: 5px 10px;
+}
+
+.signup .get-loc {
+  text-align: center;
+  vertical-align: baseline;
+  width: 49%;
+  font-family: 'Open Sans', sans-serif;
+  color: #2196F3;
+  margin: 10px auto;
+  padding: 15px 10px;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+  color: #0389f2;
+  background-color: transparent;
+}
+
+.react-calendar {
+  width: 70%;
+}
+
+.react-date-picker{
+  color: #7b7b7b;
+}
+
+/*
+Date picker
+*********/
+
+.react-calendar {
+  background: transparent;
+  font-family: 'Open Sans', sans-serif;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+}
+
+.react-date-picker__wrapper {
+    border: none;
+}
+
+@media (min-width: $tabletLandscape) { 
+  input.input-submit {
+    width: 30%;
+  }
+
+  .signup > div {
+    width: 30%;
+  }
+}

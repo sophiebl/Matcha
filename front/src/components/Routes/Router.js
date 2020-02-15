@@ -21,6 +21,7 @@ import EmailVerification from '../EmailVerification/EmailVerification';
 import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
 import UserProfileDesktop from '../Profile/UserProfileDesktop';
+import AdminReports from '../Admin/Reports';
 // import UserProfile from '../Profile/UserProfile';
 
 //TODO: query me to check token
@@ -45,6 +46,7 @@ const Router = () => (
 			<PublicRoute path="/confirm/:confirmToken" component={EmailVerification} />
 			<Route exact path="/reset" component={SendResetPassword} />
 			<Route path="/reset/:resetToken" component={ResetPassword} />
+			<Route exact path="/admin/reports" component={AdminReports} />
 			<PublicRoute exact path="/" component={Main} />
 
 			<Redirect to="/browse" />

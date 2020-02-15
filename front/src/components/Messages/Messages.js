@@ -97,7 +97,7 @@ const Messages = ({ match }) => {
 			<Link to="/messages" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="angle-left" /></Link>
 			<p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
 			<Chat conv={data.Conversation[0]}/>
-			<input type="text"/>
+			<input className="input-submit" type="text"/>
 		</div>
   );
 }

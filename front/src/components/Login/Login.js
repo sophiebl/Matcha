@@ -23,8 +23,10 @@ const Login = withRouter(({history, ...props}) => {
 		location: 'null',
 	});
 
-	// useEffect(() => {
-	const getLocationAnyway = () => {
+	const [isFirst, setFirst] = useState(true);
+	useEffect(() => {
+		if (isFirst) {
+		setFirst(false);
 		fetch("https://api.ipify.org/?format=json")
 			.then(res => res.json())
 			.then(data => {
@@ -43,8 +45,8 @@ const Login = withRouter(({history, ...props}) => {
 				.catch(e => console.log(e));
 			})
 			.catch(e => console.log(e));
-	}
-	// }, [isLocation, setLocation]);
+		}
+	}, [isFirst, setFirst, isLocation, setLocation]);
 
 	const [login] = useMutation(LOGIN,
 		{
@@ -86,13 +88,14 @@ const Login = withRouter(({history, ...props}) => {
 	};
 
 	return (
-		<div>
-			<form method="POST" className="login bg-desc" onSubmit={handleSubmit(onSubmit)}>
-				<input type="text" name="username" placeholder="username" ref={register({ required: true })} required/>
+		<div className="bg-desc">
+			<form method="POST" className="login" onSubmit={handleSubmit(onSubmit)}>
+				<h1>Login</h1>
+				<input className="input-submit" type="text" name="username" placeholder="username" ref={register({ required: true })} required/>
 				{errors.username && 'Username is required.'}
-				<input type="password" name="password" placeholder="password" ref={register({ required: true })} required/>
+				<input className="input-submit" type="password" name="password" placeholder="password" ref={register({ required: true })} required/>
 				{errors.password && 'Password is required.'}
-				<button onClick={() => getLocationAnyway()}>Login</button>
+				<button className="button-submit">Login</button>
 			</form>
 			<Link to="/reset" className="btn">Forgot password</Link>
 		</div>

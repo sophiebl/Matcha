@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react';
-
-import { gql } from "apollo-boost";
-import { useMutation } from '@apollo/react-hooks';
+import React from 'react';
 
 import MainInfos from './MainInfos';
 import LikeDislike from './LikeDislike';
@@ -12,20 +9,8 @@ import './Profile.scss'
 
 import UsersState from '../App/UsersState';
 
-const VISIT_PROFILE = gql`
-	mutation visitProfile($uid: ID!) {
-		visitProfile(uid: $uid) {
-				username
-		}
-	}
-`;
-
 const UserPreview = ({ user, dispatch, userMe }) => {
 	const { uid, tags, likedUsers, lat, long } = user;
-
-	const [visitProfile] = useMutation(VISIT_PROFILE, {
-		onError: data => console.log(data),
-	});
 
 	const latMe = parseFloat(userMe.me.lat);
 	const longMe = parseFloat(userMe.me.long);
@@ -50,14 +35,6 @@ const UserPreview = ({ user, dispatch, userMe }) => {
 		var d = R * c; // Distance in km
 		return d;
 	}
-
-	useEffect(() =>	{
-		visitProfile({
-			variables: {
-				uid: uid,
-			}
-		});
-	}, [visitProfile, uid]);
 	
 	return (
 		<div>

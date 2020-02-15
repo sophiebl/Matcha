@@ -1,13 +1,39 @@
 import React, { useContext } from 'react';
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, useLocation } from "react-router-dom";
 
 import { gql } from "apollo-boost";
-import { useSubscription } from '@apollo/react-hooks';
+import { useSubscription, useQuery } from '@apollo/react-hooks';
 
 import { store } from 'react-notifications-component';
 
 import { getCurrentUid } from '../../Helpers';
 import { StoreContext } from '../App/Store';
+
+const ME = gql`
+		{
+			me {
+				uid
+				bio
+				gender
+				tags {
+					uid
+					name
+				}
+				prefAgeMin
+				prefAgeMax
+				prefDistance
+				prefOrientation
+				lat
+				long
+				location
+			}
+
+			Tag {
+				uid
+				name
+			}
+		}
+`;
 
 const CONNECT = gql`
 	subscription {
@@ -27,6 +53,7 @@ const RECEIVED_NOTIFICATION = gql`
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	const { notifs } = useContext(StoreContext);
+	const location = useLocation();
 
 	useSubscription(CONNECT);
 
@@ -47,13 +74,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 		},
 	});
 
+	const { loading, error, data } = useQuery(ME);
+	if (loading) return <p>Loading...</p>;
+	if (error) return <p>Error </p>;
+	const redir = (data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
+
 	return <Route {...rest} render={props => 
-			localStorage.getItem('token') ? (
+		localStorage.getItem('token') ? (
+			!redir ? (
 				<Component {...props} />
 			) : (
-				<Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+				(location.pathname === "/preferences" || location.pathname === "/logout") ? <Component {...props} /> : <Redirect to={{ pathname: '/preferences', state: { notif: true } }} />
 			)
+		) : (
+			<Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+		)
 	} />
+
 };
 
 export default PrivateRoute;
