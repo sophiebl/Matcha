@@ -18,9 +18,27 @@ const ResetPassword = withRouter(({history, ...props}) => {
 	const [resetPassword] = useMutation(RESET_PASSWORD,
 		{
 			onCompleted: data => {
+				store.addNotification({
+					title: "Votre mot de passe a bien été modifié",
+					message: "Votre mot de passe a bien été modifié",
+					type: 'success',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				});
 				history.push("/login");
 			},
 			onError: data => {
+				store.addNotification({
+					title: "Votre mot de passe n'est pas assez sécurisé",
+					message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				})
 				console.log(data);
 			}
 		}
@@ -44,19 +62,30 @@ const ResetPassword = withRouter(({history, ...props}) => {
 		}
 	}
 	const onSubmit = inputs => {
-		//TODO: check passwordConfirmation
-		var check = checkPwd(inputs.password);
-		if (check) {
-			resetPassword({
-				variables: {
-					password: inputs.password,
-					resetToken: props.match.params.resetToken,
-				}
-			});
+		if (inputs.password === inputs.passwordConfirmation) {
+			var check = checkPwd(inputs.password);
+			if (check) {
+				resetPassword({
+					variables: {
+						password: inputs.password,
+						resetToken: props.match.params.resetToken,
+					}
+				});
+			} else {
+				store.addNotification({
+					title: "Votre mot de passe n'est pas assez sécurisé",
+					message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				})
+			}
 		} else {
 			store.addNotification({
-				title: "Votre mot de passe n'est pas assez sécurisé",
-				message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
+				title: "Vos mot de passe ne correspondent pas",
+				message: "Vos mot de passe ne correspondent pas",
 				type: 'danger',
 				container: 'bottom-left',
 				animationIn: ["animated", "fadeIn"],

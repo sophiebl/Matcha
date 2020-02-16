@@ -211,11 +211,8 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 		async signup (_, { firstname, lastname, username, email, password, lat, long, location, birthdate}, context) {
 			const uid = uniqid('user-');
 			const checkPwd = password => {
-				console.log("checkPwd")
 				if (password.length > 5) {
 					if (password.match(/.*[0-9]+.*/) !== null) {
-						console.log("checkPwd")
-						console.log("check chiffre")
 						if (password.match(/.*[A-Z]+.*/) !== null) {
 							if (password.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null)
 								return true;
@@ -278,7 +275,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 			}
 		},
 
-		async sendPwdReset(_, { email }) {
+		async sendPwdReset(_, { email }, ctx) {
 			const resetToken = uniqid() + crypto.randomBytes(16).toString('hex');
 			const url = `http://localhost:3000/reset/${resetToken}`;
 
@@ -290,7 +287,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				html: `Click here to reset your password : <a href="${url}">${url}</a>`,
 			};
 
-			transporter.sendMail(mailOptions, (error, info) => {
+			ctx.mailtransport.sendMail(mailOptions, (error, info) => {
 				if (error) console.log(error);
 				else console.log('Email sent: ' + info.response);
 			});
@@ -304,7 +301,27 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				});
 		},
 
-		async resetPassword(_, { password, resetToken }) {
+		async resetPassword(_, { password, resetToken }, ctx) {
+			const checkPwd = password => {
+				if (password.length > 5) {
+					if (password.match(/.*[0-9]+.*/) !== null) {
+						if (password.match(/.*[A-Z]+.*/) !== null) {
+							if (password.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null)
+								return true;
+							else
+								return false;
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			var check = checkPwd(password);
+			if(!check){return new Error('wrong password')}
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			return await ctx.driver.session().run(`MATCH (u:User {resetToken: $resetToken}) SET u.password = $hash RETURN u`, { resetToken, hash })
 				.then(result => {
