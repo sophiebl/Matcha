@@ -40,7 +40,6 @@ const div = (users, history) => <>
 
 const History = () => {
 
-	// const [mode, setMode] = useState("own");
 	const { loading, error, data } = useQuery(GET_MY_ACTIONS);
 	const history = useHistory();
 	if (loading) return <p>Loading...</p>;
@@ -53,14 +52,12 @@ const History = () => {
 
 			<div className="history-container valign50">
 				<div className="history-sections">
-					{/* <a href="#me" onClick={() => setMode("own")}>Profils visités</a> */}
-					{/* <a href="#others" onClick={() => setMode("others")}>Profils likés</a> */}
 					<a href="#me">Profils visités</a>
-					{ div(data.me.likedUsers, history) }
+					{ div(data.me.visitedUsers, history) }
 				</div>
 				<div className="history-sections hs2">
 					<a href="#others">Profils likés</a>
-					{ div(data.me.visitedUsers, history) }
+					{ div(data.me.likedUsers, history) }
 				</div>
 			</div>
 			<Nav />
