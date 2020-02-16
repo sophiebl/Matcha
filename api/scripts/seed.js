@@ -34,7 +34,6 @@ CREATE (:User {
   birthdate: $birthdate,
   gender: $gender,
   bio: '{{lorem.sentence}}',
-  elo: $elo,
   prefAgeMin: $prefAgeMin,
   prefAgeMax: $prefAgeMax,
   prefOrientation: $prefOrientation,
@@ -135,7 +134,6 @@ async function users(amount = 1) {
 	const long = faker.random.number({min: 1, max: 3});
 
 	const location = faker.address.city();
-	const elo = faker.random.number({min: 0, max: 100});
 	const prefAgeMin = faker.random.number({min: 18, max: 100});
 	const prefAgeMax = prefAgeMin + 10;
 	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
@@ -144,7 +142,7 @@ async function users(amount = 1) {
 	const avatarSrc = faker.random.arrayElement(images[gender]);
 
 	console.log('-', username, gender, uid);
-	await session.run(faker.fake(CREATE_USER), {uid, username, firstname, lastname, birthdate, hash, gender, lat, long, location, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
+	await session.run(faker.fake(CREATE_USER), {uid, username, firstname, lastname, birthdate, hash, gender, lat, long, location, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
   }
 }
 

@@ -11,6 +11,7 @@ const GET_USERS = gql`
 query User($username: String) {
 	me: me{
 		uid
+		username
 		firstname
 		lat
 		long
@@ -21,6 +22,7 @@ query User($username: String) {
 		uid
 		bio
 		gender
+		username
 		firstname
 		lastname
 		birthdate

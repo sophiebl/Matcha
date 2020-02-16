@@ -11,19 +11,21 @@ import './Browse.scss'
 import './Browse.scss'
 
 const GET_USERS = gql`
-query bruh($offset: Int){
+query bruh($offset: Int, $ageMin: Int, $ageMax: Int, $distance: Int, $elo: Int){
 	me: me{
 		uid
+		username
 		firstname
 		lat
 		long
 		location
 	}
 	
-	users: getMatchingUsers(offset: $offset) {
+	users: getMatchingUsers(offset: $offset, ageMin: $ageMin, ageMax: $ageMax, distance: $distance, elo: $elo) {
 		uid
 		bio
 		gender
+		username
 		firstname
 		lastname
 		birthdate
@@ -98,6 +100,7 @@ const BrowseDesktop = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
+			console.log(data);
 			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);
@@ -128,8 +131,7 @@ const BrowseDesktop = () => {
 					<p>Plus personne, reviens plus tard !</p>
 				) : (
 					<>
-						<BrowseFilter/>
-						{/*console.log(data)*/}
+						<BrowseFilter fetchMore={fetchMore}/>
 						<button onClick={onClick}>Fetch more</button>
 						<div className="browse">
 							{renderedUsersProfiles}

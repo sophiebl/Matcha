@@ -104,6 +104,21 @@ const Preferences = (props) => {
 	const wrapperStyle = { width: '80%', margin: 30 };
 	const Handle = Slider.Handle;
 
+  const [state, setState] = useState({
+		first: true,
+		bio: null,
+		gender: null,
+		tags: [],
+		prefOrientation: null,
+		prefAgeMin: 18,
+		prefAgeMax: 25,
+		prefDistance: 25,
+		chips: [],
+		lat: null,
+		long: null,
+		location: null,
+	});
+
 	useEffect(() => {
 		if(props && props.location && props.location.state && props.location.state.notif) {
 			if (props.location.state.notif === true && state['first'] === false){
@@ -118,7 +133,7 @@ const Preferences = (props) => {
 				});
 			}
 		}
-	}, [ props ]);
+	}, [ props, state ]);
 
 	const distanceHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;
@@ -148,21 +163,6 @@ const Preferences = (props) => {
 			</Tooltip>
 		);
 	};
-
-	const [state, setState] = useState({
-		first: true,
-		bio: null,
-		gender: null,
-		tags: [],
-		prefOrientation: null,
-		prefAgeMin: 18,
-		prefAgeMax: 25,
-		prefDistance: 25,
-		chips: [],
-		lat: null,
-		long: null,
-		location: null,
-	});
 
 	const onError = data => console.log(data);
 

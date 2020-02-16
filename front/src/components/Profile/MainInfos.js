@@ -17,7 +17,7 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile, km }) => {
-	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images, location } = user;
+	const { uid, username, firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images, location } = user;
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
@@ -78,8 +78,8 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 			<SliderShow src={images}/>
 			<div className="main-infos valignbox">
 				<div className="mb-5">
-					<h2>{firstname}</h2>
-					<span className="f-m">{location} • {age} ans • {elo} pts</span>
+					<h2 onClick={() => console.log('username:', username, '\nuid:', uid)}>{firstname}</h2>
+					<span className="f-base">{location} • {age} ans • {elo} pts</span>
 				</div>
 				<LikeIcon/>
 			</div>

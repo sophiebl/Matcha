@@ -35,6 +35,21 @@ async function filter(arr, callback) {
 	return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail);
 }
 
+async function calculateElo(uid, ctx) {
+	return await ctx.driver.session().run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid })
+		.then(result => {
+			const stats = {};
+			result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
+			let elo = ((stats.LIKED || 0) / (stats.VISITED || 0)) + ((stats.LIKED || 0) - (stats.DISLIKED || 0)) - (((stats.BLOCKED ||0) + (stats.REPORTED || 0)) * 0.01);
+			elo = (elo == Infinity || elo == NaN || elo == undefined) ? 0 : elo;
+			const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
+			const removeDot = string => string.replace('.', '');
+			//console.log(removeDot(numberToString(elo)) || 0);
+			return 42;
+			//return removeDot(numberToString(elo)) || 0;
+		});
+}
+
 const resolvers = {
 	Query: {
 		async getReportedUsers(_, args, ctx) {
@@ -73,29 +88,65 @@ const resolvers = {
 				});
 		},
 
-		async getMatchingUsers(_, { offset = 0 }, ctx) {
+		async getMatchingUsers(_, { offset = 0, ageMin, ageMax, distance, elo }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
-			return await ctx.driver.session().run(`
+
+			let prefAgeMin = null, prefAgeMax = null, prefDistance = null, prefElo = null;
+			if (ageMin !== null && ageMin !== undefined)
+				prefAgeMin = ageMin;
+			if (ageMax !== null && ageMax !== undefined)
+				prefAgeMax = ageMax;
+			if (distance !== null && distance !== undefined)
+				prefDistance = distance;
+			if (elo !== null && elo !== undefined)
+				prefElo = elo;
+
+			const query = `
 MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User)
 WHERE NOT user.uid = me.uid
 AND user.confirmToken = "true"
+AND NOT user.banned = "true"
 AND (user.gender = me.prefOrientation OR user.gender = "non-binaire" OR me.prefOrientation = "peu-importe")
-AND user.elo >= (me.elo - 50) AND user.elo <= (me.elo + 50)
-RETURN DISTINCT user, me SKIP $offset LIMIT 10
-`, { meUid, offset })
+//AND user.age >= $prefAgeMin AND user.age <= $prefAgeMax
+//AND user.elo >= ($prefElo - 50) AND user.elo <= ($prefElo + 50)
+RETURN DISTINCT user, me SKIP $offset LIMIT 9
+`
+//.replace(/\$prefElo/g, (prefElo === null ? 'me.elo' : prefElo /*'$prefElo'*/))
+
+			return await ctx.driver.session().run(query, { meUid, offset, /*prefAge,*/ prefElo })
 				.then(async result => {
 					const records = await filter(result.records, async record => {
 						const me   = record.get('me').properties;
 						const user = record.get('user').properties;
 
+						if (prefDistance === null)
+							prefDistance = me.prefDistance;
+
+						const userElo = calculateElo(user.uid, ctx);
+						if (prefElo === null)
+						{
+							const meElo   = calculateElo(me.uid, ctx);
+							if (userElo < meElo - 50 || userElo > meElo + 50)
+							{
+								console.log('tej ' + user.username + ' (elo ' + user.elo + ' too low/high)');
+								return false;
+							}
+						} else {
+							if (userElo < prefElo)
+							{
+								console.log('tej ' + user.username + ' (elo ' + user.elo + ' too low)');
+								return false;
+							}
+						}
+
 						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
 						{
-							console.log('tej ' + user.username);
+							console.log('tej ' + user.username + ' (blocked)');
 							return false;
 						}
 						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
 						console.log((dist <= me.prefDistance ? 'keep ' + user.username : 'tej ' + user.username), '(' + Math.round(dist) + ' km)');
-						return dist <= me.prefDistance;
+						return dist <= prefDistance;
 					});
 
 					return await records.map(async record => {
@@ -128,18 +179,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 10
 
 	User: {
 		async elo({ uid	}, args, ctx) {
-			return await ctx.driver.session().run(`MATCH (:User)-[r:VISITED|LIKED|DISLIKED|BLOCKED|REPORTED]->(user:User {uid: $uid}) RETURN TYPE(r) AS type, COUNT(r) AS amount ORDER BY amount DESC`, { uid })
-				.then(result => {
-					const stats = {};
-					result.records.forEach(record => stats[record.get('type')] = record.get('amount').low);
-					let elo = ((stats.LIKED || 0) / (stats.VISITED || 0)) + ((stats.LIKED || 0) - (stats.DISLIKED || 0)) - (((stats.BLOCKED ||0) + (stats.REPORTED || 0)) * 0.01);
-					elo = (elo == Infinity || elo == NaN || elo == undefined) ? 0 : elo;
-					const numberToString = number => Number.isInteger(elo) ? (elo + '.0') : elo.toString();
-					const removeDot = string => string.replace('.', '');
-					//console.log(removeDot(numberToString(elo)) || 0);
-					return 42;
-					//return removeDot(numberToString(elo)) || 0;
-				});
+			return await calculateElo(uid, ctx);
 		},
 
 		async isConnected({ uid }, args, ctx) {

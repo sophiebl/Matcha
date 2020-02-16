@@ -19,6 +19,7 @@ const ME = gql`
 				birthdate
 				avatar
 				gender
+				username
 				firstname
 				lastname
 				elo
