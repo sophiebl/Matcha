@@ -73,7 +73,7 @@ const BrowseMobile = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			console.log(data);
+			//console.log(data);
 			dispatch({ type: 'reset', payload: data.users.shift() });
 		};
 		const onError = (error) => console.log(error);

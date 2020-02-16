@@ -15,9 +15,7 @@ const EmailVerification = withRouter(({history, ...props}) => {
 			onCompleted: data => {
 				history.push("/login");
 			},
-			onError: data => {
-				console.log(data);
-			}
+			onError: data => console.log(data),
 		}
 	);
 

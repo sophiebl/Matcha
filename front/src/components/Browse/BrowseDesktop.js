@@ -72,8 +72,8 @@ const BrowseDesktop = () => {
 	  },
 	  updateQuery: (prev, { fetchMoreResult }) => {
 		if (!fetchMoreResult) return prev;
-		console.log('prev', prev);
-		console.log('fmr', fetchMoreResult);
+		//console.log('prev', prev);
+		//console.log('fmr', fetchMoreResult);
 		return Object.assign({}, prev, {
 		  users: [/*...prev.users,*/ ...fetchMoreResult.users]
 		});
@@ -100,7 +100,7 @@ const BrowseDesktop = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			console.log(data);
+			//console.log(data);
 			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);

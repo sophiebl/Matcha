@@ -14,11 +14,11 @@ const CONNECT = gql`
 const CommonStuff = ({ user }) => {
 	const { /*loading,*/ error, data } = useSubscription(CONNECT);
 	if (error) return <span>Subscription error!</span>;
-	if (data) {
-	 console.log(data);
-	 console.log("CA MARCHE");
-	}
-	console.log("CA MARCHE PPPPPPAS");
+	//if (data) {
+	// console.log(data);
+	// console.log("CA MARCHE");
+	//}
+	//console.log("CA MARCHE PPPPPPAS");
 
 	return <>
 		<UsersState user={user}/>	

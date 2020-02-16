@@ -23,7 +23,7 @@ const BAN_USER = gql`
 
 const Report = ({ user, banUser }) => {
   const ban = (uid) => {
-	console.log('ban', uid);
+	//console.log('ban', uid);
 	banUser({
 	  variables: {
 		uid: uid,

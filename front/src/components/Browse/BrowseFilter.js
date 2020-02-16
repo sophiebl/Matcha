@@ -91,13 +91,13 @@ const BrowseFilter = ({ fetchMore }) => {
 		distance: state.prefDistance,
 		elo: state.prefPop,
 	  };
-	  console.log(vars);
+	  //console.log(vars);
 	  fetchMore({
 		variables: vars,
 		updateQuery: (prev, { fetchMoreResult }) => {
 		  if (!fetchMoreResult) return prev;
-		  console.log('prev', prev);
-		  console.log('fmr', fetchMoreResult);
+		  //console.log('prev', prev);
+		  //console.log('fmr', fetchMoreResult);
 		  return Object.assign({}, prev, {
 			users: [/*...prev.users,*/ ...fetchMoreResult.users]
 		  });

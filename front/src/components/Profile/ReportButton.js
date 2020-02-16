@@ -19,7 +19,7 @@ const BlockButton = ({ uidUser, dispatch }) => {
 	const [block] = useMutation(BLOCK_USER,
 		{
 			onCompleted: data => {
-				console.log('blocked');
+				//console.log('blocked');
 				dispatch({ type: 'dislike' });
 			},
 			onError: data => console.log(data),

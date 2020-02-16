@@ -297,7 +297,7 @@ const Preferences = (props) => {
     };
 
     const getLocation = () => {
-		console.log("getLocation");
+		//console.log("getLocation");
         if (navigator.geolocation) {
 			setClicked(true);
             navigator.geolocation.getCurrentPosition(showPosition);

@@ -20,13 +20,13 @@ const UsersState = ({user}) => {
     // console.log(userMe.me.uid   );
 	const { /*loading,*/ errorState, dataState } = useSubscription(USER_STATE_CHANGED, { variables: { uid: user.uid } });
 	if (errorState) {
-        console.log("sub error");
+        //console.log("sub error");
         return <span>Subscription error!</span>;
     }
-	if (dataState){
-		console.log("UN USER VIENT DE SE CONNECTER");
-	 	console.log(dataState);
-	}
+	//if (dataState){
+		//console.log("UN USER VIENT DE SE CONNECTER");
+	 	//console.log(dataState);
+	//}
 
     // console.log("NE PASSE PAS PAR LA SUBSCRIPTION");
 
