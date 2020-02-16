@@ -49,7 +49,6 @@ const UserPreview = ({ user, dispatch, userMe }) => {
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<UsersState user={user} dispatch={dispatch} userMe={userMe}/>
 			</div>
-			<Nav />
 		</div>
 	);
 }
