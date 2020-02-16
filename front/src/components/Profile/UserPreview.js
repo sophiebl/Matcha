@@ -39,7 +39,7 @@ const UserPreview = ({ user, dispatch, userMe }) => {
 		<div>
 			<div className="infos-container infos-container-other-user" key={uid}>
 				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
-                <Link to={"/UserProfileDesktop/" + uid} className="link-to-profile">
+                <Link to={"/user/" + uid} className="link-to-profile">
                     Voir son profil
                 </Link>
 				<div className="tag-container">

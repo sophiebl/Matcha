@@ -5,10 +5,8 @@ import UserProfile from '../Profile/UserProfile';
 import Nav from "../Nav/Nav";
 import './Browse.scss'
 
-import cookie from 'react-cookies';
-
 const GET_USERS = gql`
-query User($username: String) {
+query bruh($offset: Int, $ageMin: Int, $ageMax: Int, $distance: Int, $elo: Int){
 	me: me{
 		uid
 		username
@@ -18,7 +16,7 @@ query User($username: String) {
 		location
 	}
 	
-	users: getMatchingUsers {
+	users: getMatchingUsers(offset: $offset, ageMin: $ageMin, ageMax: $ageMax, distance: $distance, elo: $elo) {
 		uid
 		bio
 		gender
@@ -49,41 +47,16 @@ query User($username: String) {
 		location
     }
 
-	firstUser: User(username: $username) {
-		uid
-		bio
-		gender
-		firstname
-		lastname
-		birthdate
-		avatar
-		elo
-		likesCount
-		prefDistance
-		tags {
-			uid
-			name
-		}
-		likedUsers {
-			uid
-			username
-		}
-		images {
-			uid
-			src
-		}
-		isConnected
-		lastVisite
-		lat
-		long
-		location
-	}
 }
 `;
 
 const BrowseMobile = () => {
-	const firstUsername = cookie.load('firstUsername');
-	const { loading, error, data } = useQuery(GET_USERS, { variables: {username: firstUsername} });
+	const { loading, error, data } = useQuery(GET_USERS, {
+		variables: {
+		  offset: 0,
+		},
+	});
+
 	function reducer(state, action) {
 		switch (action.type) {
 			case 'like':
@@ -91,7 +64,6 @@ const BrowseMobile = () => {
 			case 'dislike':
 				return { user: data.users.shift() };
 			case 'reset':
-				cookie.remove('firstUsername');
 				return { user: action.payload };
 			default:
 				throw new Error();
@@ -101,8 +73,7 @@ const BrowseMobile = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
-			if (data.firstUser.length > 0)
-				data.users.unshift(data.firstUser[0]);
+			console.log(data);
 			dispatch({ type: 'reset', payload: data.users.shift() });
 		};
 		const onError = (error) => console.log(error);

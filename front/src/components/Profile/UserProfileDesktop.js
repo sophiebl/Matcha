@@ -23,6 +23,7 @@ const GET_USER = gql`
     query User($uid: ID) {	
         me: me{
             uid
+			username
             firstname
             lat
             long
@@ -33,6 +34,7 @@ const GET_USER = gql`
             uid
             bio
             gender
+			username
             firstname
             lastname
             birthdate

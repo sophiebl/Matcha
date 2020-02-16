@@ -32,7 +32,7 @@ const GET_MY_ACTIONS = gql`
 
 const div = (users, history) => <>
 	{ users.map(({ uid, username }) => (
-		<div className="action" key={uid} onClick={() => history.push("/browse/" + username)}>
+		<div className="action" key={uid} onClick={() => history.push("/user/" + uid)}>
 			{username}
 		</div>
 	))}
