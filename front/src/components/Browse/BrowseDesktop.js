@@ -14,6 +14,7 @@ const GET_USERS = gql`
 query bruh($offset: Int, $ageMin: Int, $ageMax: Int, $distance: Int, $elo: Int){
 	me: me{
 		uid
+		username
 		firstname
 		lat
 		long
@@ -24,6 +25,7 @@ query bruh($offset: Int, $ageMin: Int, $ageMax: Int, $distance: Int, $elo: Int){
 		uid
 		bio
 		gender
+		username
 		firstname
 		lastname
 		birthdate
