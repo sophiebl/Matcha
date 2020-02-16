@@ -96,6 +96,7 @@ const BrowseDesktop = () => {
 
 	useEffect(() => {
 		const onCompleted = (data) => {
+			console.log(data);
 			dispatch({ type: 'reset', payload: data.users });
 		};
 		const onError = (error) => console.log(error);
@@ -127,7 +128,6 @@ const BrowseDesktop = () => {
 				) : (
 					<>
 						<BrowseFilter fetchMore={fetchMore}/>
-						{/*console.log(data)*/}
 						<button onClick={onClick}>Fetch more</button>
 						<div className="browse">
 							{renderedUsersProfiles}

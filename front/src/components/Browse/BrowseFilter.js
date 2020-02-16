@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 
-import Chips from 'react-chips';
-
 import Slider, { Range } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
 import './Browse.scss'
-
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
 
 const BrowseFilter = ({ fetchMore }) => {
     const wrapperStyle = { width: '80%', margin: 30 };
@@ -111,7 +106,6 @@ const BrowseFilter = ({ fetchMore }) => {
 
 	}
 
-    //return <form id="form-browse">
     return <div id="form-browse">
         <div>
             <div style={wrapperStyle}>
@@ -202,7 +196,6 @@ const BrowseFilter = ({ fetchMore }) => {
         </div>
 		<button onClick={onClick}>Filtrer</button>
 	</div>
-    {/*</form>*/}
 }
 
 export default BrowseFilter;
