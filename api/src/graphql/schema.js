@@ -298,6 +298,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				else console.log('Email sent: ' + info.response);
 			});
 
+			
 			return await ctx.driver.session().run(`MATCH (u:User {email: $email}) SET u.resetToken = $resetToken RETURN u`, { email, resetToken })
 				.then(result => {
 					if (result.records.length < 1)
