@@ -9,6 +9,8 @@ import { useMutation } from '@apollo/react-hooks';
 import Banner, { useBanner } from '../Banner/Banner';
 import DatePicker from 'react-date-picker';
 
+import { store } from 'react-notifications-component';
+
 import '../Login/Login.scss'
 
 const SIGNUP = gql`
@@ -17,7 +19,7 @@ const SIGNUP = gql`
 	}
 `;
 
-const Signup = withRouter(({history, ...props}) => {
+const Signup = withRouter(({ history, ...props }) => {
 	const [isClicked, setClicked] = useState(false);
 	const [isLocation, setLocation] = useState({
 		lat: null,
@@ -25,7 +27,7 @@ const Signup = withRouter(({history, ...props}) => {
 		location: null,
 	});
 	const [isBirthDate, setBirthDate] = useState(new Date());
-	  
+
 	const onChangeBirthDate = event => {
 		setBirthDate(
 			event
@@ -33,93 +35,137 @@ const Signup = withRouter(({history, ...props}) => {
 	}
 
 	const showPosition = async position => {
-        const obj = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lon=${position.coords.longitude}&lat=${position.coords.latitude}`
-        );
+		const obj = await fetch(
+			`https://nominatim.openstreetmap.org/reverse?format=json&lon=${position.coords.longitude}&lat=${position.coords.latitude}`
+		);
 		const data = await obj.json();
-        let location = '';
-        if (data.address.city_district)
-            location = data.address.city_district;
-        else
+		let location = '';
+		if (data.address.city_district)
+			location = data.address.city_district;
+		else
 			location = data.address.city;
-		setLocation({...isLocation,
+		setLocation({
+			...isLocation,
 			lat: data.lat,
 			long: data.lon,
 			location: location,
 		});
-    };
+	};
 	const [showBanner, toggleBanner] = useBanner();
 	const { register, handleSubmit /*, errors*/ } = useForm();
 	const [signup] = useMutation(SIGNUP,
 		{
-		onCompleted: data => {
-			// localStorage.setItem('token', data.signup);
-			toggleBanner();
-		},
-		onError: data => {
-			console.log(data);
-		}
-	});
-	const onSubmit = inputs => {
-		signup({
-			variables: {
-			firstname: inputs.firstname,
-			lastname: inputs.lastname,
-			email: inputs.email,
-			username: inputs.username,
-			password: inputs.password,
-			lat: isLocation.lat,
-			long: isLocation.long,
-			location: isLocation.location,
-			birthdate: isBirthDate.toString(),
+			onCompleted: data => {
+				// localStorage.setItem('token', data.signup);
+				toggleBanner();
+			},
+			onError: data => {
+				store.addNotification({
+					title: "Votre mot de passe n'est pas assez sécurisé",
+					message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				});
+				console.log(data);
 			}
 		});
+
+	const checkPwd = pwd => {
+		if (pwd.length > 5) {
+			if (pwd.match(/.*[0-9]+.*/) !== null) {
+				if (pwd.match(/.*[A-Z]+.*/) !== null) {
+					if (pwd.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null)
+						return true;
+					else
+						return false;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	const onSubmit = inputs => {
+		var check = checkPwd(inputs.password);
+		if (check) {
+			signup({
+				variables: {
+					firstname: inputs.firstname,
+					lastname: inputs.lastname,
+					email: inputs.email,
+					username: inputs.username,
+					password: inputs.password,
+					lat: isLocation.lat,
+					long: isLocation.long,
+					location: isLocation.location,
+					birthdate: isBirthDate.toString(),
+				}
+			});
+		} else {
+			store.addNotification({
+				title: "Votre mot de passe n'est pas assez sécurisé",
+				message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
+				type: 'danger',
+				container: 'bottom-left',
+				animationIn: ["animated", "fadeIn"],
+				animationOut: ["animated", "fadeOut"],
+				dismiss: { duration: 3000 },
+			})
+		}
 	};
 
-    const getLocation = () => {
-        if (navigator.geolocation) {
+	const getLocation = () => {
+		if (navigator.geolocation) {
 			setClicked(true);
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
+			navigator.geolocation.getCurrentPosition(showPosition);
+		} else {
+			console.log("Geolocation is not supported by this browser.");
+		}
 	}
 
 	const [isFirst, setFirst] = useState(true);
 	useEffect(() => {
 		if (isFirst) {
-		setFirst(false);
-		fetch("https://api.ipify.org/?format=json")
-			.then(res => res.json())
-			.then(data => {
-			  fetch(`http://ip-api.com/json/${data.ip}`)
+			setFirst(false);
+			fetch("https://api.ipify.org/?format=json")
 				.then(res => res.json())
 				.then(data => {
-					let lat = parseFloat(data.lat).toString();
-					let long = parseFloat(data.lon).toString();
-					let city = data.city;
-				  	setLocation({...isLocation,
-						lat: lat,
-						long: long,
-						location: city,
-					});
+					fetch(`http://ip-api.com/json/${data.ip}`)
+						.then(res => res.json())
+						.then(data => {
+							let lat = parseFloat(data.lat).toString();
+							let long = parseFloat(data.lon).toString();
+							let city = data.city;
+							setLocation({
+								...isLocation,
+								lat: lat,
+								long: long,
+								location: city,
+							});
+						})
+						.catch(e => console.log(e));
 				})
 				.catch(e => console.log(e));
-			})
-			.catch(e => console.log(e));
 		}
 	}, [isFirst, setFirst, isLocation, setLocation]);
-	
+
 	return (
 		<div className="bg-desc">
 			<form method="POST" id="signup-banner" className="signup" onSubmit={handleSubmit(onSubmit)}>
 				<h1>Sign up</h1>
-				<input className="input-submit" type="text" name="firstname" placeholder="Prénom" ref={register({ required: true })} required/>
-				<input className="input-submit" type="text" name="lastname" placeholder="Nom" ref={register({ required: true })}/>
-				<input className="input-submit" type="text" name="username" placeholder="Username" ref={register({ required: true })} required/>
-				<input className="input-submit" type="text" name="email" placeholder="Email" ref={register({ required: true })} required/>
-				<input className="input-submit" type="password" name="password" placeholder="Mot de passe" ref={register({ required: true })} required/>
-				<input className="input-submit" type="password" name="password-confirmation" placeholder="Vérification du mot de passe" ref={register({ required: true })}/>
+				<input className="input-submit" type="text" name="firstname" placeholder="Prénom" ref={register({ required: true })} required />
+				<input className="input-submit" type="text" name="lastname" placeholder="Nom" ref={register({ required: true })} />
+				<input className="input-submit" type="text" name="username" placeholder="Username" ref={register({ required: true })} required />
+				<input className="input-submit" type="text" name="email" placeholder="Email" ref={register({ required: true })} required />
+				<input className="input-submit" type="password" name="password" placeholder="Mot de passe" ref={register({ required: true })} required />
+				<input className="input-submit" type="password" name="password-confirmation" placeholder="Vérification du mot de passe" ref={register({ required: true })} />
 				<DatePicker className="react-calendar" onChange={onChangeBirthDate} value={isBirthDate} />
 				<div>
 					<p>Localisation: </p>

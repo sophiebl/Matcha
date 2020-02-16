@@ -204,6 +204,29 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 
 		async signup (_, { firstname, lastname, username, email, password, lat, long, location, birthdate}, context) {
 			const uid = uniqid('user-');
+			const checkPwd = password => {
+				console.log("checkPwd")
+				if (password.length > 5) {
+					if (password.match(/.*[0-9]+.*/) !== null) {
+						console.log("checkPwd")
+						console.log("check chiffre")
+						if (password.match(/.*[A-Z]+.*/) !== null) {
+							if (password.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null)
+								return true;
+							else
+								return false;
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			var check = checkPwd(password);
+			if(!check){return new Error('wrong password')}
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
 			const url = `http://localhost:3000/confirm/${confirmToken}`;
