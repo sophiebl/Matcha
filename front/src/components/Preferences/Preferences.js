@@ -168,7 +168,15 @@ const Preferences = (props) => {
 
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
 		onCompleted: data => {
-			alert('Profil sauvegarde !');
+			store.addNotification({
+				title: "Votre profil est sauvergardé",
+				message: "Vous commencer à matcher!",
+				type: 'success',
+				container: 'bottom-left',
+				animationIn: ["animated", "fadeIn"],
+				animationOut: ["animated", "fadeOut"],
+				dismiss: { duration: 3000 },
+			});
 			window.location = "/preferences";
 		},
 		onError,
@@ -176,7 +184,15 @@ const Preferences = (props) => {
 
 	const [editPreferencesWithLoc] = useMutation(EDIT_PREFERENCES_WITH_LOC, {
 		onCompleted: data => {
-			alert('Profil sauvegarde !');
+			store.addNotification({
+				title: "Votre profil est sauvergardé",
+				message: "Vous commencer à matcher!",
+				type: 'success',
+				container: 'bottom-left',
+				animationIn: ["animated", "fadeIn"],
+				animationOut: ["animated", "fadeOut"],
+				dismiss: { duration: 3000 },
+			});
 			window.location = "/preferences";
 		},
 		onError,
@@ -281,14 +297,15 @@ const Preferences = (props) => {
     };
 
     const getLocation = () => {
+		console.log("getLocation");
         if (navigator.geolocation) {
 			setClicked(true);
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
-            //setClicked(false);
+            setClicked(false);
             console.log("Geolocation is not supported by this browser.");
         }
-    }
+	}
 
 	const onChipsChange = chips => {
 		const added = chips.filter(x => !state['chips'].includes(x))[0];	

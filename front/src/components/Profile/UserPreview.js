@@ -3,7 +3,6 @@ import React from 'react';
 import MainInfos from './MainInfos';
 import LikeDislike from './LikeDislike';
 import Tag from './Tag';
-import Nav from "../Nav/Nav";
 import { Link } from "react-router-dom";
 import './Profile.scss'
 
