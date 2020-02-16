@@ -105,7 +105,7 @@ const resolvers = {
 MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User)
 WHERE NOT user.uid = me.uid
 AND user.confirmToken = "true"
-AND NOT user.banned = "true"
+AND user.banned IS NULL
 AND (user.gender = me.prefOrientation OR user.gender = "non-binaire" OR me.prefOrientation = "peu-importe")
 //AND user.age >= $prefAgeMin AND user.age <= $prefAgeMax
 //AND user.elo >= ($prefElo - 50) AND user.elo <= ($prefElo + 50)
@@ -137,6 +137,15 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 								console.log('tej ' + user.username + ' (elo ' + user.elo + ' too low)');
 								return false;
 							}
+						}
+
+						const userAge = (Date.now() - Date.parse(user.birthdate))/(3600*24*365*1000);
+						if (prefAgeMin === null) prefAgeMin = me.prefAgeMin;
+						if (prefAgeMax === null) prefAgeMax = me.prefAgeMax;
+						if (userAge < prefAgeMin || userAge > prefAgeMax)
+						{
+							console.log('tej ' + user.username + ' (bad age)');
+							return false;
 						}
 
 						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
@@ -299,8 +308,6 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 						return new Error('EmailNotConfirmed');
 					if (user.banned == true)
 						return new Error('UserBanned');
-					//if (!ctx.connectedUsers.includes(user.uid))
-					//	ctx.connectedUsers.push(user.uid);
 					ctx.pubsub.publish('USER_STATE_CHANGED', { user: user, state: 1 });
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});	
