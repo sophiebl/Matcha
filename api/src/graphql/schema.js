@@ -105,6 +105,7 @@ const resolvers = {
 MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User)
 WHERE NOT user.uid = me.uid
 AND user.confirmToken = "true"
+AND NOT user.banned = "true"
 AND (user.gender = me.prefOrientation OR user.gender = "non-binaire" OR me.prefOrientation = "peu-importe")
 //AND user.age >= $prefAgeMin AND user.age <= $prefAgeMax
 //AND user.elo >= ($prefElo - 50) AND user.elo <= ($prefElo + 50)
