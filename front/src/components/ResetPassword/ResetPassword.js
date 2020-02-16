@@ -47,7 +47,7 @@ const ResetPassword = withRouter(({history, ...props}) => {
 		if (pwd.length > 5) {
 			if (pwd.match(/.*[0-9]+.*/) !== null) {
 				if (pwd.match(/.*[A-Z]+.*/) !== null) {
-					if (pwd.match(/.*[!@#-_$%^&*(){}[]:;<,>.?\/\\~`]+.*/) !== null)
+					if (pwd.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null) // eslint-disable-line no-useless-escape
 						return true;
 					else
 						return false;
