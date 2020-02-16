@@ -73,16 +73,30 @@ const resolvers = {
 				});
 		},
 
-		async getMatchingUsers(_, { offset = 0 }, ctx) {
+		async getMatchingUsers(_, { offset = 0, ageMin, ageMax, distance, elo }, ctx) {
 			const meUid = ctx.cypherParams.currentUserUid;
-			return await ctx.driver.session().run(`
+
+			let prefAgeMin = null, prefAgeMax = null, prefDistance = null, prefElo = null;
+			if (ageMin !== null && ageMin !== undefined)
+				prefAgeMin = ageMin;
+			if (ageMax !== null && ageMax !== undefined)
+				prefAgeMax = ageMax;
+			if (distance !== null && distance !== undefined)
+				prefDistance = distance;
+			if (elo !== null && elo !== undefined)
+				prefElo = elo;
+
+			const query = `
 MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User)
 WHERE NOT user.uid = me.uid
 AND user.confirmToken = "true"
 AND (user.gender = me.prefOrientation OR user.gender = "non-binaire" OR me.prefOrientation = "peu-importe")
-AND user.elo >= (me.elo - 50) AND user.elo <= (me.elo + 50)
+AND user.elo >= ($prefElo - 50) AND user.elo <= ($prefElo + 50)
 RETURN DISTINCT user, me SKIP $offset LIMIT 10
-`, { meUid, offset })
+`
+.replace('$prefElo', (prefElo === null ? 'me.elo' : prefElo))
+
+			return await ctx.driver.session().run(query, { meUid, offset, /*prefAge,*/ prefElo })
 				.then(async result => {
 					const records = await filter(result.records, async record => {
 						const me   = record.get('me').properties;
@@ -90,12 +104,12 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 10
 
 						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
 						{
-							console.log('tej ' + user.username);
+							console.log('tej ' + user.username + ' (blocked)');
 							return false;
 						}
 						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
 						console.log((dist <= me.prefDistance ? 'keep ' + user.username : 'tej ' + user.username), '(' + Math.round(dist) + ' km)');
-						return dist <= me.prefDistance;
+						return dist <= prefDistance;
 					});
 
 					return await records.map(async record => {

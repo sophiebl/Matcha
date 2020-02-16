@@ -10,24 +10,15 @@ import './Browse.scss'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 
-const BrowseFilter = () => {
+const BrowseFilter = ({ fetchMore }) => {
     const wrapperStyle = { width: '80%', margin: 30 };
     const Handle = Slider.Handle;
 
     const [state, setState] = useState({
-		first: true,
-		bio: null,
-		gender: null,
-		tags: [],
-		prefOrientation: null,
 		prefAgeMin: 18,
 		prefAgeMax: 25,
 		prefDistance: 25,
 		prefPop: 25,
-		chips: [],
-		lat: null,
-		long: null,
-		location: null,
 	});
 
 	const distanceHandle = (props) => {
@@ -44,7 +35,7 @@ const BrowseFilter = () => {
 			</Tooltip>
 		);
     };
-    
+
 	const ageHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;
 		return (
@@ -97,7 +88,31 @@ const BrowseFilter = () => {
 		});
 	};
 
-    return <form id="form-browse">
+	const onClick = () => {
+	  const vars = {
+		offset: 0,
+		ageMin: state.prefAgeMin,
+		ageMax: state.prefAgeMax,
+		distance: state.prefDistance,
+		elo: state.prefPop,
+	  };
+	  console.log(vars);
+	  fetchMore({
+		variables: vars,
+		updateQuery: (prev, { fetchMoreResult }) => {
+		  if (!fetchMoreResult) return prev;
+		  console.log('prev', prev);
+		  console.log('fmr', fetchMoreResult);
+		  return Object.assign({}, prev, {
+			users: [/*...prev.users,*/ ...fetchMoreResult.users]
+		  });
+		}
+	  })
+
+	}
+
+    //return <form id="form-browse">
+    return <div id="form-browse">
         <div>
             <div style={wrapperStyle}>
 				<p className="txt-left f-m">Age</p>
@@ -185,11 +200,9 @@ const BrowseFilter = () => {
 				/>
 			</div>
         </div>
-        <div>
-            <label>Tag</label>
-            <input></input>
-        </div>
-    </form>
+		<button onClick={onClick}>Filtrer</button>
+	</div>
+    {/*</form>*/}
 }
 
 export default BrowseFilter;
