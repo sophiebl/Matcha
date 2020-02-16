@@ -91,10 +91,12 @@ MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User)
 WHERE NOT user.uid = me.uid
 AND user.confirmToken = "true"
 AND (user.gender = me.prefOrientation OR user.gender = "non-binaire" OR me.prefOrientation = "peu-importe")
-AND user.elo >= ($prefElo - 50) AND user.elo <= ($prefElo + 50)
-RETURN DISTINCT user, me SKIP $offset LIMIT 10
+AND (user.elo >= ($prefElo - 50) AND user.elo <= ($prefElo + 50))
+RETURN DISTINCT user, me SKIP $offset LIMIT 9
 `
-.replace('$prefElo', (prefElo === null ? 'me.elo' : prefElo))
+.replace(/\$prefElo/g, (prefElo === null ? 'me.elo' : '$prefElo'))
+
+console.log(query);
 
 			return await ctx.driver.session().run(query, { meUid, offset, /*prefAge,*/ prefElo })
 				.then(async result => {
