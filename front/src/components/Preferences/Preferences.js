@@ -133,7 +133,7 @@ const Preferences = (props) => {
 				});
 			}
 		}
-	}, []);
+	}, []); //eslint-disable-line react-hooks/exhaustive-deps
 
 	const distanceHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;

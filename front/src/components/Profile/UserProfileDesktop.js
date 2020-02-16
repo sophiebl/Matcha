@@ -137,7 +137,7 @@ const UserProfileDesktop = ({ match }) => {
 				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers}  km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
 				<Bio bio={bio} />
 				<div className="tag-container">
-					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
+					{ tags.map((tag, i) => <Tag key={i} tagName={tag.name} />) }
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<BlockButton uidUser={uid} dispatch={dispatch} />

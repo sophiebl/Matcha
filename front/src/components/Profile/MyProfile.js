@@ -52,7 +52,7 @@ const MyProfile = () => {
 				<MainInfos user={data.me} isMyProfile={true} userMe={images} meLocation={location} />
 				<Bio content={bio} />
 				<div className="tag-container">
-					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
+					{ tags.map((tag, i) => <Tag key={i} tagName={tag.name} />) }
 				</div>
 				<div className="logout-container">
         			<Link to="/logout" className="color-r"><FontAwesomeIcon size="1x" icon="walking" />   Logout  <FontAwesomeIcon size="1x" icon="walking" /></Link>

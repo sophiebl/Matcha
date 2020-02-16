@@ -43,7 +43,7 @@ const UserPreview = ({ user, dispatch, userMe }) => {
                     Voir son profil
                 </Link>
 				<div className="tag-container">
-					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }
+					{ tags.map((tag, i) => <Tag key={i} tagName={tag.name} />) }
 				</div>
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<UsersState user={user} dispatch={dispatch} userMe={userMe}/>
