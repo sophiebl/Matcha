@@ -214,7 +214,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				if (password.length > 5) {
 					if (password.match(/.*[0-9]+.*/) !== null) {
 						if (password.match(/.*[A-Z]+.*/) !== null) {
-							if (password.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null)
+							if (password.match(/.*[!@#-_$%^&*\(\){}\[\]:;<,>.?\/\\~`]+.*/) !== null) // eslint-disable-line no-useless-escape
 								return true;
 							else
 								return false;
