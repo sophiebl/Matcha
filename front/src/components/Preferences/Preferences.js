@@ -169,6 +169,7 @@ const Preferences = (props) => {
 	const [editPreferences] = useMutation(EDIT_PREFERENCES, {
 		onCompleted: data => {
 			alert('Profil sauvegarde !');
+			window.location = "/preferences";
 		},
 		onError,
 	});
@@ -176,6 +177,7 @@ const Preferences = (props) => {
 	const [editPreferencesWithLoc] = useMutation(EDIT_PREFERENCES_WITH_LOC, {
 		onCompleted: data => {
 			alert('Profil sauvegarde !');
+			window.location = "/preferences";
 		},
 		onError,
 	});
