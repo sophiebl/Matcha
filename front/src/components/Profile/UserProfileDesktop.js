@@ -26,6 +26,7 @@ const GET_USER = gql`
             firstname
             lat
             long
+			location
         }
 
         User(uid: $uid) {
@@ -55,6 +56,7 @@ const GET_USER = gql`
             lastVisite
             lat
             long
+			location
         }
     }
 `;
@@ -99,7 +101,7 @@ const UserProfileDesktop = ({ match }) => {
 	if (error) return <p>Error </p>;
 
     const user = data.User[0];
-    const userMe = data.me;
+	const userMe = data.me;
 
     const { uid, bio, tags, likedUsers, lat, long } = user;
 
@@ -130,7 +132,7 @@ const UserProfileDesktop = ({ match }) => {
 		return (
 		<div>
 			<div className="infos-container" key={uid}>
-				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers} km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
+				<MainInfos user={user} isMyProfile={false} likedUsers={likedUsers}  km={getDistanceBetweenUsers(latMe, longMe, latUser, longUser)}/>
 				<Bio bio={bio} />
 				<div className="tag-container">
 					{ tags.map(tag => <Tag key={tag.uid} tagName={tag.name} />) }

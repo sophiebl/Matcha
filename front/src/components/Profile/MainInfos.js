@@ -17,7 +17,7 @@ const USER_STATE_CHANGED = gql`
 `;
 
 const MainInfos = ({ user, isMyProfile, km }) => {
-	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images } = user;
+	const { firstname, birthdate, elo, likesCount, likedUsers, lastVisite, images, location } = user;
 
 	var kmArrondi = km*100;
 	kmArrondi = Math.round(kmArrondi);
@@ -79,7 +79,7 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 			<div className="main-infos valign50">
 				<div className="mb-5">
 					<h2>{firstname}</h2>
-					<span className="f-base">Paris • {age} ans • {elo} pts</span>
+					<span className="f-base">{location} • {age} ans • {elo} pts</span>
 				</div>
 				<LikeIcon/>
 			</div>

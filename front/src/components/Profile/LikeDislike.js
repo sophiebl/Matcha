@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 
 import { getCurrentUid } from '../../Helpers';
+import { store } from 'react-notifications-component';
 
 const LIKE_USER = gql`
 	mutation likeUser($uid: ID!) {
@@ -22,7 +23,17 @@ const LikeDislike = ({ uidUser, likedUsers, dispatch }) => {
 	const [like] = useMutation(LIKE_USER,
 		{
 			onCompleted: data => dispatch({ type: 'like' }),
-			onError: data => console.log(data),
+			onError: data => {
+				store.addNotification({
+					title: "Utilisateur bloqué",
+					message: "Vous ne pouvez pas liker un utilisateur blocké",
+					type: 'danger',
+					container: 'bottom-left',
+					animationIn: ["animated", "fadeIn"],
+					animationOut: ["animated", "fadeOut"],
+					dismiss: { duration: 3000 },
+				})
+			}
 		}
 	);
 
