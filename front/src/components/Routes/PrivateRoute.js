@@ -82,22 +82,17 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 	if (error) return <Redirect to={{ pathname: '/login'}} />;
 	const redir = (!data || !data.me || data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
 
-	return <Route {...rest} render={props => {
-		alert("PRivate route")
-		return localStorage.getItem('token') ? (
+	return <Route {...rest} render={props => 
+		localStorage.getItem('token') ? (
 			!redir ? (
-				console.log("!REDIR"),
 				<Component {...props} />
 			) : (
-				console.log("REDIR"),
 				(location.pathname === "/preferences" || location.pathname === "/logout") ? <Component {...props} /> : <Redirect to={{ pathname: '/preferences', state: { notif: true } }} />
 			)
 		) : (
-			console.log("PAS DE LOCAL STORAGE"),
 			<Redirect to={{ pathname: '/login', state: { from: props.location } }} />
 		)
-	}} />
-
+	} />
 
 };
 
