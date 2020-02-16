@@ -56,20 +56,40 @@ const Signup = withRouter(({ history, ...props }) => {
 	const [signup] = useMutation(SIGNUP,
 		{
 			onCompleted: data => {
-				// localStorage.setItem('token', data.signup);
 				toggleBanner();
 			},
 			onError: data => {
+				const err = data.message.split(':')[1].trim();
+				if (err === "WrongPassword")
+				  store.addNotification({
+				    title: "Votre mot de passe n'est pas assez sécurisé",
+				    message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
+				    type: 'danger',
+				    container: 'bottom-left',
+				    animationIn: ["animated", "fadeIn"],
+				    animationOut: ["animated", "fadeOut"],
+				    dismiss: { duration: 3000 },
+				  });
+				else if (err === "UsernameOrMailAlreadyExists")
 				store.addNotification({
-					title: "Votre mot de passe n'est pas assez sécurisé",
-					message: "Votre mot de passe doit contenir au moins 1 chiffre, 1 majuscule et 1 caractere special et au moins 5 caracteres",
-					type: 'danger',
-					container: 'bottom-left',
-					animationIn: ["animated", "fadeIn"],
-					animationOut: ["animated", "fadeOut"],
-					dismiss: { duration: 3000 },
-				});
-				console.log(data);
+				    title: "Username ou Mail deja utilise",
+				    message: "Merci d'utiliser un autre username ou mail",
+				    type: 'danger',
+				    container: 'bottom-left',
+				    animationIn: ["animated", "fadeIn"],
+				    animationOut: ["animated", "fadeOut"],
+				    dismiss: { duration: 3000 },
+				  });
+			  else
+				store.addNotification({
+				    title: "Erreur",
+				    message: "Une erreur s'est produite",
+				    type: 'danger',
+				    container: 'bottom-left',
+				    animationIn: ["animated", "fadeIn"],
+				    animationOut: ["animated", "fadeOut"],
+				    dismiss: { duration: 3000 },
+				  });
 			}
 		});
 
