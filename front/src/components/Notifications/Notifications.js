@@ -7,6 +7,8 @@ import { useQuery} from '@apollo/react-hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Nav from "../Nav/Nav";
 
+import './Notifications.scss'
+
 const GET_NOTIFS = gql`
 	query {
 	  me {
@@ -43,7 +45,7 @@ const Notifications = () => {
 
   return (
 	  	<>
-			<div>
+			<div className="notifications-header">
 				<a href="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></a>
 				<h2>Notifications</h2>
 				{ notifs.map((notif, index) => <Notification key={index} notif={notif} last={index === last}/>) }
