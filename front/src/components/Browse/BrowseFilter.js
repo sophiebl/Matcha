@@ -168,7 +168,7 @@ const BrowseFilter = ({ fetchMore }) => {
         <div>
             <div style={wrapperStyle}>
 				<p className="txt-left f-m">Popularité</p>
-				<Slider min={5} max={200} defaultValue={state['prefPop']} handle={popularityHandle} step={5} onChange={onSliderPopChange}
+				<Slider min={5} max={700} defaultValue={state['prefPop']} handle={popularityHandle} step={5} onChange={onSliderPopChange}
 					railStyle={{
 						height: 10,
 					}}
