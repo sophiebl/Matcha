@@ -185,3 +185,29 @@ a {
 .notif{
   z-index: 420000 !important;
 }
+
+.get-loc {
+  text-align: center;
+  vertical-align: baseline;
+  width: 49%;
+  font-family: 'Open Sans', sans-serif;
+  color: #2196F3;
+  margin: 10px auto;
+  padding: 15px 10px;
+  border: 2px solid #2196F3;
+  border-radius: 3px;
+  color: #0389f2;
+  background-color: transparent;
+}
+
+.localisation{
+  display: inline-block;
+  vertical-align: baseline;
+  width: 49%;
+  font-family: 'Open Sans', sans-serif;
+  color: #7b7b7b;
+  font-size: 1em;
+  text-align: left;
+  margin: 10px auto;
+  padding: 5px 10px;
+}

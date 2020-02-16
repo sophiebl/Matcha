@@ -41,7 +41,18 @@ h2{
   font-size: 1em;
 }
 
+.upload-image-container {
+  position: relative;
+  top: 0;
+  width: 265px;
+  margin: 0 auto;
+  height: 100px;
+}
+
 .label-file {
+  position: absolute;
+  top: 0;
+  left: 25%;
   cursor: pointer;
   display: inline-block;
   border: 2px solid #2196F3;
@@ -57,10 +68,13 @@ h2{
 }
 
 .input-file {
-  position: relative;
-  top: -43px;
+  position: absolute;
+  top: 0;
+  left: 25%;
   z-index: 100;
   opacity: 0;
+  width: 150px;
+  height: 100px;
 }
 
 @media (max-width: $tabletLandscape) { 

@@ -26,6 +26,9 @@ Browse
   .browse {
     flex-wrap: wrap;
     justify-content: center;
+    max-width: 80%;
+    margin: 0 auto;
+    margin-bottom: 80px;
   }
   .browse > div {
     width: 400px;
