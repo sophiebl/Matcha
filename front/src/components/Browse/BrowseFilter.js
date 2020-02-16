@@ -194,7 +194,9 @@ const BrowseFilter = ({ fetchMore }) => {
 				/>
 			</div>
         </div>
-		<button onClick={onClick}>Filtrer</button>
+		<div className="filter-button-container">
+			<button onClick={onClick} className="filter-submit">Appliquer</button>
+		</div>
 	</div>
 }
 

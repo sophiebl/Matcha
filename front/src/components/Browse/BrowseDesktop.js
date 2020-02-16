@@ -132,10 +132,10 @@ const BrowseDesktop = () => {
 				) : (
 					<>
 						<BrowseFilter fetchMore={fetchMore}/>
-						<button onClick={onClick}>Fetch more</button>
 						<div className="browse">
 							{renderedUsersProfiles}
 						</div>
+						<button className="button-submit fetch-more"onClick={onClick}>Fetch more</button>
 					</>
 				)
 		}
