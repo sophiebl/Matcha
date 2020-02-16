@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import faker from 'faker';
 import uniqid from 'uniqid';
 import fetch from 'node-fetch';
+const Fakerator = require("fakerator");
 
 import crypto from 'crypto'
 
@@ -12,7 +13,8 @@ const session = driver.session();
 
 
 /* -----[ Faker config ]----- */
-faker.locale = 'fr';
+faker.locale = 'en';
+const fakerator = Fakerator("en-EN");
 //faker.seed(42);
 
 /* -----[ Queries ]----- */
@@ -26,7 +28,7 @@ CREATE (:User {
   uid: $uid,
   username: $username,
   firstname: $firstname,
-  lastname: '{{name.lastName}}',
+  lastname: $lastname,
   email: '{{internet.email}}',
   password: $hash,
   birthdate: $birthdate,
@@ -118,18 +120,19 @@ async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
 	const uid = uniqid('user-');
 	const gender = faker.random.arrayElement(['homme', 'femme']);
-	const firstname = faker.name.firstName(gender === 'homme' ? 'man' : 'woman');
+	const firstname = (gender === 'homme' ? fakerator.names.firstNameM() : fakerator.names.firstNameF()).replace('\'"', '').trim();
+	const lastname = fakerator.names.lastName().replace('\'"', '').trim();
 	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
 	const username = firstname + i;
 	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
 
 	// 50 43
 	//const lat = faker.address.latitude();
-	const lat = faker.random.number({min: 43, max: 50});
+	const lat = faker.random.number({min: 47, max: 49});
 
 	// -3 8
 	//const long = faker.address.longitude();
-	const long = faker.random.number({min: -3, max: 8});
+	const long = faker.random.number({min: 1, max: 3});
 
 	const location = faker.address.city();
 	const elo = faker.random.number({min: 0, max: 100});
@@ -140,8 +143,8 @@ async function users(amount = 1) {
 	const avatarUid = uniqid('img-');
 	const avatarSrc = faker.random.arrayElement(images[gender]);
 
-	console.log('-', username, uid);
-	await session.run(faker.fake(CREATE_USER), {uid, username, firstname, birthdate, hash, gender, lat, long, location, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
+	console.log('-', username, gender, uid);
+	await session.run(faker.fake(CREATE_USER), {uid, username, firstname, lastname, birthdate, hash, gender, lat, long, location, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
   }
 }
 
