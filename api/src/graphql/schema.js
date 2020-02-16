@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
+import deg2rad from 'deg2rad';
 
 dotenv.config();
 
@@ -12,6 +13,26 @@ async function sendNotif(ctx, uid, type, title, message, context) {
 	context = context ? context : "";
 	ctx.pubsub.publish('RECEIVED_NOTIFICATION', { uid, type, title, message, context });
 	ctx.driver.session().run(`MATCH (user:User {uid: $uid}) MERGE (user)-[r:HAS_NOTIF]->(notif:Notification {uid: 'notif-' + $uniqid, type: $type, title: $title, message: $message}) RETURN "Ok"`, { uid, uniqid: ctx.cypherParams.uniqid, type, title, message });
+}
+
+function getDistanceBetweenUsers(latMe, longMe, latUser, longUser) {
+	var R = 6371; // Radius of the earth in km
+	var dLat = deg2rad(latUser - latMe); // deg2rad below
+	var dLon = deg2rad(longUser - longMe);
+	var a =
+		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos(deg2rad(latMe)) *
+		Math.cos(deg2rad(latUser)) *
+		Math.sin(dLon / 2) *
+		Math.sin(dLon / 2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	var d = R * c; // Distance in km
+	return d;
+}
+
+async function filter(arr, callback) {
+	const fail = Symbol();
+	return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail);
 }
 
 const resolvers = {
@@ -49,6 +70,50 @@ const resolvers = {
 
 							return { uid, members, messages };
 						});
+				});
+		},
+
+		async getMatchingUsers(_, { offset = 0 }, ctx) {
+			const meUid = ctx.cypherParams.currentUserUid;
+			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_TAG]->(tag:Tag)<-[:HAS_TAG]-(user:User) WHERE NOT user.uid = me.uid AND user.confirmToken = "true" AND user.gender = me.prefOrientation AND user.elo >= (me.elo - 50) AND user.elo <= (me.elo + 50) RETURN DISTINCT user, me SKIP $offset LIMIT 10`, { meUid, offset })
+				.then(async result => {
+					const records = await filter(result.records, async record => {
+						const me   = record.get('me').properties;
+						const user = record.get('user').properties;
+
+						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
+						{
+							console.log('tej ' + user.username);
+							return false;
+						}
+						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
+						console.log((dist <= me.prefDistance ? 'keep ' + user.username : 'tej ' + user.username), '(' + Math.round(dist) + ' km)');
+						return dist <= me.prefDistance;
+					});
+
+					return await records.map(async record => {
+						const recordUser = record.get('user').properties;
+						return (await ctx.driver.session().run(`MATCH (tag:Tag)<-[:HAS_TAG]-(user:User {uid: $uid})-[:HAS_IMG]->(image:Image), (user)-[:LIKED]->(liked:User) RETURN collect(DISTINCT image) AS images, collect(DISTINCT tag) as tags, collect(DISTINCT liked) as likeds`, { uid: recordUser.uid })
+							.then(async result => {
+								const images     = result.records[0].get('images').map(node => node.properties);
+								const tags       = result.records[0].get('tags').map(node => node.properties);
+								const likeds     = result.records[0].get('likeds').map(node => node.properties);
+								const likesCount = (await ctx.driver.session().run(`MATCH (:User)-[r:LIKED]->(user:User {uid: $uid}) RETURN count(r) AS likesCount`, { uid: recordUser.uid }).then(result => result.records[0].get('likesCount').low));
+								const user = {
+									...recordUser,
+									images: images,
+									avatar: images[0].src,
+									likesCount: likesCount,
+									tags: tags,
+									likedUsers: likeds,
+									email: null,
+									password: null,
+									confirmToken: null,
+									resetToken: null
+								};
+								return user;
+							}));
+					});
 				});
 		},
 

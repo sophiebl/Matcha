@@ -63,7 +63,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 		onSubscriptionData: ({ client, subscriptionData }) => {
 			const notif = subscriptionData.data.receivedNotification;
 			notifs.setCount(notifs.getCount + 1);
-			if (location.pathname !== "/messages/" + notif.context) {
+			//if (location.pathname !== "/messages/" + notif.context) {
 			  store.addNotification({
 			  	title: notif.title,
 			  	message: notif.message,
@@ -73,14 +73,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 			  	animationOut: ["animated", "fadeOut"],
 			  	dismiss: { duration: 3000 },
 			  });
-			}
+			//}
 		},
 	});
 
 	const { loading, error, data } = useQuery(ME);
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
-	const redir = (data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
+	const redir = (!data || !data.me || data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
 
 	return <Route {...rest} render={props => 
 		localStorage.getItem('token') ? (

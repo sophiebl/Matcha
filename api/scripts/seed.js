@@ -24,11 +24,10 @@ DETACH DELETE (a)
 const CREATE_USER = `
 CREATE (:User {
   uid: $uid,
-  username: $firstname,
+  username: $username,
   firstname: $firstname,
   lastname: '{{name.lastName}}',
   email: '{{internet.email}}',
-  username: $firstname,
   password: $hash,
   birthdate: $birthdate,
   gender: $gender,
@@ -98,27 +97,51 @@ async function gen() {
  const res = (await fetch(`http://source.unsplash.com/random/?${gender === "homme" ? "man" : "woman"}`, { headers: {'Cache-Control': 'no-cache'} })).url.split('?')[0]; 
 }
 
+const images = {
+  homme: [
+	'https://images.unsplash.com/photo-1543084951-1650d1468e2d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1559548331-f9cb98001426?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1554878610-786883b1fb6c?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1541577141970-eebc83ebe30e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1555069519-127aadedf1ee?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+  ],
+  femme: [
+	'https://images.unsplash.com/photo-1552334949-3ac66cef3650?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1529008475023-5d5271a6fe50?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1572863141204-83031c77e65a?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+	'https://images.unsplash.com/photo-1528475775637-ed767f76e6b6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9',
+  ],
+};
+
 async function users(amount = 1) {
   for (var i = 0; i < amount; i++) {
-  	const uid = uniqid('user-');
-  	const firstname = faker.name.firstName();
-  	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
-  	const username = firstname;
-  	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
-  	const gender = faker.random.arrayElement(['homme', 'femme']);
-  	const lat = faker.address.latitude();
-    const long = faker.address.longitude();
-    const location = faker.address.city();
-  	const elo = faker.random.number({min: 0, max: 100});
-  	const prefAgeMin = faker.random.number({min: 18, max: 100});
-  	const prefAgeMax = prefAgeMin + 10;
-  	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
-    const prefDistance = faker.random.number({min: 5, max: 200});
-  	const avatarUid = uniqid('img-');
-    const avatarSrc = (await fetch(`http://source.unsplash.com/random/?${gender === "homme" ? "man" : "woman"}`, { headers: {'Cache-Control': 'no-cache'} })).url.split('?')[0];
-    await sleep(2000);
-  
-  	await session.run(faker.fake(CREATE_USER), {uid, firstname, birthdate, username, hash, gender, lat, long, location, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
+	const uid = uniqid('user-');
+	const gender = faker.random.arrayElement(['homme', 'femme']);
+	const firstname = faker.name.firstName(gender === 'homme' ? 'man' : 'woman');
+	const birthdate = faker.date.between("1974-01-01", "2001-12-31").toString();
+	const username = firstname + i;
+	const hash = crypto.createHmac('sha256', 'matcha').update('password' + 'salt').digest('hex');
+
+	// 50 43
+	//const lat = faker.address.latitude();
+	const lat = faker.random.number({min: 43, max: 50});
+
+	// -3 8
+	//const long = faker.address.longitude();
+	const long = faker.random.number({min: -3, max: 8});
+
+	const location = faker.address.city();
+	const elo = faker.random.number({min: 0, max: 100});
+	const prefAgeMin = faker.random.number({min: 18, max: 100});
+	const prefAgeMax = prefAgeMin + 10;
+	const prefOrientation = faker.random.arrayElement(['homme', 'femme']);
+	const prefDistance = faker.random.number({min: 5, max: 200});
+	const avatarUid = uniqid('img-');
+	const avatarSrc = faker.random.arrayElement(images[gender]);
+
+	console.log('-', username, uid);
+	await session.run(faker.fake(CREATE_USER), {uid, username, firstname, birthdate, hash, gender, lat, long, location, elo, prefAgeMin, prefAgeMax, prefOrientation, prefDistance, avatarUid, avatarSrc});
   }
 }
 
@@ -156,9 +179,9 @@ async function reset() {
 }
 
 async function seed() {
-	await users(10);
+  await users(500);
   await tags();
-	await hasTags();
+  await hasTags();
   await liked();
   await blocked();
   await messages();
