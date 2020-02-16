@@ -106,7 +106,7 @@ const Preferences = (props) => {
 
 	useEffect(() => {
 		if(props && props.location && props.location.state && props.location.state.notif) {
-			if (props.location.state.notif === true){
+			if (props.location.state.notif === true && state['first'] === false){
 				store.addNotification({
 					title: "Votre profil est incomplet",
 					message: "Veuillez remplir votre profil pour pouvoir matcher des utilisateurs",
@@ -314,8 +314,7 @@ const Preferences = (props) => {
 		});
 	}
 
-
-	const checkWithLOc = (state['bio'] === null || state['gender'] === null || state['prefAgeMin'] === null|| state['prefAgeMax'] === null|| state['prefOrientation'] === null || state['prefDistance'] === null
+	const checkWithLoc = (state['bio'] === null || state['gender'] === null || state['prefAgeMin'] === null|| state['prefAgeMax'] === null|| state['prefOrientation'] === null || state['prefDistance'] === null
 		|| isLocation.lat === null || isLocation.long === null || isLocation.location === null);
 
 	const check = (state['bio'] === null || state['gender'] === null || state['prefAgeMin'] === null|| state['prefAgeMax'] === null|| state['prefOrientation'] === null || state['prefDistance'] === null);
@@ -407,13 +406,13 @@ const Preferences = (props) => {
 			/>
 
 			<div>
-				<p className="txt-left f-m bio-title">Localisation</p>
-				{!isClicked && (<button onClick={getLocation}>Get my location</button>)}
+				<p className="localisation">Localisation: </p>
+				{!isClicked && (<button className="get-loc" onClick={getLocation}>Get my location</button>)}
 				{(isClicked === true) && (<span>{isLocation.location}</span>)}
 			</div>		
 
 			{(isClicked === true && (
-				<button className="pref" onClick={() => !checkWithLOc ? editPreferencesWithLoc({
+				<button className="pref" onClick={() => !checkWithLoc ? editPreferencesWithLoc({
 					variables: {
 						uid: data.me.uid,
 						bio: state['bio'],
