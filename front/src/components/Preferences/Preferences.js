@@ -133,7 +133,7 @@ const Preferences = (props) => {
 				});
 			}
 		}
-	}, [ props, state ]);
+	}, []);
 
 	const distanceHandle = (props) => {
 		const { value, dragging, index, ...restProps } = props;
