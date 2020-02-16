@@ -85,8 +85,7 @@ const UserProfileDesktop = ({ match }) => {
 	 			uid: match.params.uid,
 	 		}
 	 	});
-	 }, []);
-	 //}, [visitProfile, match.params.uid]);
+	 }, [visitProfile, match.params.uid]);
 
     useEffect(() => {
 		const onCompleted = (data) => {

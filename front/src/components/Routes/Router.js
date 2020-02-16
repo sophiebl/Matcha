@@ -1,8 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
-import cookie from 'react-cookies';
-
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import Main from '../Main/Main';
@@ -22,7 +20,6 @@ import SendResetPassword from '../SendResetPassword/SendResetPassword';
 import ResetPassword from '../ResetPassword/ResetPassword';
 import UserProfileDesktop from '../Profile/UserProfileDesktop';
 import AdminReports from '../Admin/Reports';
-// import UserProfile from '../Profile/UserProfile';
 
 //TODO: query me to check token
 
@@ -36,7 +33,6 @@ const Router = () => (
 			<PrivateRoute exact path="/profile" component={MyProfile} />
 			<PrivateRoute path="/messages/:uid" component={Messages} />
 			<PrivateRoute path="/user/:uid" component={UserProfileDesktop} />
-			{/* <PrivateRoute path="/UserProfile/:uid" component={UserProfile} /> */}
 			<PrivateRoute exact path="/messages" component={MessagesIndex} />
 			<PrivateRoute exact path="/notifications" component={Notifications} />
 			<PrivateRoute exact path="/preferences" component={Preferences} />
