@@ -229,7 +229,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				}
 			}
 			var check = checkPwd(password);
-			if(!check){return new Error('wrong password')}
+			if(!check){return new Error('WrongPassword')}
 			const hash = crypto.createHmac('sha256', 'matcha').update(password + 'salt').digest('hex');
 			const confirmToken = uniqid() + crypto.randomBytes(16).toString('hex');
 			const url = `http://localhost:3000/confirm/${confirmToken}`;
@@ -241,13 +241,19 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				text: `Click here to confirm your email : ${url}`,
 				html: `Click here to confirm your email : <a href="${url}">${url}</a>`,
 			};
-			//console.log(ctx);
-			// console.log(context);
+
+			const already = await context.driver.session().run(`MATCH (username:User {username: $username}), (email:User {email: $email}) RETURN username, email`, { username, email })
+				.then(result =>	result.records.length > 1);
+			if (already) return new Error('UsernameOrMailAlreadyExists');
+
 			context.mailtransport.sendMail(mailOptions, (error, info) => {
 				if (error) console.log(error);
 				else console.log('Email sent: ' + info.response);
 			});
 
+			lat = 42;
+			long = 42;
+			location = "bruh";
 			return await context.driver.session().run(`CREATE (u:User {uid: $uid, firstname: $firstname, lastname: $lastname, birthdate: $birthdate, username: $username, email: $email, birthdate: $birthdate, password: $hash, confirmToken: $confirmToken, lat: $lat, long: $long, location: $location})-[:HAS_IMG]->(i:Image {uid: 'img-' + $uniqid, src: "https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png"}) RETURN u`,
 				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, birthdate, uniqid:context.cypherParams.uniqid})
 				.then(result => {
