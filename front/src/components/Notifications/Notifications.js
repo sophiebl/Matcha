@@ -5,6 +5,7 @@ import { gql } from "apollo-boost";
 import { useQuery} from '@apollo/react-hooks';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Nav from "../Nav/Nav";
 
 const GET_NOTIFS = gql`
 	query {
@@ -41,11 +42,14 @@ const Notifications = () => {
   const last = notifs.length - 1;
 
   return (
-	<div className="settings">
-	  <a href="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></a>
-	  <h2>Notifications</h2>
-	  { notifs.map((notif, index) => <Notification key={index} notif={notif} last={index === last}/>) }
-	</div>
+	  	<>
+			<div>
+				<a href="/profile" style={{color: 'black', display: 'inline-block', float: 'left'}}><FontAwesomeIcon size="2x" icon="times" /></a>
+				<h2>Notifications</h2>
+				{ notifs.map((notif, index) => <Notification key={index} notif={notif} last={index === last}/>) }
+			</div>
+			<Nav />
+		</>
   );
 }
 

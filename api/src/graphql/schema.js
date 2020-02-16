@@ -278,7 +278,6 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 10
 				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
 				console.log('publis disco (logout)');
 			}
-
 			return "Ok";
 		},
 

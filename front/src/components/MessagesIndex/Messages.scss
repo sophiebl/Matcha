@@ -27,3 +27,26 @@
     bottom:0;
     left:0;
 }
+.msg-form{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.msg-form input{
+    display: inline-block;
+    vertical-align: baseline;
+    width: 79%;
+    min-height: 48px;
+    border: 1px solid #f0f0f0;
+    background: #f0f0f0;
+    border-radius: 2px;
+}
+
+.msg-form button.button-submit{
+    display: inline-block;
+    vertical-align: baseline;
+    width: 20%;
+}
