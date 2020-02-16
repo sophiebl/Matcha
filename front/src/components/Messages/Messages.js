@@ -170,9 +170,9 @@ const Messages = ({ match }) => {
 			  <p style={{fontSize: '15px', display: 'inline-block'}}><strong>{members}</strong></p>
 			{/*</div>*/}
 			<Chat conv={data.getConv}/>
-		    <form method="POST" onSubmit={handleSubmit(onSubmit)}>
+		    <form method="POST" className="msg-form" onSubmit={handleSubmit(onSubmit)}>
 		      <input type="text" name="message" id="msg" placeholder="message" ref={register({ required: true })} required/>
-		      <button>Envoyer</button>
+		      <button className="button-submit">Envoyer</button>
 		    </form>
 		</div>
   );

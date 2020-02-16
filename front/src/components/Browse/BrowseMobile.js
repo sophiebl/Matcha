@@ -14,6 +14,7 @@ query User($username: String) {
 		firstname
 		lat
 		long
+		location
 	}
 	
 	users: getMatchingUsers {
@@ -43,6 +44,7 @@ query User($username: String) {
 		lastVisite
 		lat
 		long
+		location
     }
 
 	firstUser: User(username: $username) {
@@ -72,6 +74,7 @@ query User($username: String) {
 		lastVisite
 		lat
 		long
+		location
 	}
 }
 `;

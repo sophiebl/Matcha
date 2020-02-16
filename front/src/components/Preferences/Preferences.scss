@@ -10,13 +10,6 @@ h2{
     border: 1px solid rgb(3, 218, 198) !important;
 }
 
-// .rc-slider-tooltip.rc-slider-tooltip-placement-bottom{
-//   top: 375px !important;
-//   .rc-slider-tooltip{
-//     padding: 6px 19px;
-//   }
-// }
-
 .rc-slider-tooltip-inner{
   color: $blue-green !important;
   background-color: transparent !important;
@@ -46,7 +39,10 @@ h2{
 
 @media (min-width: $tabletLandscape) { 
   .settings{
-    width: 50%;
+    width: 30%;
     margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 11px 7px 12px #03dac629;
+    padding: 20px 50px !important;
   }
 }

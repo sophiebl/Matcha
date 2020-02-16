@@ -317,7 +317,6 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				ctx.pubsub.publish('USER_STATE_CHANGED', { user: { uid: ctx.cypherParams.currentUserUid }, state: 0 });
 				console.log('publis disco (logout)');
 			}
-
 			return "Ok";
 		},
 
@@ -341,7 +340,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 					const target = result.records[0].get('target').properties;
 					return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => {
-							const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
+							const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})<-[b:BLOCKED]-(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
 							if (result.records.length > 0) {
 								if (blocked) {
 									return new Error("Blocked user");

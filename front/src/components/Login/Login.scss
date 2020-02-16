@@ -63,6 +63,11 @@ Date picker
     border: none;
 }
 
+.react-date-picker__calendar .react-calendar {
+  border-width: thin;
+  background: white;
+}
+
 @media (min-width: $tabletLandscape) { 
   input.input-submit {
     width: 30%;

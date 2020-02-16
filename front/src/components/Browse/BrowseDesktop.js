@@ -17,6 +17,7 @@ query bruh($offset: Int, $ageMin: Int, $ageMax: Int, $distance: Int, $elo: Int){
 		firstname
 		lat
 		long
+		location
 	}
 	
 	users: getMatchingUsers(offset: $offset, ageMin: $ageMin, ageMax: $ageMax, distance: $distance, elo: $elo) {
@@ -46,6 +47,7 @@ query bruh($offset: Int, $ageMin: Int, $ageMax: Int, $distance: Int, $elo: Int){
 		lastVisite
 		lat
 		long
+		location
     }
 }
 `;
@@ -106,7 +108,7 @@ const BrowseDesktop = () => {
 		else if (onError && !loading && error)
 			onError(error);
 	}, [loading, data, error]);
-	
+
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error </p>;
 
