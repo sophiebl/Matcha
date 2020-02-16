@@ -24,15 +24,27 @@ const LikeDislike = ({ uidUser, likedUsers, dispatch }) => {
 		{
 			onCompleted: data => dispatch({ type: 'like' }),
 			onError: data => {
-				store.addNotification({
-					title: "Utilisateur bloqué",
-					message: "Vous ne pouvez pas liker un utilisateur blocké",
-					type: 'danger',
-					container: 'bottom-left',
-					animationIn: ["animated", "fadeIn"],
-					animationOut: ["animated", "fadeOut"],
-					dismiss: { duration: 3000 },
-				})
+				const err = data.message.split(':')[1].trim();
+				if (err === "BlockedUser")
+				  store.addNotification({
+				  	title: "Utilisateur bloqué",
+				  	message: "Vous ne pouvez pas liker un utilisateur bloqué",
+				  	type: 'danger',
+				  	container: 'bottom-left',
+				  	animationIn: ["animated", "fadeIn"],
+				  	animationOut: ["animated", "fadeOut"],
+				  	dismiss: { duration: 3000 },
+				  });
+				else if (err === "NoAvatar")
+				  store.addNotification({
+				  	title: "Avatar manquant",
+				  	message: "Merci d'uploader un avatar",
+				  	type: 'danger',
+				  	container: 'bottom-left',
+				  	animationIn: ["animated", "fadeIn"],
+				  	animationOut: ["animated", "fadeOut"],
+				  	dismiss: { duration: 3000 },
+				  });
 			}
 		}
 	);

@@ -390,12 +390,17 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				.then(async result => {
 					const me = result.records[0].get('me').properties;
 					const target = result.records[0].get('target').properties;
+
+					const images = await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_IMG]-(img:Image) RETURN collect(img) AS images`, { meUid: me.uid }).then(async result => result.records[0].get('images'));
+					if (images.length == 1 && images[0].properties.src == "https://cdn0.iconfinder.com/data/icons/user-pictures/100/unknown2-512.png")
+						return new Error("NoAvatar");
+
 					return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => {
 							const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})<-[b:BLOCKED]-(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
 							if (result.records.length > 0) {
 								if (blocked) {
-									return new Error("Blocked user");
+									return new Error("BlockedUser");
 								} else {
 									sendNotif(ctx, target.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + me.username + " !");
 									sendNotif(ctx, me.uid, 'success', "IT'S A MATCH", "Vous avez match avec " + target.username + " !");
@@ -411,7 +416,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 							}
 							else {
 								if (blocked) {
-									return new Error("Blocked user");
+									return new Error("BlockedUser");
 								} else {
 									sendNotif(ctx, uid, 'default', 'Nouveau like', me.username + " vient de vous liker !");
 								}
@@ -438,7 +443,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 					if (heLiked && iLiked) {
 						const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
 						if (blocked) {
-							return new Error("Blocked user");
+							return new Error("BlockedUser");
 						} else {
 							sendNotif(ctx, uid, 'danger', "U GOT UNMATCHED NOOB", me.username + " ne vous like plus :c");
 						}
@@ -495,7 +500,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 								const blocked = (await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: ctx.cypherParams.currentUserUid, memberUid: member.uid }).then(async result => result.records.length > 0));
 								ctx.pubsub.publish('NEW_MESSAGE', { ...msg, author: { ...me, avatar: "", isConnected: true } });
 								if (blocked) {
-									return new Error("Blocked user");
+									return new Error("BlockedUser");
 								} else {
 									sendNotif(ctx, member.uid, 'default', 'Nouveau message', message, convUid);
 								}
