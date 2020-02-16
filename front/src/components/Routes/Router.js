@@ -33,10 +33,9 @@ const Router = () => (
 			<PrivateRoute exact path="/logout" component={Logout} />
 			<PublicRoute exact path="/signup" component={Signup} />
 			<PrivateRoute exact path="/browse" component={Browse}/>
-			<PrivateRoute path="/browse/:username" component={(props) => { cookie.save('firstUsername', props.match.params.username, { path: '/' }); return <Redirect to="/browse"/> }}/>
 			<PrivateRoute exact path="/profile" component={MyProfile} />
 			<PrivateRoute path="/messages/:uid" component={Messages} />
-			<PrivateRoute path="/UserProfileDesktop/:uid" component={UserProfileDesktop} />
+			<PrivateRoute path="/user/:uid" component={UserProfileDesktop} />
 			{/* <PrivateRoute path="/UserProfile/:uid" component={UserProfile} /> */}
 			<PrivateRoute exact path="/messages" component={MessagesIndex} />
 			<PrivateRoute exact path="/notifications" component={Notifications} />
