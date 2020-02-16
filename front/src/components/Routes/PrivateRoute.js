@@ -83,7 +83,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 	const redir = (!data || !data.me || data.me.prefAgeMin === null || data.me.prefAgeMax === null || data.me.prefDistance === null|| data.me.prefOrientation === null|| data.me.bio === null || data.me.gender === null);
 
 	return <Route {...rest} render={props => 
-		localStorage.getItem('token') ? (
+		getCurrentUid() !== null ? (
 			!redir ? (
 				<Component {...props} />
 			) : (
