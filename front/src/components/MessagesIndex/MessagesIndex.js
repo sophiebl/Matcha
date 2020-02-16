@@ -45,7 +45,6 @@ const MessagesList = () => {
   if (error) return <p>Error :(</p>;
 
   const convs = data.me.conversations;
-  console.log('convs', convs);
   return <>{ convs.map((conv, index) => <ConvItem key={index} conv={conv} />) }</>
 }
 

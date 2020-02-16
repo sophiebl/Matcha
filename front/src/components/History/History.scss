@@ -14,18 +14,16 @@ h2 {
 }
 
 .history-sections {
-  display: flex;
-  flex-direction: row;
+  display: inline-block;
 }
 
-.history-sections > a{
+.history-sections a{
   display: inline-block;
-  vertical-align: baseline;
-  width: 49%;
   font-family: "Meyrin";
   font-weight: bold;
   font-size: 1.8em;
   color: $blue-green;
+  margin-bottom: 30px;
 }
 
 .history-sections h3{
@@ -33,8 +31,18 @@ h2 {
   font-size: 1em;
 }
 
+.history-sections.hs2{
+  vertical-align: top;
+}
+
 .history-sections > div{
+  width: 65%;
+  margin: 5px auto;
   text-align: left;
+}
+
+.actions{
+  display: block;
 }
 
 @media (min-width: $tabletLandscape) { 
@@ -48,5 +56,8 @@ h2 {
   }
   .history-sections > a{
     font-size: 2.5em;
+  }
+  .history-sections > div{
+    width: 11%;
   }
 }

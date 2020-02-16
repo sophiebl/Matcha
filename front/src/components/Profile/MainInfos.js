@@ -76,7 +76,7 @@ const MainInfos = ({ user, isMyProfile, km }) => {
 				</div>
 			)}
 			<SliderShow src={images}/>
-			<div className="main-infos valign50">
+			<div className="main-infos valignbox">
 				<div className="mb-5">
 					<h2 onClick={() => console.log('username:', username, '\nuid:', uid)}>{firstname}</h2>
 					<span className="f-base">{location} • {age} ans • {elo} pts</span>

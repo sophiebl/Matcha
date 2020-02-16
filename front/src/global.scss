@@ -40,7 +40,7 @@ $white: #fff;
 $blue-green: #03DAC6;
 $red: #E10050;
 $grey: #F1F1F1;
-$dark-grey: #C4C4C4;
+$dark-grey: #f0f0f0;
 $txt-color: #7b7b7b;
 $online: #1AF816;
 $offline: #F81616;
@@ -126,6 +126,18 @@ a {
     display: inline-block;
     vertical-align: baseline;
     width: 25%;
+  }
+}
+
+.valignbox {
+  width: 100%;
+  > div {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 39%;
+  }
+  > div.mb-5{
+    width: 59%;
   }
 }
 

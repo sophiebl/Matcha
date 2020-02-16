@@ -83,7 +83,8 @@ User tag
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  overflow-y: scroll;
+  overflow-y: hidden;
+ // overflow-y: scroll;
   height: 11vh;
   //margin-bottom: 20px;
 }

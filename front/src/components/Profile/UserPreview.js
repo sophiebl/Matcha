@@ -3,7 +3,6 @@ import React from 'react';
 import MainInfos from './MainInfos';
 import LikeDislike from './LikeDislike';
 import Tag from './Tag';
-import Nav from "../Nav/Nav";
 import { Link } from "react-router-dom";
 import './Profile.scss'
 
@@ -49,7 +48,6 @@ const UserPreview = ({ user, dispatch, userMe }) => {
 				<LikeDislike uidUser={uid} likedUsers={likedUsers} dispatch={dispatch} />
 				<UsersState user={user} dispatch={dispatch} userMe={userMe}/>
 			</div>
-			<Nav />
 		</div>
 	);
 }
