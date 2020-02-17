@@ -126,12 +126,14 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 							if (userElo < meElo - 50 || userElo > meElo + 50)
 							{
 								console.log('tej ' + user.username + ' (elo ' + user.elo + ' too low/high)');
+								ctx.driver.session().close();
 								return false;
 							}
 						} else {
 							if (userElo < prefElo)
 							{
 								console.log('tej ' + user.username + ' (elo ' + user.elo + ' too low)');
+								ctx.driver.session().close();
 								return false;
 							}
 						}
@@ -142,12 +144,14 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 						if (userAge < prefAgeMin || userAge > prefAgeMax)
 						{
 							console.log('tej ' + user.username + ' (bad age)');
+							ctx.driver.session().close();
 							return false;
 						}
 
 						if ((await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:BLOCKED]->(user:User {uid: $userUid}) RETURN count(r) AS blocked`, { meUid, userUid: user.uid })).records[0].get('blocked').low > 0)
 						{
 							console.log('tej ' + user.username + ' (blocked)');
+							ctx.driver.session().close();
 							return false;
 						}
 						const dist = getDistanceBetweenUsers(me.lat, me.long, user.lat, user.long);
@@ -175,6 +179,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 									confirmToken: null,
 									resetToken: null
 								};
+								ctx.driver.session().close();
 								return user;
 							}));
 					});
@@ -201,6 +206,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 					let notifs = [];
 					result.records.forEach(record => notifs.push(record.get('notifs').properties));
 					ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[rels:HAS_NOTIF]->(notifs:Notification) DELETE rels, notifs`, { meUid: ctx.cypherParams.currentUserUid });
+					ctx.driver.session().close();
 					return notifs;	
 				});
 		},
@@ -244,6 +250,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 
 			const already = await context.driver.session().run(`MATCH (username:User {username: $username}), (email:User {email: $email}) RETURN username, email`, { username, email })
 				.then(result =>	result.records.length > 1);
+			ctx.driver.session().close();
 			if (already) return new Error('UsernameOrMailAlreadyExists');
 
 			context.mailtransport.sendMail(mailOptions, (error, info) => {
@@ -258,8 +265,12 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 				{uid, firstname, lastname, username, email, hash, confirmToken, lat, long, location, birthdate, uniqid:context.cypherParams.uniqid})
 				.then(result => {
 					if (result.records.length < 1)
+					{
+						ctx.driver.session().close();
 						return new Error('CouldNotCreateUser')
+					}
 					const user = result.records[0].get('u').properties;
+					ctx.driver.session().close();
 					return jwt.sign(
 						{ uid: user.uid },
 						process.env.JWT_SECRET,
@@ -276,6 +287,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 						if (result.records.length < 1)
 							return new Error('UnknownUser')
 						const user = result.records[0].get('u').properties;
+						ctx.driver.session().close();
 						return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 					});
 			}
@@ -304,6 +316,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 					if (result.records.length < 1)
 						return new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
+					ctx.driver.session().close();
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
 		},
@@ -335,6 +348,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 					if (result.records.length < 1)
 						return new Error('UnknownUser')
 					const user = result.records[0].get('u').properties;
+					ctx.driver.session().close();
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});
 		},
@@ -353,6 +367,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 					if (user.banned == true)
 						return new Error('UserBanned');
 					ctx.pubsub.publish('USER_STATE_CHANGED', { user: user, state: 1 });
+					ctx.driver.session().close();
 					return jwt.sign({ uid: user.uid }, process.env.JWT_SECRET, { expiresIn: '1y' });
 				});	
 		},
@@ -375,6 +390,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 		async reportUser(_, { uid }, ctx) {
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) MERGE (me)-[:REPORTED]->(target) WITH me, target MATCH (:User)-[r:REPORTED]->(target) RETURN COUNT(r) as reportsCount`, { meUid: ctx.cypherParams.currentUserUid, uid })
 				.then(async result => {
+					ctx.driver.session().close();
 					if (result.records.length < 1)
 						return new Error('UnknownUser')
 					const reportsCount = result.records[0].get('reportsCount').low;
@@ -388,6 +404,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 			const meUid = ctx.cypherParams.currentUserUid;
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:LIKED]->(target) RETURN me, target`, { meUid, uid })
 				.then(async result => {
+					ctx.driver.session().close();
 					const me = result.records[0].get('me').properties;
 					const target = result.records[0].get('target').properties;
 
@@ -397,6 +414,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 
 					return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})<-[r:LIKED]-(target:User {uid: $uid}) RETURN r`, { meUid, uid })
 						.then(async result => {
+							ctx.driver.session().close();
 							const blocked = await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})<-[b:BLOCKED]-(me:User {uid: $meUid}) RETURN b`, { meUid: me.uid, memberUid: uid }).then(async result => result.records.length > 0);
 							if (result.records.length > 0) {
 								if (blocked) {
@@ -408,6 +426,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 
 								return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[:HAS_CONV]->(conv:Conversation)<-[:HAS_CONV]-(target:User {uid: $uid}) RETURN conv`, { meUid, uid })
 									.then(async result => {
+										ctx.driver.session().close();
 										if (result.records.length < 1)
 											ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:HAS_CONV]->(c:Conversation {uid: 'conv-' + $uniqid})<-[:HAS_CONV]-(target) RETURN me, target`, { meUid, uid, uniqid: ctx.cypherParams.uniqid });
 										ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:DISLIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
@@ -449,6 +468,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 						}
 					}
 					ctx.driver.session().run(`MATCH (me:User {uid: $meUid})-[r:LIKED]->(target:User {uid: $uid}) DELETE r`, { meUid, uid });
+					ctx.driver.session().close();
 					return target.uid;
 				});
 		},
@@ -460,6 +480,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 			//return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target MERGE (me)-[:VISITED]->(target) RETURN me, target`, { meUid, uid })
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (target:User {uid: $uid}) WHERE NOT me = target AND NOT (me)-[:VISITED]->(target) MERGE (me)-[:VISITED]->(target) RETURN me, target`, { meUid, uid })
 				.then(async result => {
+					ctx.driver.session().close();
 					if (result.records.length < 1)
 						return null;
 					const me     = result.records[0].get('me').properties;
@@ -473,6 +494,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 			if (true || ctx.cypherParams.currentUserUid.startsWith('admin-'))
 			{
 				ctx.driver.session().run(`MATCH (user:User {uid: $uid}) SET user.banned = true`, { uid });
+				ctx.driver.session().close();
 				return "Ok";
 			}
 			else return new Error('NotAdmin');
@@ -483,11 +505,15 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 			return await ctx.driver.session().run(`MATCH (me:User {uid: $meUid}), (conv:Conversation {uid: $convUid}) CREATE (conv)-[:HAS_MSG]->(msg:Message {uid: 'msg-' + $uniqid, content: $message})<-[:AUTHORED]-(me) RETURN me, msg`, { meUid, convUid, message, uniqid: ctx.cypherParams.uniqid })
 				.then(async result => {
 					if (result.records.length < 1)
+					{
+						ctx.driver.session().close();
 						return null;
+					}
 					const me  = result.records[0].get('me').properties;
 					const msg = result.records[0].get('msg').properties;
 					return await ctx.driver.session().run(`MATCH (member:User)-[:HAS_CONV]->(conv:Conversation {uid: $convUid}) RETURN member`, { convUid })
 						.then(async result => {
+							ctx.driver.session().close();
 							if (result.records.length < 1)
 								return null;
 							let members = new Set();
@@ -498,6 +524,7 @@ RETURN DISTINCT user, me SKIP $offset LIMIT 9
 							});
 							Array.from(members).forEach(async member => {
 								const blocked = (await ctx.driver.session().run(`MATCH (target:User {uid: $memberUid})-[b:BLOCKED]->(me:User {uid: $meUid}) RETURN b`, { meUid: ctx.cypherParams.currentUserUid, memberUid: member.uid }).then(async result => result.records.length > 0));
+								ctx.driver.session().close();
 								ctx.pubsub.publish('NEW_MESSAGE', { ...msg, author: { ...me, avatar: "", isConnected: true } });
 								if (blocked) {
 									return new Error("BlockedUser");
