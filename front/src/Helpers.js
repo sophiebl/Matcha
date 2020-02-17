@@ -11,8 +11,9 @@ const getToken = () => {
 
 const getCurrentUid = () => {
 	const token = getToken();
-	if (token !== null && (Date.now()/1000) < token.exp)
+	if (token !== null && token.uid !== null && (Date.now()/1000) < token.exp)
 		return token.uid
+	localStorage.removeItem('token');
 	return null;
 }
 
