@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import useForm from 'react-hook-form';
 import { gql } from "apollo-boost";
 import { useMutation } from '@apollo/react-hooks';
+import { store } from 'react-notifications-component';
 
 const SEND_PWD_RESET = gql`
   mutation sendPwdReset($email: String!) {
@@ -18,7 +19,18 @@ const SendResetPassword = withRouter(({history, ...props}) => {
 			alert('Merci de cliquer sur le lien dans le mail que vous avez recu.');
 			history.push("/login");
 		},
-    onError: data => console.log(data),
+    onError: data => {
+      store.addNotification({
+        title: "Ce mail n'a pas été trouvé",
+        message: "Le mail que vous avez renseigné n'existe pas",
+        type: 'danger',
+        container: 'bottom-left',
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: { duration: 3000 },
+      })
+      console.log(data)
+    }
   });
   const onSubmit = inputs => {
     pwdReset({
