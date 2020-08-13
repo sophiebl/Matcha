@@ -18,7 +18,7 @@ Matcha is a dating platform with the following features:
 * [React](https://reactjs.org/)
 * [Material-Ui](https://material-ui.com/) : React UI framework
 
-##Server
+### Server
 * [Docker](https://www.docker.com/)
 
 ## How to quickly try it?
