@@ -38,7 +38,9 @@ open http://localhost:3000
 
 [![Home](https://www.sophieboulaaouli.com/images/Matcha_desktop.jpg)](https://www.sophieboulaaouli.com/images/Matcha_desktop.jpg)
 [![Match](https://www.sophieboulaaouli.com/images/matcha-mobile.png)](https://www.sophieboulaaouli.com/images/matcha-mobile.png)
+
 [![User Profile](https://www.sophieboulaaouli.com/images/matcha-myprofile.png)](https://www.sophieboulaaouli.com/images/matcha-myprofile.png)
+
 [![Chat](https://www.sophieboulaaouli.com/images/matcha-conv.png)](https://www.sophieboulaaouli.com/images/matcha-conv.png)
 
 ## How we've been working
