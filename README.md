@@ -1,10 +1,27 @@
 # Matcha
-Stack: 
- - NodeJS + Express
- - React
- - Neo4j (GraphQL)
- - Docker
+## The project
 
+Matcha is a Dating platform.
+
+💘 matching algorithm based on preferences, distance, common interests and popularity rates
+🛎 real-time notifications
+💌 chat
+🚫 possibility to block or report a user
+
+## The stack
+### Back
+* [Node](https://nodejs.org/en/)
+* [Express](https://expressjs.com/)
+* [Neo4j](https://neo4j.com/)
+
+### Front
+* [React](https://reactjs.org/)
+* [Material-Ui](https://material-ui.com/) : React UI framework
+
+##Server
+* [Docker](https://www.docker.com/)
+
+## How to quickly try it?
 ## Setup (you just need *Make* and *Docker*)
 ```
 git clone https://github.com/alexandregv/Matcha.git
@@ -12,6 +29,20 @@ cd Matcha
 make
 open http://localhost:3000
 ```
+
+### API we used
+* [Unplash](https://unsplash.com/developers)
+* [Fakerator](https://www.npmjs.com/package/fakerator) : to generate fake profiles for the seed
+
+## What it looks like
+
+[![Home](https://www.sophieboulaaouli.com/images/Matcha_desktop.jpg)](https://www.sophieboulaaouli.com/images/Matcha_desktop.jpg)
+[![Match](https://www.sophieboulaaouli.com/images/matcha-mobile.png)](https://www.sophieboulaaouli.com/images/matcha-mobile.png)
+[![User Profile](https://www.sophieboulaaouli.com/images/matcha-myprofile.png)](https://www.sophieboulaaouli.com/images/matcha-myprofile.png)
+[![Chat](https://www.sophieboulaaouli.com/images/matcha-conv.png)](https://www.sophieboulaaouli.com/images/matcha-conv.png)
+
+## How we've been working
+* 🗓 Planning the project on Github Kanban : [The Project Board](https://github.com/alexandregv/Matcha/projects/1)
 
 ## Handy commands
 - `make up`: Up the stack
@@ -49,6 +80,8 @@ open http://localhost:3000
 Others commands are here mainly for development purposes.  
 Also, if you see some errors marked as `(ignored)`: **this is normal**.  
 
-## Contributors
-[`alexandregv (aguiot--)`](https://github.com/alexandregv) - Alexandre Guiot--Valentin  
-[`sophiebl (sboulaao)`](https://github.com/sophiebl) - Sophie Boulaaouli  
+## Credits
+
+👨🏻‍💻👩🏻‍💻
+Built and designed by 
+[@alexandregv](https://github.com/alexandregv) & [@sophiebl](https://github.com/sophiebl/)
