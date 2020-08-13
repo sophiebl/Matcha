@@ -1,12 +1,12 @@
 # Matcha
 ## The project
 
-Matcha is a Dating platform.
+Matcha is a dating platform with the following features:
 
-💘 matching algorithm based on preferences, distance, common interests and popularity rates
-🛎 real-time notifications
-💌 chat
-🚫 possibility to block or report a user
+* 💘 matching algorithm based on preferences, distance, common interests and popularity rates
+* 🛎 real-time notifications
+* 💌 chat
+* 🚫 possibility to block or report a userr
 
 ## The stack
 ### Back
